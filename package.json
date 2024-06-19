@@ -1,0 +1,32 @@
+{
+  "name": "react-native-zoom-us",
+  "version": "8.0.1",
+  "description": "React-native bridge for ZoomUs SDK",
+  "homepage": "https://github.com/mieszko4/react-native-zoom-us",
+  "main": "index",
+  "types": "index.d.ts",
+  "scripts": {
+    "prepack": "npx tsc --noEmit false",
+    "postversion": "git push && git push --tags",
+    "dev": "npm run prepack && rm -fr ../react-native-zoom-us-test/node_modules/react-native-zoom-us/ && cp -R . ../react-native-zoom-us-test/node_modules/react-native-zoom-us"
+  },
+  "keywords": [
+    "react-native",
+    "zoom.us"
+  ],
+  "author": "mieszko4",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">0.60.0"
+  },
+  "devDependencies": {
+    "@types/invariant": "^2.2.34",
+    "@types/react-native": "^0.64.4",
+    "typescript": "4.0.5"
+  },
+  "dependencies": {
+    "color": "^3.2.1",
+    "invariant": "^2.2.4"
+  }
+}
