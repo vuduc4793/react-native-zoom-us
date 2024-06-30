@@ -1,6 +1,8 @@
 #import <ReplayKit/ReplayKit.h>
 #import "RNZoomUs.h"
 #import <React/RCTViewManager.h>
+#import "ProviderDelegate.h"
+
 @implementation RNZoomUs
 {
     BOOL isInitialized;
@@ -19,6 +21,8 @@
     NSString *screenShareExtension;
     
     NSString *jwtToken;
+    ProviderDelegate *providerDelegate;
+    CXCallController *callController;
 }
 
 - (instancetype)init {
@@ -35,6 +39,8 @@
         meetingPromiseReject = nil;
         screenShareExtension = nil;
         jwtToken = nil;
+        providerDelegate = nil;
+        callController = nil;
     }
     return self;
 }
@@ -84,6 +90,8 @@ RCT_EXPORT_METHOD(
     }
     
     isInitialized = true;
+    providerDelegate = [[ProviderDelegate alloc] init];
+    callController = [[CXCallController alloc] init];
     
     @try {
         initializePromiseResolve = resolve;
@@ -141,9 +149,10 @@ RCT_EXPORT_METHOD(
 - (void)setMeetingSettings {
     MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
     if (zoomSettings != nil) {
-        [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
-        [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
-        [zoomSettings disableClearWebKitCache:disableClearWebKitCache];
+        [zoomSettings enableVideoCallPictureInPicture:YES];
+//        [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
+//        [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
+//        [zoomSettings disableClearWebKitCache:disableClearWebKitCache];
     }
 }
 
@@ -187,6 +196,7 @@ RCT_EXPORT_METHOD(
         meetingPromiseReject = reject;
         
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+        
         if (ms) {
             ms.delegate = self;
             
@@ -194,16 +204,11 @@ RCT_EXPORT_METHOD(
             joinParam.userName = data[@"userName"];
             joinParam.meetingNumber = data[@"meetingNumber"];
             joinParam.password =  data[@"password"];
-//            joinParam.participantID = data[@"participantID"]; // todo any new keyword?
-//            joinParam.zak = data[@"zoomAccessToken"];
-//            joinParam.webinarToken =  data[@"webinarToken"];
-//            joinParam.noAudio = data[@"noAudio"];
-//            joinParam.noVideo = data[@"noVideo"];
-            
-            
-            NSLog(@"MobileRTC onJoinaMeeting ret: %@", data[@"userName"]);
-            NSLog(@"MobileRTC onJoinaMeeting ret: %@", data[@"meetingNumber"]);
-            NSLog(@"MobileRTC onJoinaMeeting ret: %@", data[@"password"]);
+            //            joinParam.participantID = data[@"participantID"]; // todo any new keyword?
+            joinParam.zak = data[@"zoomAccessToken"];
+            joinParam.webinarToken =  data[@"webinarToken"];
+            joinParam.noAudio = data[@"noAudio"];
+            joinParam.noVideo = data[@"noVideo"];
             
             MobileRTCMeetError joinMeetingResult = [ms joinMeetingWithJoinParam:joinParam];
             
@@ -238,7 +243,7 @@ RCT_EXPORT_METHOD(connectAudio: (RCTPromiseResolveBlock)resolve rejecter:(RCTPro
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (!ms) return;
     [ms connectMyAudio: YES];
-//    [ms muteMyAudio: NO];
+    //    [ms muteMyAudio: NO];
     NSLog(@"connectAudio");
 }
 
@@ -549,11 +554,47 @@ RCT_EXPORT_METHOD(lowerMyHand: (RCTPromiseResolveBlock)resolve rejecter:(RCTProm
 }
 
 - (void)onMeetingStateChange:(MobileRTCMeetingState)state {
-    NSLog(@"onMeetingStatusChanged, meetingState=%d", state);
+    NSLog(@"onMeetingStatusChanged, meetingState=%@", @(state));
     
     NSString* statusString = [self formatStateToString:state];
     [self sendEventWithName:@"MeetingEvent" event:@"success" status:statusString];
     [self sendEventWithName:@"MeetingStatus" event:statusString];
+    
+    
+    
+    if (state == MobileRTCMeetingState_Connecting && providerDelegate.callingUUID == nil) {
+        NSUUID *callUUID = [NSUUID UUID];
+        
+        CXStartCallAction *startCallAction = [[CXStartCallAction alloc] initWithCallUUID:callUUID handle:[[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@"Học Viện Minh Trí Thành"]];
+        CXCallUpdate *callUpdate = [[CXCallUpdate alloc] init];
+        callUpdate.remoteHandle = startCallAction.handle;
+        callUpdate.hasVideo = startCallAction.video;
+        CXTransaction *transaction = [[CXTransaction alloc] initWithAction:startCallAction];
+        [callController requestTransaction:transaction completion:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error requesting start call transaction: %@", error.localizedDescription);
+                self->providerDelegate.callingUUID = nil;
+            } else {
+                NSLog(@"Requested start call transaction succeeded");
+                NSLog(@"callUUID 1: %@", callUUID);
+                self->providerDelegate.callingUUID = callUUID;
+                NSLog(@"callUUID 2: %@", self->providerDelegate.callingUUID);
+            }
+        }];
+    }
+    else if (state == MobileRTCMeetingState_Ended && providerDelegate.callingUUID != nil) {
+        NSLog(@"endCallUUID: %@", providerDelegate.callingUUID);
+        CXEndCallAction *endCallAction = [[CXEndCallAction alloc] initWithCallUUID:providerDelegate.callingUUID];
+        CXTransaction *transaction = [[CXTransaction alloc] initWithAction:endCallAction];
+        [callController requestTransaction:transaction completion:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error requesting end call transaction: %@", error.localizedDescription);
+            } else {
+                NSLog(@"Requested end call transaction succeeded");
+                self->providerDelegate.callingUUID = nil;
+            }
+        }];
+    }
     
     if (state == MobileRTCMeetingState_InMeeting && shouldAutoConnectAudio == YES) {
         [self connectAudio];
@@ -767,10 +808,10 @@ RCT_EXPORT_METHOD(lowerMyHand: (RCTPromiseResolveBlock)resolve rejecter:(RCTProm
 - (void)onSinkMeetingUserJoin:(NSUInteger)userID {
     NSLog(@"MobileRTC onSinkMeetingUserJoin==%@", @(userID));
     
-        [self sendEventWithName:@"MeetingEvent" params:@{
-            @"event": @"userJoin",
-            @"userList": @[@(userID)]
-        }];
+    [self sendEventWithName:@"MeetingEvent" params:@{
+        @"event": @"userJoin",
+        @"userList": @[@(userID)]
+    }];
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
@@ -905,6 +946,10 @@ RCT_EXPORT_METHOD(lowerMyHand: (RCTPromiseResolveBlock)resolve rejecter:(RCTProm
         case MobileRTCMeetingEndReason_RemovedByHost: return @"endedRemovedByHost";
         default: return @"endedUnknownReason";
     }
+}
+
+- (BOOL)onCheckIfMeetingVoIPCallRunning{
+    return [providerDelegate isInCall];
 }
 
 
