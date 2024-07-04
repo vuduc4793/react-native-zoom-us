@@ -6,8 +6,9 @@ import { RNZoomUs, RNZoomUsVideoView, NativeVideoProps } from "./native";
 export interface Props {
   style?: NativeVideoProps["style"];
   layout: NativeVideoProps["layout"];
-  muteMyCamera?: boolean
-  muteMyAudio?: boolean
+  muteMyCamera?: boolean;
+  muteMyAudio?: boolean;
+  fullScreen?: boolean;
   onSinkMeetingUserJoin?: (event: any) => void;
   onSinkMeetingUserLeft?: (event: any) => void;
   onMeetingStateChange?: (event: any) => void;
@@ -56,13 +57,13 @@ const ZoomUsVideoView: React.FC<Props> = (props) => {
         ref={nativeEl}
         layout={nativeLayout}
         onSinkMeetingUserJoin={(event) =>
-          onSinkMeetingUserJoin(event?.["nativeEvent"])
+          onSinkMeetingUserJoin?.(event?.["nativeEvent"])
         }
         onSinkMeetingUserLeft={(event) =>
-          onSinkMeetingUserLeft(event?.["nativeEvent"])
+          onSinkMeetingUserLeft?.(event?.["nativeEvent"])
         }
         onMeetingStateChange={(event) =>
-          onMeetingStateChange(event?.["nativeEvent"])
+          onMeetingStateChange?.(event?.["nativeEvent"])
         }
         {...otherProps}
       />
