@@ -8,6 +8,7 @@ export interface Props {
   layout: NativeVideoProps["layout"];
   muteMyCamera?: boolean
   muteMyAudio?: boolean
+  fullScreen?: boolean
   onSinkMeetingUserJoin?: (event: any) => void;
   onSinkMeetingUserLeft?: (event: any) => void;
   onMeetingStateChange?: (event: any) => void;
