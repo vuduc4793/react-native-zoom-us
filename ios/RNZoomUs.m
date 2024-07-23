@@ -45,15 +45,6 @@
     return self;
 }
 
-+ (instancetype)sharedInstance {
-    static RNZoomUs *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
-    return sharedInstance;
-}
-
 + (BOOL)requiresMainQueueSetup
 {
     return NO;
@@ -110,10 +101,6 @@ RCT_EXPORT_METHOD(
         if (settings[@"enableCustomizedMeetingUI"]) {
             enableCustomMeeting = [[settings objectForKey:@"enableCustomizedMeetingUI"] boolValue];
         }
-        if (enableCustomMeeting) {
-            RNZoomUs *meetingManager = [RNZoomUs sharedInstance];
-            meetingManager.customMeetingVC = [[CustomMeetingViewController alloc] init];
-        }
         context.enableCustomizeMeetingUI = enableCustomMeeting;
         
         if (settings[@"disableShowVideoPreviewWhenJoinMeeting"]) {
@@ -150,9 +137,14 @@ RCT_EXPORT_METHOD(
     MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
     if (zoomSettings != nil) {
         [zoomSettings enableVideoCallPictureInPicture:YES];
-//        [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
-//        [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
-//        [zoomSettings disableClearWebKitCache:disableClearWebKitCache];
+        //        [zoomSettings setMeetingChatHidden:YES];
+        [zoomSettings setAutoConnectInternetAudio:YES];
+        [zoomSettings disableDriveMode:YES];
+        [zoomSettings disableCopyMeetingUrl:YES];
+        
+        [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
+        [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
+        [zoomSettings disableClearWebKitCache:disableClearWebKitCache];
     }
 }
 
@@ -243,7 +235,8 @@ RCT_EXPORT_METHOD(connectAudio: (RCTPromiseResolveBlock)resolve rejecter:(RCTPro
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (!ms) return;
     [ms connectMyAudio: YES];
-    //    [ms muteMyAudio: NO];
+    [ms muteMyAudio: YES];
+    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 
@@ -596,7 +589,7 @@ RCT_EXPORT_METHOD(lowerMyHand: (RCTPromiseResolveBlock)resolve rejecter:(RCTProm
         }];
     }
     
-    if (state == MobileRTCMeetingState_InMeeting && shouldAutoConnectAudio == YES) {
+    if (state == MobileRTCMeetingState_InMeeting) {
         [self connectAudio];
     }
     
@@ -951,6 +944,5 @@ RCT_EXPORT_METHOD(lowerMyHand: (RCTPromiseResolveBlock)resolve rejecter:(RCTProm
 - (BOOL)onCheckIfMeetingVoIPCallRunning{
     return [providerDelegate isInCall];
 }
-
 
 @end

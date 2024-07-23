@@ -34,6 +34,7 @@
 
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID
 {
+    self.pinUserId = userID;
     [self updateMyAudioStatus];
 
     [self updateVideoOrShare];
@@ -46,6 +47,7 @@
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID
 {
+    self.pinUserId = userID;
     [self updateMyVideoStatus];
 
     [self updateVideoOrShare];

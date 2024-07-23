@@ -43,23 +43,24 @@
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    [self.thumbView updateFrame];
-    
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    BOOL landscape = UIInterfaceOrientationIsLandscape(orientation);
-    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-    
-    BOOL isWebinarAttendee = [ms isWebinarAttendee];
-    if (landscape)
-    {
-        if (!isWebinarAttendee) {
-            self.thumbView.hidden = YES;
-        }
-    }
-    else
-    {
-        self.thumbView.hidden = YES;
-    }
+    [self initSubView];
+//    [self.thumbView updateFrame];
+//    
+//    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+//    BOOL landscape = UIInterfaceOrientationIsLandscape(orientation);
+//    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+//    
+//    BOOL isWebinarAttendee = [ms isWebinarAttendee];
+//    if (landscape)
+//    {
+//        if (!isWebinarAttendee) {
+//            self.thumbView.hidden = YES;
+//        }
+//    }
+//    else
+//    {
+//        self.thumbView.hidden = YES;
+//    }
 }
 
 - (void)updateVideoOrShare
@@ -78,14 +79,14 @@
         if (self.pinUserId) {
             [self.videoVC showActiveVideoWithUserID:self.pinUserId];
         } else {
-            NSUInteger activeUserID = [[[MobileRTC sharedRTC] getMeetingService] activeUserID];
+            NSUInteger activeUserID = [ms activeUserID];
             [self.videoVC showActiveVideoWithUserID:activeUserID];
         }
     } else {
         if (self.pinUserId) {
             [self.videoVC showAttendeeVideoWithUserID:self.pinUserId];
         } else {
-            [self.videoVC showAttendeeVideoWithUserID:[ms myselfUserID]];
+//            [self.videoVC showAttendeeVideoWithUserID:[ms myselfUserID]];
         }
     }
     

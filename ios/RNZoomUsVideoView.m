@@ -21,6 +21,10 @@ BOOL hasObservers;
     return self;
 }
 
+- (void)reactSetFrame:(CGRect)frame {
+    [super reactSetFrame:frame];
+}
+
 - (void)dealloc
 {
     
@@ -130,7 +134,7 @@ BOOL hasObservers;
 }
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingVideoStatusChange=%@",@(userID));
+    NSLog(@"MobileRTC onSinkMeetingVideoStatusChange => %@",@(userID));
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
     {
         [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:userID];
@@ -194,7 +198,8 @@ BOOL hasObservers;
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (!ms) return;
     [ms connectMyAudio: YES];
-//    [ms muteMyAudio: NO];
+    [ms muteMyAudio: YES];
+    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 

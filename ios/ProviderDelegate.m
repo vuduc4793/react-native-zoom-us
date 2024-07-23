@@ -37,9 +37,10 @@
 }
 
 + (CXProviderConfiguration *)providerConfiguration {
-    CXProviderConfiguration *providerConfiguration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Học Viện Minh Trí Thành"];
+    CXProviderConfiguration *providerConfiguration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Minh Trí Thành"];
     providerConfiguration.supportedHandleTypes = [NSSet setWithObject:@(CXHandleTypeGeneric)];
     providerConfiguration.supportsVideo = YES;
+    
     return providerConfiguration;
 }
 

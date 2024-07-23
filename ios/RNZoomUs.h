@@ -9,13 +9,8 @@
 #import <MobileRTC/MobileRTC.h>
 #import "CustomMeetingViewController.h"
 #import "ProviderDelegate.h"
+#import <AVKit/AVKit.h>
 
-@interface RNZoomUs : RCTEventEmitter<RCTBridgeModule, MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate>
-
-@property (assign, nonatomic) NSInteger                 pinUserId;
-
-@property (strong, nonatomic) UIViewController<MobileRTCMeetingServiceDelegate> *customMeetingVC;
-
-+ (instancetype)sharedInstance;
+@interface RNZoomUs : RCTEventEmitter<RCTBridgeModule, MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate, UIAlertViewDelegate, AVPictureInPictureControllerDelegate>
 @end
 

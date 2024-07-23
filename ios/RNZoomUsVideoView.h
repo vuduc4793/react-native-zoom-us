@@ -16,7 +16,7 @@
 #import <MobileRTC/MobileRTCMeetingDelegate.h>
 #import "CustomMeetingViewController.h"
 #import "RCTEventEmitter.h"
-@interface RNZoomUsVideoView : UIView<MobileRTCMeetingServiceDelegate>
+@interface RNZoomUsVideoView : UIView<MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate>
 
 @property(nonatomic, strong)CustomMeetingViewController* rnZoomUsVideoViewController;
 @property (nonatomic, strong) UILabel *label;
