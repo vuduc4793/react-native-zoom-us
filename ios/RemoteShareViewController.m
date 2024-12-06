@@ -3,10 +3,11 @@
 //  react-native-zoom-us
 //
 //  Created by John Vu on 2024/05/12.
-//  
+//
 //
 
 #import "RemoteShareViewController.h"
+#import "GlobalData.h"
 
 @interface RemoteShareViewController ()
 
@@ -67,9 +68,10 @@
 
 - (void)updateShareView
 {
-    if (0 != self.activeShareID)
+    NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
+    if (0 != globalActiveShareID)
     {
-        [self.shareView showActiveShareWithUserID:self.activeShareID];
+        [self.shareView showActiveShareWithUserID:globalActiveShareID];
         MobileRTCAnnotationService *as = [[MobileRTC sharedRTC] getAnnotationService];
         if (as) [as startAnnotationWithSharedView:self.shareView];
     }

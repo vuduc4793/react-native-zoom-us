@@ -258,6 +258,37 @@ async function lowerMyHand() {
   return RNZoomUs.lowerMyHand();
 }
 
+async function joinBO() {
+  return RNZoomUs.joinBO();
+}
+
+async function leaveBO() {
+  return RNZoomUs.leaveBO();
+}
+
+async function requestForHelp() {
+  return RNZoomUs.requestForHelp();
+}
+
+async function isHostInThisBO() {
+  return RNZoomUs.isHostInThisBO();
+}
+
+async function getAllChatMessageID() {
+  return RNZoomUs.getAllChatMessageID();
+}
+
+async function sendChatMsg({content}: {content: string}) {
+  return RNZoomUs.sendChatMsg(content);
+}
+
+
+async function isHostUser({userId}: {userId: number}) {
+  return RNZoomUs.isHostUser(userId);
+}
+
+
+
 export { default as ZoomUsVideoView } from "./video-view";
 
 export * from "./src/events";
@@ -282,5 +313,12 @@ export default {
   switchCamera,
   raiseMyHand,
   lowerMyHand,
+  joinBO,
+  leaveBO,
+  requestForHelp,
+  isHostInThisBO,
+  getAllChatMessageID,
+  sendChatMsg,
+  isHostUser,
   ...events,
 };

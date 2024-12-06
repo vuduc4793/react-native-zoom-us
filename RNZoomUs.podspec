@@ -3,7 +3,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
   s.name         = "RNZoomUs"
-  s.version      = "6.0.12.15920"
+  s.version      = "6.1.0.16236"
   s.summary      = "RNZoomUs"
   s.description  = <<-DESC
                   React Native integration for Zoom SDK

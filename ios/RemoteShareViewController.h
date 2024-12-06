@@ -11,7 +11,8 @@
 
 @interface RemoteShareViewController : UIViewController
 
-@property (assign, nonatomic) NSUInteger activeShareID;
+//@property (assign, nonatomic) NSUInteger activeShareID;
+@property (nonatomic, strong) MobileRTCShareAction *shareAction;
 
 @property (strong, nonatomic) MobileRTCActiveShareView* shareView;
 

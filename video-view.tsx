@@ -12,6 +12,16 @@ export interface Props {
   onSinkMeetingUserJoin?: (event: any) => void;
   onSinkMeetingUserLeft?: (event: any) => void;
   onMeetingStateChange?: (event: any) => void;
+  onInMeetingUserCount?: (event: any) => void;
+  onBOStatusChanged?: (event: any) => void;
+  onHasAttendeeRightsNotification?: (event: any) => void;
+  onMeetingAudioRequestUnmuteByHost?: (event: any) => void;
+  onMeetingVideoRequestUnmuteByHost?: (event: any) => void;
+  onSinkMeetingAudioStatusChange?: (event: any) => void;
+  onMeetingPreviewStopped?: (event: any) => void;
+  onSinkMeetingVideoStatusChange?: (event: any) => void;
+  onChatMessageNotification?: (event: any) => void;
+  onChatMsgDeleteNotification?: (event: any) => void;
 }
 
 const ZoomUsVideoView: React.FC<Props> = (props) => {
@@ -20,6 +30,16 @@ const ZoomUsVideoView: React.FC<Props> = (props) => {
     onSinkMeetingUserLeft,
     onSinkMeetingUserJoin,
     onMeetingStateChange,
+    onInMeetingUserCount,
+    onBOStatusChanged,
+    onHasAttendeeRightsNotification,
+    onMeetingAudioRequestUnmuteByHost,
+    onMeetingVideoRequestUnmuteByHost,
+    onSinkMeetingAudioStatusChange,
+    onMeetingPreviewStopped,
+    onSinkMeetingVideoStatusChange,
+    onChatMessageNotification,
+    onChatMsgDeleteNotification,
     ...otherProps
   } = props;
 
@@ -57,13 +77,43 @@ const ZoomUsVideoView: React.FC<Props> = (props) => {
         ref={nativeEl}
         layout={nativeLayout}
         onSinkMeetingUserJoin={(event) =>
-          onSinkMeetingUserJoin(event?.["nativeEvent"])
+          onSinkMeetingUserJoin?.(event?.["nativeEvent"])
         }
         onSinkMeetingUserLeft={(event) =>
-          onSinkMeetingUserLeft(event?.["nativeEvent"])
+          onSinkMeetingUserLeft?.(event?.["nativeEvent"])
         }
         onMeetingStateChange={(event) =>
-          onMeetingStateChange(event?.["nativeEvent"])
+          onMeetingStateChange?.(event?.["nativeEvent"])
+        }
+        onInMeetingUserCount={(event) =>
+          onInMeetingUserCount?.(event?.["nativeEvent"])
+        }
+        onBOStatusChanged={(event) =>
+          onBOStatusChanged?.(event?.["nativeEvent"])
+        }
+        onHasAttendeeRightsNotification={(event) =>
+          onHasAttendeeRightsNotification?.(event?.["nativeEvent"])
+        }
+        onMeetingAudioRequestUnmuteByHost={(event) =>
+          onMeetingAudioRequestUnmuteByHost?.(event?.["nativeEvent"])
+        }
+        onMeetingVideoRequestUnmuteByHost={(event) =>
+          onMeetingVideoRequestUnmuteByHost?.(event?.["nativeEvent"])
+        }
+        onSinkMeetingAudioStatusChange={(event) =>
+          onSinkMeetingAudioStatusChange?.(event?.["nativeEvent"])
+        }
+        onMeetingPreviewStopped={(event) =>
+          onMeetingPreviewStopped?.(event?.["nativeEvent"])
+        }
+        onSinkMeetingVideoStatusChange={(event) =>
+          onSinkMeetingVideoStatusChange?.(event?.["nativeEvent"])
+        }
+        onChatMessageNotification={(event) =>
+          onChatMessageNotification?.(event?.["nativeEvent"])
+        }
+        onChatMsgDeleteNotification={(event) =>
+          onChatMsgDeleteNotification?.(event?.["nativeEvent"])
         }
         {...otherProps}
       />

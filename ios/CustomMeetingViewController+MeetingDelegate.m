@@ -3,10 +3,11 @@
 //  react-native-zoom-us
 //
 //  Created by John Vu on 2024/05/12.
-//  
+//
 //
 
 #import "CustomMeetingViewController+MeetingDelegate.h"
+#import "GlobalData.h"
 
 @implementation CustomMeetingViewController (MeetingDelegate)
 
@@ -24,7 +25,8 @@
 
 - (void)onSinkMeetingActiveVideo:(NSUInteger)userID
 {
-    self.pinUserId = userID;
+    [[GlobalData sharedInstance] setUserID:userID];
+//    self.pinUserId = userID;
     [self updateVideoOrShare];
 }
 
@@ -34,7 +36,8 @@
 
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID
 {
-    self.pinUserId = userID;
+    [[GlobalData sharedInstance] setUserID:userID];
+//    self.pinUserId = userID;
     [self updateMyAudioStatus];
 
     [self updateVideoOrShare];
@@ -47,9 +50,20 @@
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID
 {
-    self.pinUserId = userID;
+    [[GlobalData sharedInstance] setUserID:userID];
+//    self.pinUserId = userID;
+    
+//    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+//    BOOL isWebinar = [ms isWebinarMeeting];
+//    if (isWebinar) {
+//        BOOL isViewingShare = [ms isViewingShare];
+//            isViewingShare ?
+//            [[GlobalData sharedInstance] setGlobalActiveShareID:userID] :
+//            [[GlobalData sharedInstance] setUserID:userID];
+//    } else {
+//        [[GlobalData sharedInstance] setUserID:userID];
+//    }
     [self updateMyVideoStatus];
-
     [self updateVideoOrShare];
 }
 
@@ -90,22 +104,31 @@
     }
     else if (status == MobileRTCSharingStatus_Other_Share_Begin)
     {
-        self.remoteShareVC.activeShareID = userID;
+//        self.remoteShareVC.activeShareID = userID;
+        [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
         [self showRemoteShareView];
+        
+        [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
     }
     else if (status == MobileRTCSharingStatus_Self_Send_End ||
              status == MobileRTCSharingStatus_Other_Share_End)
     {
-        [self showVideoView];
+        [self updateVideoOrShare];
     }
 }
 
 - (void)onSinkShareSizeChange:(NSUInteger)userID
 {
+//    self.remoteShareVC.activeShareID = userID;
+    [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
+//    [self showRemoteShareView];
+    [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
 }
 
 - (void)onSinkMeetingShareReceiving:(NSUInteger)userID
 {
+    [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
+    [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
 }
 
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting
