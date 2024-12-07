@@ -3,7 +3,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
   s.name         = "RNZoomUs"
-  s.version      = "6.1.0.16236"
+  s.version      = "6.1.0.16235"
   s.summary      = "RNZoomUs"
   s.description  = <<-DESC
                   React Native integration for Zoom SDK
@@ -19,12 +19,12 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.dependency "React"
-  # s.dependency "ZoomSDK", '5.17.11.14222'
-   s.vendored_frameworks = ["ios/lib/MobileRTC.xcframework", "ios/lib/MobileRTCScreenShare.xcframework", "ios/lib/zoomcml.xcframework"]
-  s.resource = 'ios/lib/MobileRTCResources.bundle'
-  s.libraries = "sqlite3", "z.1.2.5", "c++"
-  s.weak_framework = 'VideoToolbox', 'CoreMedia', 'CoreVideo', 'CoreGraphics', 'ReplayKit'
-  s.requires_arc = true
+  s.dependency "ZoomSDK", '6.1.0.16235'
+  #  s.vendored_frameworks = ["ios/lib/MobileRTC.xcframework", "ios/lib/MobileRTCScreenShare.xcframework", "ios/lib/zoomcml.xcframework"]
+  # s.resource = 'ios/lib/MobileRTCResources.bundle'
+  # s.libraries = "sqlite3", "z.1.2.5", "c++"
+  # s.weak_framework = 'VideoToolbox', 'CoreMedia', 'CoreVideo', 'CoreGraphics', 'ReplayKit'
+  # s.requires_arc = true
 
 end
 
