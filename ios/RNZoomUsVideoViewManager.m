@@ -27,6 +27,19 @@ RCT_EXPORT_MODULE(RNZoomUsVideoView)
 RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingUserLeft, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingUserJoin, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMeetingStateChange, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onInMeetingUserCount, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onBOStatusChanged, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onHasAttendeeRightsNotification, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onMeetingAudioRequestUnmuteByHost, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onMeetingVideoRequestUnmuteByHost, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingAudioStatusChange, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onMeetingPreviewStopped, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingVideoStatusChange, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onChatMessageNotification, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onChatMsgDeleteNotification, RCTBubblingEventBlock);
+
+
+
 
 RCT_EXPORT_VIEW_PROPERTY(muteMyAudio, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(muteMyCamera, BOOL);

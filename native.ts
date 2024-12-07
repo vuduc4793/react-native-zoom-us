@@ -40,6 +40,16 @@ export interface NativeVideoProps {
   onSinkMeetingUserJoin?: (event: any) => void;
   onSinkMeetingUserLeft?: (event: any) => void;
   onMeetingStateChange?: (event: any) => void;
+  onInMeetingUserCount?: (event: any) => void;
+  onBOStatusChanged?: (event: any) => void;
+  onHasAttendeeRightsNotification?: (event: any) => void;
+  onMeetingAudioRequestUnmuteByHost?: (event: any) => void;
+  onMeetingVideoRequestUnmuteByHost?: (event: any) => void;
+  onSinkMeetingAudioStatusChange?: (event: any) => void;
+  onMeetingPreviewStopped?: (event: any) => void;
+  onSinkMeetingVideoStatusChange?: (event: any) => void;
+  onChatMessageNotification?: (event: any) => void;
+  onChatMsgDeleteNotification?: (event: any) => void;
 }
 
 // TODO: implement for iOS -> https://github.com/mieszko4/react-native-zoom-us/issues/113

@@ -3,9 +3,10 @@
 //  react-native-zoom-us
 //
 //  Created by John Vu on 2024/05/12.
-//  
+//
 //
 
+#import "GlobalData.h"
 #import "CustomMeetingViewController.h"
 @implementation CustomMeetingViewController
 
@@ -24,6 +25,9 @@
     [self.vcArray addObject:self.remoteShareVC];
     [self.view addSubview:self.thumbView];
     [self showVideoView];
+    [self updateVideoOrShare];
+//    [self setMuteMyCamera: YES];
+//    [self setMuteMyAudio: YES];
     self.thumbView.hidden = YES;
 }
 
@@ -44,49 +48,77 @@
 {
     [super viewDidLayoutSubviews];
     [self initSubView];
-//    [self.thumbView updateFrame];
-//    
-//    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    [self updateVideoOrShare];
 //    BOOL landscape = UIInterfaceOrientationIsLandscape(orientation);
-//    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-//    
-//    BOOL isWebinarAttendee = [ms isWebinarAttendee];
-//    if (landscape)
-//    {
-//        if (!isWebinarAttendee) {
-//            self.thumbView.hidden = YES;
-//        }
-//    }
-//    else
-//    {
-//        self.thumbView.hidden = YES;
-//    }
 }
 
 - (void)updateVideoOrShare
 {
+    NSUInteger pinUserId = [[GlobalData sharedInstance] userID];
+    NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (self.remoteShareVC.parentViewController)
     {
         [self.remoteShareVC updateShareView];
     }
     
-    [self.thumbView updateThumbViewVideo];
-    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+//    [self.thumbView updateThumbViewVideo];
     
     BOOL isWebinarAttendee = [ms isWebinarAttendee];
+    BOOL isViewingShare = [ms isViewingShare];
+    
     if (isWebinarAttendee) {
         self.thumbView.hidden = YES;
-        if (self.pinUserId) {
-            [self.videoVC showActiveVideoWithUserID:self.pinUserId];
+        if (isViewingShare) {
+//            NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
+//            [ms getWebinarAttendeeList];
+//            self.remoteShareVC.activeShareID = globalActiveShareID;
+//            [self.videoVC showActiveVideoWithUserID:globalActiveShareID];
+            [self showRemoteShareView];
+            [self.remoteShareVC updateShareView];
         } else {
-            NSUInteger activeUserID = [ms activeUserID];
-            [self.videoVC showActiveVideoWithUserID:activeUserID];
+            [self.videoVC showActiveVideoWithUserID:pinUserId];
+//            if (self.pinUserId) {
+////                [self showVideoView];
+//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
+//            } else {
+//                NSUInteger savedUserID = [[GlobalData sharedInstance] userID];
+//                self.pinUserId = savedUserID;
+////                NSUInteger activeUserID = [ms activeUserID];
+////                [self showVideoView];
+//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
+////                [self.videoVC showActiveVideoWithUserID:activeUserID];
+//            }
         }
     } else {
-        if (self.pinUserId) {
-            [self.videoVC showAttendeeVideoWithUserID:self.pinUserId];
+        if (isViewingShare) {
+//            NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
+//            if (!self.remoteShareVC.activeShareID) {
+//                self.remoteShareVC.activeShareID = globalActiveShareID;
+//            }
+//            [self.videoVC showActiveVideoWithUserID:globalActiveShareID];
+            [self showRemoteShareView];
+            [self.remoteShareVC updateShareView];
         } else {
-//            [self.videoVC showAttendeeVideoWithUserID:[ms myselfUserID]];
+            if ([ms myselfUserID] != pinUserId) {
+                [self showVideoView];
+                [self.videoVC showActiveVideoWithUserID:pinUserId];
+            } else {
+                
+            }
+//            if (self.pinUserId) {
+////                [self showVideoView];
+//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
+//            } else {
+//                NSUInteger savedUserID = [[GlobalData sharedInstance] userID];
+//                self.pinUserId = savedUserID;
+////                NSUInteger activeUserID = [ms activeUserID];
+////                [self showVideoView];
+//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
+////                [self.videoVC showActiveVideoWithUserID:activeUserID];
+//            }
         }
     }
     
@@ -95,6 +127,15 @@
     self.videoVC.view.frame = frame;
 }
 
+- (void) showCurrentShareVideo {
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    BOOL isViewingShare = [ms isViewingShare];
+    if (isViewingShare == 1) {
+        [self showRemoteShareView];
+    } else {
+        [self showVideoView];
+    }
+}
 
 - (ThumbView *)thumbView
 {
@@ -104,7 +145,8 @@
         __weak typeof(self) weakSelf = self;
         _thumbView.pinOnClickBlock = ^(NSInteger pinUserID) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            strongSelf.pinUserId = pinUserID;
+            [[GlobalData sharedInstance] setUserID:pinUserID];
+//            strongSelf.pinUserId = pinUserID;
             [strongSelf.videoVC showAttendeeVideoWithUserID:pinUserID];
         };
     }
@@ -203,7 +245,7 @@
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID{
     NSLog(@"MobileRTC onSinkMeetingUserLeft==%@", @(userID));
 }
--(void)setMuteMyAudio:(BOOL)isMute{ 
+-(void)setMuteMyAudio:(BOOL)isMute{
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     [ms muteMyAudio:isMute];
 }

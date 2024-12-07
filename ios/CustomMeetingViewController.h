@@ -15,7 +15,7 @@
 @interface CustomMeetingViewController : UIViewController <MobileRTCMeetingServiceDelegate>
 
 @property (strong, nonatomic) UIView                    * baseView;
-@property (assign, nonatomic) NSInteger                 pinUserId;
+//@property (assign, nonatomic) NSInteger                 pinUserId;
 @property (strong, nonatomic) ThumbView                 * thumbView;
 
 @property (strong, nonatomic) NSMutableArray                * vcArray;
