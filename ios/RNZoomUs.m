@@ -13,6 +13,13 @@
     BOOL disableShowVideoPreviewWhenJoinMeeting;
     BOOL disableMinimizeMeeting;
     BOOL disableClearWebKitCache;
+    BOOL meetingShareHidden;
+    BOOL meetingVideoHidden;
+    BOOL meetingAudioHidden;
+    BOOL closeCaptionHidden;
+    BOOL disableCloudWhiteboard;
+    BOOL meetingMoreHidden;
+    
     RCTPromiseResolveBlock initializePromiseResolve;
     RCTPromiseRejectBlock initializePromiseReject;
     RCTPromiseResolveBlock meetingPromiseResolve;
@@ -117,6 +124,30 @@ RCT_EXPORT_METHOD(
             disableClearWebKitCache = [[settings objectForKey:@"disableClearWebKitCache"] boolValue];
         }
         
+        if (settings[@"meetingShareHidden"]) {
+            meetingShareHidden = [[settings objectForKey:@"meetingShareHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingVideoHidden"]) {
+            meetingVideoHidden = [[settings objectForKey:@"meetingVideoHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingAudioHidden"]) {
+            meetingAudioHidden = [[settings objectForKey:@"meetingAudioHidden"] boolValue];
+        }
+        
+        if (settings[@"closeCaptionHidden"]) {
+            closeCaptionHidden = [[settings objectForKey:@"closeCaptionHidden"] boolValue];
+        }
+        
+        if (settings[@"disableCloudWhiteboard"]) {
+            disableCloudWhiteboard = [[settings objectForKey:@"disableCloudWhiteboard"] boolValue];
+        }
+        
+        if (settings[@"meetingMoreHidden"]) {
+            meetingMoreHidden = [[settings objectForKey:@"meetingMoreHidden"] boolValue];
+        }
+        
         [[MobileRTC sharedRTC] setLanguage:settings[@"language"]];
         
         BOOL initializeSuc = [[MobileRTC sharedRTC] initialize:context];
@@ -147,6 +178,14 @@ RCT_EXPORT_METHOD(
         [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
         [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
         [zoomSettings disableClearWebKitCache:disableClearWebKitCache];
+        // custom default UI
+        [zoomSettings setMeetingShareHidden:meetingShareHidden];
+        [zoomSettings setMeetingVideoHidden:meetingVideoHidden];
+        [zoomSettings setMeetingAudioHidden:meetingAudioHidden];
+        [zoomSettings setCloseCaptionHidden:closeCaptionHidden];
+        [zoomSettings disableCloudWhiteboard:disableCloudWhiteboard];
+        [zoomSettings setMeetingMoreHidden:meetingMoreHidden];
+        
         [zoomSettings setMeetingInviteUrlHidden:YES];
         [zoomSettings setMeetingPasswordHidden:YES];
         [zoomSettings setMeetingInviteHidden:YES];
