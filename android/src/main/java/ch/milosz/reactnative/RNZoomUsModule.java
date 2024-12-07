@@ -116,6 +116,13 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
   private Boolean customizedMeetingUIEnabled = false;
   private Boolean disableClearWebKitCache = false;
 
+  private Boolean  meetingShareHidden = false;
+  private Boolean  meetingVideoHidden = false;
+  private Boolean  meetingAudioHidden = false;
+  private Boolean  closeCaptionHidden = false;
+  private Boolean  disableCloudWhiteboard = false;
+  private Boolean  meetingMoreHidden = false;
+
   private List<Integer> videoViews = Collections.synchronizedList(new ArrayList<Integer>());
 
   private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
@@ -185,6 +192,30 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             disableClearWebKitCache = settings.getBoolean("disableClearWebKitCache");
           }
 
+          if (settings.hasKey("meetingShareHidden")) {
+            meetingShareHidden = settings.getBoolean("meetingShareHidden");
+          }
+
+          if (settings.hasKey("meetingVideoHidden")) {
+            meetingVideoHidden = settings.getBoolean("meetingVideoHidden");
+          }
+
+          if (settings.hasKey("meetingAudioHidden")) {
+            meetingAudioHidden = settings.getBoolean("meetingAudioHidden");
+          }
+
+          if (settings.hasKey("closeCaptionHidden")) {
+            closeCaptionHidden = settings.getBoolean("closeCaptionHidden");
+          }
+
+          if (settings.hasKey("disableCloudWhiteboard")) {
+            disableCloudWhiteboard = settings.getBoolean("disableCloudWhiteboard");
+          }
+
+          if (settings.hasKey("meetingMoreHidden")) {
+            meetingMoreHidden = settings.getBoolean("meetingMoreHidden");
+          }
+
           ZoomSDK zoomSDK = ZoomSDK.getInstance();
           if (zoomSDK.isInitialized()) {
             // Apply fresh settings
@@ -194,6 +225,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
               meetingSettingsHelper.disableShowVideoPreviewWhenJoinMeeting(shouldDisablePreview);
               meetingSettingsHelper.setCustomizedMeetingUIEnabled(customizedMeetingUIEnabled);
               meetingSettingsHelper.disableClearWebKitCache(disableClearWebKitCache);
+              meetingSettingsHelper.setHideShareButtonInMeetingToolbar(meetingShareHidden);
+              meetingSettingsHelper.setClosedCaptionHidden(closeCaptionHidden);
+              meetingSettingsHelper.enableCloudWhiteboard(!disableCloudWhiteboard);
+              meetingSettingsHelper.hideCloudWhiteboardHelperCenterButton(disableCloudWhiteboard);
+              meetingSettingsHelper.hideCloudWhiteboardOpenInBrowserButton(disableCloudWhiteboard);
             }
 
             promise.resolve("Already initialize Zoom SDK successfully.");
@@ -202,8 +238,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
           String[] parts = settings.getString("language").split("-");
           Locale locale = parts.length == 1
-            ? new Locale(parts[0])
-            : new Locale(parts[0], parts[1]);
+                  ? new Locale(parts[0])
+                  : new Locale(parts[0], parts[1]);
           zoomSDK.setSdkLocale(reactContext, locale);
 
           ZoomSDKInitParams initParams = new ZoomSDKInitParams();
@@ -244,20 +280,20 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     private String getStartBOErrorName(final BOControllerError errorCode) {
-        return switch (errorCode) {
-            case BOControllerError_BO_LIST_IS_UPLOADING -> "BO_LIST_IS_UPLOADING";
-            case BOControllerError_NO_PRIVILEGE -> "NO_PRIVILEGE";
-            case BOControllerError_NO_ONE_HAS_BEEN_ASSIGNED ->
-                    "NO_ONE_HAS_BEEN_ASSIGNED"; // Android only
-            case BOControllerError_NULL_POINTER -> "NULL_POINTER"; // Android only
-            case BOControllerError_UNKNOWN -> "UNKNOWN"; // Android only
-            case BOControllerError_TOKEN_NOT_READY ->
-                    "TOKEN_NOT_READY"; // Android only
-            case BOControllerError_UPLOAD_FAIL -> "UPLOAD_FAIL"; // Android only
-            case BOControllerError_WRONG_CURRENT_STATUS ->
-                    "WRONG_CURRENT_STATUS"; // Android only
-            default -> "UNKNOWN";
-        };
+      return switch (errorCode) {
+        case BOControllerError_BO_LIST_IS_UPLOADING -> "BO_LIST_IS_UPLOADING";
+        case BOControllerError_NO_PRIVILEGE -> "NO_PRIVILEGE";
+        case BOControllerError_NO_ONE_HAS_BEEN_ASSIGNED ->
+                "NO_ONE_HAS_BEEN_ASSIGNED"; // Android only
+        case BOControllerError_NULL_POINTER -> "NULL_POINTER"; // Android only
+        case BOControllerError_UNKNOWN -> "UNKNOWN"; // Android only
+        case BOControllerError_TOKEN_NOT_READY ->
+                "TOKEN_NOT_READY"; // Android only
+        case BOControllerError_UPLOAD_FAIL -> "UPLOAD_FAIL"; // Android only
+        case BOControllerError_WRONG_CURRENT_STATUS ->
+                "WRONG_CURRENT_STATUS"; // Android only
+        default -> "UNKNOWN";
+      };
     }
   };
 
@@ -283,8 +319,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @ReactMethod
   public void startMeeting(
-    final ReadableMap paramMap,
-    final Promise promise
+          final ReadableMap paramMap,
+          final Promise promise
   ) {
     UiThreadUtil.runOnUiThread(new Runnable() {
       @Override
@@ -321,7 +357,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
           if(paramMap.hasKey("noMeetingErrorMessage")) opts.no_meeting_error_message = paramMap.getBoolean("noMeetingErrorMessage");
 
           if(paramMap.hasKey("noButtonLeave") && paramMap.getBoolean("noButtonLeave")) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_BUTTON_LEAVE;
-          if(paramMap.hasKey("noButtonMore") && paramMap.getBoolean("noButtonMore")) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_BUTTON_MORE;
+          if((paramMap.hasKey("noButtonMore") && paramMap.getBoolean("noButtonMore")) || meetingMoreHidden) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_BUTTON_MORE;
           if(paramMap.hasKey("noButtonParticipants") && paramMap.getBoolean("noButtonParticipants")) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_BUTTON_PARTICIPANTS;
           if(paramMap.hasKey("noButtonShare") && paramMap.getBoolean("noButtonShare")) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_BUTTON_SHARE;
           if(paramMap.hasKey("noTextMeetingId") && paramMap.getBoolean("noTextMeetingId")) opts.meeting_views_options = opts.meeting_views_options + MeetingViewsOptions.NO_TEXT_MEETING_ID;
@@ -354,8 +390,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @ReactMethod
   public void joinMeeting(
-    final ReadableMap paramMap,
-    final Promise promise
+          final ReadableMap paramMap,
+          final Promise promise
   ) {
     UiThreadUtil.runOnUiThread(new Runnable() {
       @Override
@@ -377,10 +413,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
           MeetingViewsOptions view = new MeetingViewsOptions();
           if(paramMap.hasKey("noAudio")) opts.no_audio = paramMap.getBoolean("noAudio");
           /**
-              participant_id was removed from android options.
-              There is no propper documentations and it still exists in jave docs...
-              Maybe it was renamed to customer_key or so on. (todo check)
-              Waiting before further changes.
+           participant_id was removed from android options.
+           There is no propper documentations and it still exists in jave docs...
+           Maybe it was renamed to customer_key or so on. (todo check)
+           Waiting before further changes.
            */
 //          if(paramMap.hasKey("participantID")) opts.participant_id = paramMap.getString("participantID");
 
@@ -400,20 +436,22 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
           if(paramMap.hasKey("noUnmuteConfirmDialog")) opts.no_unmute_confirm_dialog = paramMap.getBoolean("noUnmuteConfirmDialog");
           if(paramMap.hasKey("noWebinarRegisterDialog")) opts.no_webinar_register_dialog = paramMap.getBoolean("noWebinarRegisterDialog");
           if(paramMap.hasKey("noChatMsgToast")) opts.no_chat_msg_toast = paramMap.getBoolean("noChatMsgToast");
-
+          if(paramMap.hasKey("noMeetingErrorMessage")) opts.no_meeting_error_message = paramMap.getBoolean("noMeetingErrorMessage");
 
           /** TODO: posible extra options:
-            opts.meeting_views_options = meetingOptions.meeting_views_options;
-            opts.invite_options = meetingOptions.invite_options;
-            opts.customer_key = meetingOptions.customer_key;
-          */
+           opts.meeting_views_options = meetingOptions.meeting_views_options;
+           opts.invite_options = meetingOptions.invite_options;
+           opts.customer_key = meetingOptions.customer_key;
+           */
 
           if(paramMap.hasKey("noButtonLeave") && paramMap.getBoolean("noButtonLeave")) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_LEAVE;
-          if(paramMap.hasKey("noButtonMore") && paramMap.getBoolean("noButtonMore")) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_MORE;
+          if((paramMap.hasKey("noButtonMore") && paramMap.getBoolean("noButtonMore")) || meetingMoreHidden) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_MORE;
           if(paramMap.hasKey("noButtonParticipants") && paramMap.getBoolean("noButtonParticipants")) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_PARTICIPANTS;
           if(paramMap.hasKey("noButtonShare") && paramMap.getBoolean("noButtonShare")) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_SHARE;
           if(paramMap.hasKey("noTextMeetingId") && paramMap.getBoolean("noTextMeetingId")) opts.meeting_views_options = opts.meeting_views_options + view.NO_TEXT_MEETING_ID;
           if(paramMap.hasKey("noTextPassword") && paramMap.getBoolean("noTextPassword")) opts.meeting_views_options = opts.meeting_views_options + view.NO_TEXT_PASSWORD;
+          if(meetingVideoHidden) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_VIDEO;
+          if(meetingAudioHidden) opts.meeting_views_options = opts.meeting_views_options + view.NO_BUTTON_AUDIO;
 
           JoinMeetingParam4WithoutLogin params = new JoinMeetingParam4WithoutLogin();
           params.displayName = paramMap.getString("userName");
@@ -710,7 +748,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
           if (customizedMeetingUIEnabled) {
             final MediaProjectionManager manager =
-              (MediaProjectionManager) reactContext.getCurrentActivity().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+                    (MediaProjectionManager) reactContext.getCurrentActivity().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
             if (manager != null) {
               Intent intent = manager.createScreenCaptureIntent();
@@ -869,11 +907,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @ReactMethod
   public void addListener(String eventName) {
-      // Keep: Required for RN built in Event Emitter Calls.
+    // Keep: Required for RN built in Event Emitter Calls.
   }
   @ReactMethod
   public void removeListeners(Integer count) {
-      // Keep: Required for RN built in Event Emitter Calls.
+    // Keep: Required for RN built in Event Emitter Calls.
   }
 
   @ReactMethod
@@ -919,22 +957,22 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
 
     uiManager.addUIBlock(new UIBlock() {
-        @Override
-        public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-          synchronized (videoViews) {
-            Log.i(TAG, "updateVideoView");
-            Iterator<Integer> iterator = videoViews.iterator();
-            while (iterator.hasNext()) {
-              final int tagId = iterator.next();
-              try {
-                final RNZoomUsVideoView view = (RNZoomUsVideoView) nativeViewHierarchyManager.resolveView(tagId);
-                if (view != null) view.update();
-              } catch (Exception ex) {
-                Log.e(TAG, ex.getMessage());
-              }
+      @Override
+      public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+        synchronized (videoViews) {
+          Log.i(TAG, "updateVideoView");
+          Iterator<Integer> iterator = videoViews.iterator();
+          while (iterator.hasNext()) {
+            final int tagId = iterator.next();
+            try {
+              final RNZoomUsVideoView view = (RNZoomUsVideoView) nativeViewHierarchyManager.resolveView(tagId);
+              if (view != null) view.update();
+            } catch (Exception ex) {
+              Log.e(TAG, ex.getMessage());
             }
           }
         }
+      }
     });
   }
 
@@ -946,8 +984,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     if(errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
       String errorFormatted = String.format("Error= %d (%s)", errorCode, errorInfo);
       initializePromise.reject(
-        "ERR_ZOOM_INITIALIZATION",
-         errorFormatted + ", internalErrorCode=" + internalErrorCode
+              "ERR_ZOOM_INITIALIZATION",
+              errorFormatted + ", internalErrorCode=" + internalErrorCode
       );
       initializePromise = null;
     } else {
@@ -964,7 +1002,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         meetingSettingsHelper.disableClearWebKitCache(disableClearWebKitCache);
         meetingSettingsHelper.disableCopyMeetingUrl(true);
         meetingSettingsHelper.enable720p(true);
-
+        meetingSettingsHelper.enableCloudWhiteboard(!disableCloudWhiteboard);
       }
       if (zoomUIServiceHelper != null) {
         zoomUIServiceHelper.hideMeetingInviteUrl(true);
@@ -1350,7 +1388,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
       if (shareController.isSharingOut()) {
         if (shareController.isSharingScreen()) {
-            shareController.startShareScreenContent();
+          shareController.startShareScreenContent();
         }
       }
     }
@@ -1435,24 +1473,24 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     params.putString("event", event);
 
     reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, params);
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(name, params);
   }
 
   private void sendEvent(String name, String event, InMeetingUserInfo userInfo) {
     if (userInfo != null) {
       WritableMap params = Arguments.createMap();
-          params.putString("event", event);
-          params.putString("userRole", userInfo.getInMeetingUserRole().name());
-          params.putDouble("audioType", userInfo.getAudioStatus().getAudioType());
+      params.putString("event", event);
+      params.putString("userRole", userInfo.getInMeetingUserRole().name());
+      params.putDouble("audioType", userInfo.getAudioStatus().getAudioType());
 
-          params.putBoolean("isTalking", userInfo.getAudioStatus().isTalking());
-          params.putBoolean("isMutedAudio", userInfo.getAudioStatus().isMuted());
-          params.putBoolean("isMutedVideo", !userInfo.getVideoStatus().isSending());
+      params.putBoolean("isTalking", userInfo.getAudioStatus().isTalking());
+      params.putBoolean("isMutedAudio", userInfo.getAudioStatus().isMuted());
+      params.putBoolean("isMutedVideo", !userInfo.getVideoStatus().isSending());
 
-        reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(name, params);
+      reactContext
+              .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+              .emit(name, params);
     }
   }
 
@@ -1493,8 +1531,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     params.putString("status", status.name());
 
     reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, params);
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(name, params);
   }
 
   private void sendEvent(String name, String event, String status) {
@@ -1513,8 +1551,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     params.putDouble("userId", userId);
 
     reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, params);
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(name, params);
   }
 
   private void sendEvent(String name, String event, List<Long> userList) {
@@ -1529,8 +1567,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     params.putArray("userList", users);
 
     reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, params);
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(name, params);
   }
 
   private void sendEvent(String name, String event, MobileRTCSDKError error) {
@@ -1539,8 +1577,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     params.putString("error", error.name());
 
     reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(name, params);
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(name, params);
   }
 
   private String getSharingStatusEventName(final SharingStatus status) {

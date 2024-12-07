@@ -46,6 +46,12 @@ type InitializeSettings = {
   disableShowVideoPreviewWhenJoinMeeting?: boolean;
   disableMinimizeMeeting?: boolean;
   disableClearWebKitCache?: boolean;
+  meetingShareHidden?: boolean;
+  meetingVideoHidden?: boolean;
+  meetingAudioHidden?: boolean;
+  closeCaptionHidden?: boolean;
+  disableCloudWhiteboard?: boolean;
+  meetingMoreHidden?: boolean;
 };
 
 async function initialize(
@@ -65,12 +71,13 @@ async function initialize(
     disableMinimizeMeeting = false,
 
     disableClearWebKitCache = false,
+    ...settings
   }: InitializeSettings = {}
 ): Promise<string> {
   invariant(
     typeof params === "object",
     "ZoomUs.initialize expects object param. Consider to check migration docs. " +
-      "Check Link: https://github.com/mieszko4/react-native-zoom-us/blob/master/docs/UPGRADING.md"
+    "Check Link: https://github.com/mieszko4/react-native-zoom-us/blob/master/docs/UPGRADING.md"
   );
 
   invariant(params.jwtToken, "ZoomUs.initialize requires jwtToken");
@@ -83,6 +90,7 @@ async function initialize(
 
     disableMinimizeMeeting,
     disableClearWebKitCache,
+    ...settings
   };
 
   const mappedParams = {
@@ -278,12 +286,12 @@ async function getAllChatMessageID() {
   return RNZoomUs.getAllChatMessageID();
 }
 
-async function sendChatMsg({content}: {content: string}) {
+async function sendChatMsg({ content }: { content: string }) {
   return RNZoomUs.sendChatMsg(content);
 }
 
 
-async function isHostUser({userId}: {userId: number}) {
+async function isHostUser({ userId }: { userId: number }) {
   return RNZoomUs.isHostUser(userId);
 }
 
