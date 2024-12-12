@@ -8,6 +8,7 @@
 
 #import "GlobalData.h"
 #import "CustomMeetingViewController.h"
+#import <AVFoundation/AVFoundation.h>
 @implementation CustomMeetingViewController
 
 
@@ -26,8 +27,8 @@
     [self.view addSubview:self.thumbView];
     [self showVideoView];
     [self updateVideoOrShare];
-//    [self setMuteMyCamera: YES];
-//    [self setMuteMyAudio: YES];
+    //    [self setMuteMyCamera: YES];
+    //    [self setMuteMyAudio: YES];
     self.thumbView.hidden = YES;
 }
 
@@ -51,7 +52,7 @@
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     [self updateVideoOrShare];
-//    BOOL landscape = UIInterfaceOrientationIsLandscape(orientation);
+    //    BOOL landscape = UIInterfaceOrientationIsLandscape(orientation);
 }
 
 - (void)updateVideoOrShare
@@ -64,64 +65,24 @@
         [self.remoteShareVC updateShareView];
     }
     
-//    [self.thumbView updateThumbViewVideo];
-    
+    //    [self.thumbView updateThumbViewVideo];
+    [self activeLoudspeaker];
     BOOL isWebinarAttendee = [ms isWebinarAttendee];
     BOOL isViewingShare = [ms isViewingShare];
-    
     if (isWebinarAttendee) {
-        self.thumbView.hidden = YES;
-        if (isViewingShare) {
-//            NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
-//            [ms getWebinarAttendeeList];
-//            self.remoteShareVC.activeShareID = globalActiveShareID;
-//            [self.videoVC showActiveVideoWithUserID:globalActiveShareID];
-            [self showRemoteShareView];
-            [self.remoteShareVC updateShareView];
+        if (pinUserId) {
+            [self.videoVC showAttendeeVideoWithUserID:pinUserId];
         } else {
-            [self.videoVC showActiveVideoWithUserID:pinUserId];
-//            if (self.pinUserId) {
-////                [self showVideoView];
-//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
-//            } else {
-//                NSUInteger savedUserID = [[GlobalData sharedInstance] userID];
-//                self.pinUserId = savedUserID;
-////                NSUInteger activeUserID = [ms activeUserID];
-////                [self showVideoView];
-//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
-////                [self.videoVC showActiveVideoWithUserID:activeUserID];
-//            }
+            NSUInteger activeUserID = [[[MobileRTC sharedRTC] getMeetingService] activeUserID];
+            [self.videoVC showAttendeeVideoWithUserID:activeUserID];
         }
     } else {
-        if (isViewingShare) {
-//            NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
-//            if (!self.remoteShareVC.activeShareID) {
-//                self.remoteShareVC.activeShareID = globalActiveShareID;
-//            }
-//            [self.videoVC showActiveVideoWithUserID:globalActiveShareID];
-            [self showRemoteShareView];
-            [self.remoteShareVC updateShareView];
+        if (pinUserId) {
+            [self.videoVC showAttendeeVideoWithUserID:pinUserId];
         } else {
-            if ([ms myselfUserID] != pinUserId) {
-                [self showVideoView];
-                [self.videoVC showActiveVideoWithUserID:pinUserId];
-            } else {
-                
-            }
-//            if (self.pinUserId) {
-////                [self showVideoView];
-//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
-//            } else {
-//                NSUInteger savedUserID = [[GlobalData sharedInstance] userID];
-//                self.pinUserId = savedUserID;
-////                NSUInteger activeUserID = [ms activeUserID];
-////                [self showVideoView];
-//                [self.videoVC showActiveVideoWithUserID:self.pinUserId];
-////                [self.videoVC showActiveVideoWithUserID:activeUserID];
-//            }
+            [self.videoVC showAttendeeVideoWithUserID:[[[MobileRTC sharedRTC] getMeetingService] myselfUserID]];
         }
     }
-    
     CGRect frame = self.videoVC.view.frame;
     frame.origin.y = 0;
     self.videoVC.view.frame = frame;
@@ -136,7 +97,39 @@
         [self showVideoView];
     }
 }
-
+- (void) activeLoudspeaker {
+    dispatch_async(dispatch_get_main_queue(), ^{
+//        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//        AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
+        
+        BOOL headphoneConnected = YES;
+//        for (AVAudioSessionPortDescription *port in currentRoute.outputs) {
+//            if ([port.portType isEqualToString:AVAudioSessionPortHeadphones]) {
+//                headphoneConnected = YES;
+//                break;
+//            }
+//        }
+        if([UIDevice currentDevice].systemVersion.floatValue >= 6.0) {
+            if (headphoneConnected) {
+                BOOL ok = [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+                if (ok) {
+                }
+            } else {
+                BOOL ok = [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+                if (ok) {
+                }
+            }
+        } else {
+            UInt32 route;
+            if (headphoneConnected) {
+                route = kAudioSessionOverrideAudioRoute_Speaker;
+            } else {
+                route = kAudioSessionOverrideAudioRoute_None;
+            }
+            AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute, sizeof(route), &route);
+        }
+    });
+}
 - (ThumbView *)thumbView
 {
     if (!_thumbView)
@@ -146,7 +139,7 @@
         _thumbView.pinOnClickBlock = ^(NSInteger pinUserID) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             [[GlobalData sharedInstance] setUserID:pinUserID];
-//            strongSelf.pinUserId = pinUserID;
+            //            strongSelf.pinUserId = pinUserID;
             [strongSelf.videoVC showAttendeeVideoWithUserID:pinUserID];
         };
     }
@@ -213,7 +206,7 @@
     {
         _baseView = [[UIView alloc] initWithFrame:self.view.bounds];
         _baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
+        
     }
     return _baseView;
 }

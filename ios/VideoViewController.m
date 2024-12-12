@@ -58,9 +58,9 @@
     CGRect frame = self.view.frame;
     frame.origin.y = 0;
     self.view.frame = frame;
-    CGRect videoViewFrame = self.videoView.frame;
-    videoViewFrame.origin.y = 0;
-    self.videoView.frame = videoViewFrame;
+    CGRect videoView = self.videoView.frame;
+    videoView.origin.y = 0;
+    self.videoView.frame = videoView;
 }
 
 - (void)showActiveVideoWithUserID:(NSUInteger)userID
@@ -69,19 +69,12 @@
     
     [self.activeVideoView stopAttendeeVideo];
     
-//    if (!self.activeVideoView.superview) {
-//        [self.view addSubview:self.activeVideoView];
-//    }
-//    self.activeVideoView.hidden = NO;
-//    [self.view bringSubviewToFront:self.activeVideoView];
-//    [self.activeVideoView showAttendeeVideoWithUserID:userID];
-    
-    if (!self.videoView.superview) {
-        [self.view addSubview:self.videoView];
+    if (!self.activeVideoView.superview) {
+        [self.view addSubview:self.activeVideoView];
     }
-    self.videoView.hidden = NO;
-    [self.view bringSubviewToFront:self.videoView];
-    [self.videoView showAttendeeVideoWithUserID:userID];
+    self.activeVideoView.hidden = NO;
+    [self.view bringSubviewToFront:self.activeVideoView];
+    [self.activeVideoView showAttendeeVideoWithUserID:userID];
     
     CGRect frame = self.view.frame;
     frame.origin.y = 0;

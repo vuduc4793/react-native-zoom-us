@@ -710,13 +710,11 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
-    if (!isWebinarMeeting) {
         if(isViewingShare) {
             [[GlobalData sharedInstance] setGlobalActiveShareID:[ms activeShareUserID]];
         } else {
             [[GlobalData sharedInstance] setUserID:[ms activeUserID]];
         }
-    }
 }
 - (void)onMeetingStateChange:(MobileRTCMeetingState)state {
     NSLog(@"onMeetingStatusChanged, meetingState=%@", @(state));
@@ -873,14 +871,10 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
     NSLog(@"MobileRTC onSinkMeetingVideoStatusChange=%@",@(userID));
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinar = [ms isWebinarMeeting];
-    if (isWebinar) {
-        BOOL isViewingShare = [ms isViewingShare];
-        isViewingShare ?
-        [[GlobalData sharedInstance] setGlobalActiveShareID:userID] :
-        [[GlobalData sharedInstance] setUserID:userID];
-    } else {
-        [[GlobalData sharedInstance] setUserID:userID];
-    }
+    BOOL isViewingShare = [ms isViewingShare];
+    isViewingShare ?
+    [[GlobalData sharedInstance] setGlobalActiveShareID:userID] :
+    [[GlobalData sharedInstance] setUserID:userID];
 }
 
 - (void)onMyVideoStateChange {
