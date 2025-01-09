@@ -249,7 +249,7 @@ RCT_EXPORT_METHOD(
             
             MobileRTCMeetError joinMeetingResult = [ms joinMeetingWithJoinParam:joinParam];
             
-            NSLog(@"MobileRTC onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
+            NSLog(@"RNZoomUs onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
             [ms connectMyAudio: YES];
             
         }
@@ -662,7 +662,7 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
             break;
         case MobileRTCMeetingState_InMeeting:{
             result = @"MEETING_STATUS_INMEETING";
-            [self getCurrentActiveId];
+//            [self getCurrentActiveId];
             break;
         }
         case MobileRTCMeetingState_Disconnecting:
@@ -803,6 +803,10 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 
 #pragma mark - Screen share functionality
 
+- (void)onSinkShareSizeChange:(NSUInteger)userID {
+    NSLog(@"RNZoomUs onSinkShareSizeChange==%@",@(userID));
+}
+
 - (void)onSinkMeetingActiveShare:(NSUInteger)userId {
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (ms) {
@@ -839,8 +843,12 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 #pragma mark - MobileRTCVideoServiceDelegate
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID videoStatus:(MobileRTC_VideoStatus)videoStatus {
+    NSLog(@"RNZoomUs onSinkMeetingVideoStatusChange=%@, videoStatus=%@",@(userID), @(videoStatus));
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     
+    if (videoStatus == MobileRTC_VideoStatus_Video_ON) {
+            [[GlobalData sharedInstance] setUserID:userID];
+    }
     if ([ms isMyself:userID]) {
         [self sendEventWithName:@"MeetingEvent" event:@"myVideoStatusChanged" userInfo:[ms userInfoByID:[ms myselfUserID]]];
     }
@@ -848,7 +856,7 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 
 -  (void)onSinkMeetingVideoRequestUnmuteByHost:(MobileRTCSDKError (^_Nonnull)(BOOL Accept))completion {
     [self sendEventWithName:@"MeetingEvent" event:@"askUnMuteVideo"];
-    NSLog(@"MobileRTC onSinkMeetingVideoRequestUnmuteByHost");
+    NSLog(@"RNZoomUs onSinkMeetingVideoRequestUnmuteByHost");
     if (completion)
     {
         MobileRTCSDKError err = completion(YES);
@@ -863,36 +871,40 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 }
 
 - (void)onSinkMeetingActiveVideo:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingActiveVideo =>%@", @(userID));
-    [[GlobalData sharedInstance] setUserID:userID];
+    NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
+//    [[GlobalData sharedInstance] setUserID:userID];
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    BOOL isViewingShare = [ms isViewingShare];
+    BOOL isWebinarMeeting = [ms isWebinarMeeting];
+    if (isWebinarMeeting) [[GlobalData sharedInstance] setGlobalWebinarFirstActiveVideoID:userID];
+    if (isViewingShare) [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
+    NSLog(@"RNZoomUs RNZoomUs isViewingShare =>%@", @(isViewingShare));
 }
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingVideoStatusChange=%@",@(userID));
+    NSLog(@"RNZoomUs onSinkMeetingVideoStatusChange=%@",@(userID));
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinar = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
-    isViewingShare ?
-    [[GlobalData sharedInstance] setGlobalActiveShareID:userID] :
-    [[GlobalData sharedInstance] setUserID:userID];
+//    if (isViewingShare) [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
 }
 
 - (void)onMyVideoStateChange {
-    NSLog(@"MobileRTC onMyVideoStateChange");
+    NSLog(@"RNZoomUs onMyVideoStateChange");
 }
 
 - (void)onSpotlightVideoChange:(BOOL)on {}
 
 - (void)onSinkMeetingPreviewStopped {
-    NSLog(@"MobileRTC onSinkMeetingPreviewStopped");
+    NSLog(@"RNZoomUs onSinkMeetingPreviewStopped");
 }
 
 - (void)onSinkMeetingActiveVideoForDeck:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingActiveVideo =>%@", @(userID));
+    NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
 }
 
 - (void)onSinkMeetingVideoQualityChanged:(MobileRTCNetworkQuality)qality userID:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingVideoQualityChanged: %zd userID:%zd",qality,userID);
+    NSLog(@"RNZoomUs onSinkMeetingVideoQualityChanged: %zd userID:%zd",qality,userID);
 }
 
 - (void)onSinkMeetingShowMinimizeMeetingOrBackZoomUI:(MobileRTCMinimizeMeetingState)state {
@@ -986,14 +998,14 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 }
 
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingUserLeft==%@", @(userID));
+    NSLog(@"RNZoomUs onSinkMeetingUserLeft==%@", @(userID));
     [self sendEventWithName:@"MeetingEvent" params:@{
         @"event": @"userLeave",
         @"userList": @[@(userID)]
     }];
 }
 - (void)onSinkMeetingUserJoin:(NSUInteger)userID {
-    NSLog(@"MobileRTC onSinkMeetingUserJoin==%@", @(userID));
+    NSLog(@"RNZoomUs onSinkMeetingUserJoin==%@", @(userID));
     
     [self sendEventWithName:@"MeetingEvent" params:@{
         @"event": @"userJoin",

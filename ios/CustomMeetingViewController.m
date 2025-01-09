@@ -66,11 +66,15 @@
     }
     
     //    [self.thumbView updateThumbViewVideo];
-    [self activeLoudspeaker];
+//    [self activeLoudspeaker];
     BOOL isWebinarAttendee = [ms isWebinarAttendee];
     BOOL isViewingShare = [ms isViewingShare];
     if (isWebinarAttendee) {
-        if (pinUserId) {
+//        if (isViewingShare) {
+//            [self.remoteShareVC updateShareView];
+//        } else
+            
+            if (pinUserId) {
             [self.videoVC showAttendeeVideoWithUserID:pinUserId];
         } else {
             NSUInteger activeUserID = [[[MobileRTC sharedRTC] getMeetingService] activeUserID];
@@ -89,6 +93,7 @@
 }
 
 - (void) showCurrentShareVideo {
+    
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isViewingShare = [ms isViewingShare];
     if (isViewingShare == 1) {

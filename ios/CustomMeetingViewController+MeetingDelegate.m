@@ -107,12 +107,12 @@
 //        self.remoteShareVC.activeShareID = userID;
         [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
         [self showRemoteShareView];
-        
         [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
     }
     else if (status == MobileRTCSharingStatus_Self_Send_End ||
              status == MobileRTCSharingStatus_Other_Share_End)
     {
+        [self showVideoView];
         [self updateVideoOrShare];
     }
 }

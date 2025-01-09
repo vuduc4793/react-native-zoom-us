@@ -4,5 +4,6 @@
 @property (nonatomic, assign) NSUInteger userID;
 @property (nonatomic, assign) NSUInteger globalActiveShareID;
 @property (nonatomic, assign) NSUUID *globalCallingUUID;
+@property (nonatomic, assign) NSUInteger globalWebinarFirstActiveVideoID;
 
 @end
