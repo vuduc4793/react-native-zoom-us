@@ -3,7 +3,7 @@
 //  react-native-zoom-us
 //
 //  Created by John Vu on 2024/05/11.
-//  
+//
 //
 
 #import "VideoViewController.h"
@@ -108,11 +108,20 @@
 
 - (MobileRTCActiveVideoView *)activeVideoView
 {
+    UIWindowScene *windowScene = (UIWindowScene *)[UIApplication.sharedApplication.connectedScenes anyObject];
+    UIInterfaceOrientation orientation = windowScene.interfaceOrientation;
+    BOOL isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+    CGFloat defaultWidth = self.view.bounds.size.width;
+    CGFloat videoAspectRatio = 1.77777777778;
+    CGFloat desiredHeight = isLandscape ? self.view.bounds.size.height : defaultWidth/videoAspectRatio;
     if (!_activeVideoView)
     {
-        _activeVideoView = [[MobileRTCActiveVideoView alloc] initWithFrame:self.view.bounds];
+        CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, desiredHeight);
+        _activeVideoView = [[MobileRTCActiveVideoView alloc] initWithFrame:frame];
         [_videoView setVideoAspect:MobileRTCVideoAspect_PanAndScan];
     }
+        CGRect currentFrame = CGRectMake(0, 0, self.view.bounds.size.width, desiredHeight);
+        _activeVideoView.frame =currentFrame;
     return _activeVideoView;
 }
 

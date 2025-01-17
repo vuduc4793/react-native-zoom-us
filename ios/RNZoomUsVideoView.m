@@ -51,9 +51,9 @@ CXCallController *callController;
     AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
     
     if (reason == AVAudioSessionRouteChangeReasonNewDeviceAvailable) {
-        NSLog(@"Headphones connected");
+        NSLog(@"RNZoomUsVideoView Headphones connected");
     } else if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
-        NSLog(@"Headphones disconnected");
+        NSLog(@"RNZoomUsVideoView Headphones disconnected");
     }
     [self updateAudioOutput];
 }
@@ -63,7 +63,7 @@ CXCallController *callController;
 
     [audioSession setActive:YES error:&error];
     if (error) {
-        NSLog(@"Error activating audio session: %@", error.localizedDescription);
+        NSLog(@"RNZoomUsVideoView Error activating audio session: %@", error.localizedDescription);
         return;
     }
 
@@ -83,9 +83,7 @@ CXCallController *callController;
         }
     }
 
-    if (isHeadphonesConnected) {
-        
-    } else {
+    if (!isHeadphonesConnected) {
         [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
         if (error) {
             NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
@@ -258,24 +256,28 @@ CXCallController *callController;
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID videoStatus:(MobileRTC_VideoStatus)videoStatus{
     NSLog(@"RNZoomUsVideoView onSinkMeetingVideoStatusChange=%@, videoStatus=%@",@(userID), @(videoStatus));
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    BOOL isHostUser = [ms isHostUser:userID];
+    BOOL isWebinarMeeting = [ms isWebinarMeeting];
     if (videoStatus == MobileRTC_VideoStatus_Video_ON) {
+        
         //        [[GlobalData sharedInstance] setUserID:userID];
+        if (isWebinarMeeting && !isHostUser) {
+            return;
+        }
         if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
         {
             [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:userID];
         }
     }
     if (videoStatus == MobileRTC_VideoStatus_Video_OFF) {
-        //        [self getCurrentActiveId];
-        MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-        BOOL isWebinarMeeting = [ms isWebinarMeeting];
-        if (isWebinarMeeting) {
-            NSUInteger globalWebinarFirstActiveVideoID = [[GlobalData sharedInstance] globalWebinarFirstActiveVideoID];
-            if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
-            {
-                [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:globalWebinarFirstActiveVideoID];
-            }
-        }
+//        if (isWebinarMeeting) {
+//            NSUInteger globalWebinarFirstActiveVideoID = [[GlobalData sharedInstance] globalWebinarFirstActiveVideoID];
+//            if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
+//            {
+//                [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:globalWebinarFirstActiveVideoID];
+//            }
+//        }
     }
     if (self.onSinkMeetingVideoStatusChange) {
         self.onSinkMeetingVideoStatusChange(@{
