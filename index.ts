@@ -101,6 +101,10 @@ async function initialize(
   return RNZoomUs.initialize(mappedParams, mappedSettings);
 }
 
+function cleanup(): Promise<string> {
+  return RNZoomUs.cleanup();
+}
+
 function isInitialized(): Promise<boolean> {
   return RNZoomUs.isInitialized();
 }
@@ -302,6 +306,7 @@ export { default as ZoomUsVideoView } from "./video-view";
 export * from "./src/events";
 export default {
   initialize,
+  cleanup,
   joinMeeting,
   joinMeetingWithPassword,
   startMeeting,

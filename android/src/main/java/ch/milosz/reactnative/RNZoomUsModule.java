@@ -262,6 +262,27 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     });
   }
 
+  @ReactMethod
+  public void cleanup(final Promise promise) {
+    UiThreadUtil.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          ZoomSDK zoomSDK = ZoomSDK.getInstance();
+          if (!zoomSDK.isInitialized()) {
+            promise.resolve("Zoom SDK is not initialized");
+            return;
+          }
+          zoomSDK.uninitialize();
+          promise.resolve("Already cleanup Zoom SDK successfully.");
+        } catch (Exception ex) {
+          promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
+          initializePromise = null;
+        }
+      }
+    });
+  }
+
   private final IBOAdminEvent iboAdminEvent = new IBOAdminEvent() {
     @Override
     public void onHelpRequestReceived(String strUserID) {
@@ -1163,6 +1184,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @Override
   public void onMyAudioSourceTypeChanged(int type) {
+    ZoomSDK zoomSDK = ZoomSDK.getInstance();
+    if(!zoomSDK.isInitialized()) {
+      return;
+    }
     final InMeetingUserInfo userInfo = ZoomSDK.getInstance().getInMeetingService().getMyUserInfo();
 
     sendEvent("MeetingEvent", "myAudioSourceTypeChanged", userInfo);
@@ -1170,6 +1195,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @Override
   public void onUserAudioStatusChanged(long userId, AudioStatus audioStatus) {
+    ZoomSDK zoomSDK = ZoomSDK.getInstance();
+    if(!zoomSDK.isInitialized()) {
+      return;
+    }
     InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
 
     if (userId == inMeetingService.getMyUserID()) {
@@ -1181,6 +1210,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
   @Override
   public void onUserVideoStatusChanged(long userId, VideoStatus videoStatus) {
+    ZoomSDK zoomSDK = ZoomSDK.getInstance();
+    if(!zoomSDK.isInitialized()) {
+      return;
+    }
     InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
 
     if (userId == inMeetingService.getMyUserID()) {

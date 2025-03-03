@@ -166,6 +166,39 @@ RCT_EXPORT_METHOD(
     }
 }
 
+
+RCT_EXPORT_METHOD(
+                  cleanup: (RCTPromiseResolveBlock)resolve
+                  withReject: (RCTPromiseRejectBlock)reject
+                  )
+{
+    if (!isInitialized) {
+        resolve(@"Already initialize Zoom SDK successfully.");
+        return;
+    }
+    
+    @try {
+        isInitialized = NO;
+        shouldAutoConnectAudio = NO;
+        enableCustomMeeting = NO;
+        disableShowVideoPreviewWhenJoinMeeting = YES;
+        disableMinimizeMeeting = NO;
+        disableClearWebKitCache = NO;
+        initializePromiseResolve = nil;
+        initializePromiseReject = nil;
+        meetingPromiseResolve = nil;
+        meetingPromiseReject = nil;
+        screenShareExtension = nil;
+        jwtToken = nil;
+        providerDelegate = nil;
+        callController = nil;
+        [[MobileRTC sharedRTC] cleanup];
+        resolve(@"Already cleanup Zoom SDK successfully.");
+    } @catch (NSError *ex) {
+        reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing cleanup", ex);
+    }
+}
+
 - (void)setMeetingSettings {
     MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
     if (zoomSettings != nil) {
