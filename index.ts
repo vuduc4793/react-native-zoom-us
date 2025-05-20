@@ -324,6 +324,10 @@ async function isHostUser({ userId }: { userId: number }) {
   return RNZoomUs.isHostUser(userId);
 }
 
+async function getMyselfUserID(): Promise<number> {
+  return RNZoomUs.getMyselfUserID();
+}
+
 
 
 export { default as ZoomUsVideoView } from "./video-view";
@@ -359,5 +363,6 @@ export default {
   sendChatMsg,
   isHostUser,
   deleteChatMessage,
+  getMyselfUserID,
   ...events,
 };

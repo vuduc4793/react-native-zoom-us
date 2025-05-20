@@ -26,8 +26,8 @@
     [self.view addSubview:self.thumbView];
     //    self.thumbView.hidden = NO;
     //    [self.thumbView showThumbView];
-//    [self.view addSubview:self.thumbPreviewView];
-//    [self.thumbPreviewView startPreviewWithMyself];
+    [self.view addSubview:self.thumbPreviewView];
+    [self.thumbPreviewView startPreviewWithMyself];
     [self showVideoView];
     [self updateVideoOrShare];
 //    [self setMuteMyCamera: YES];
@@ -77,6 +77,7 @@
     BOOL isWebinarAttendee = [ms isWebinarAttendee];
     BOOL isViewingShare = [ms isViewingShare];
     if (isWebinarAttendee) {
+        self.thumbPreviewView.hidden = YES;
             if (pinUserId) {
                 [self.videoVC showActiveVideoWithUserID:pinUserId];
         } else {

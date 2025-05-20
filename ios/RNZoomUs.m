@@ -617,9 +617,9 @@ RCT_EXPORT_METHOD(sendChatMsg: (NSDictionary *)msgData resolver:(RCTPromiseResol
             bool ret = [ms sendChatMsg:newChat];
             NSLog(@"sendCommentsChatMsg==>%@", @(ret));
             if (messageToHost.length > 0 && hostId != 0) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
                     [ms deleteChatMessage:previousChatId];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
                         MobileRTCMeetingChat *newReplaceChat = [[[[builder setContent:messageToHost] setReceiver:hostId] setMessageType:MobileRTCChatMessageType_To_Individual] build];
                         [ms sendChatMsg:newReplaceChat];});
                 });
@@ -655,6 +655,22 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
             
             BOOL requestResult = [ms isHostUser:userId];
         resolve(@(requestResult));
+    } @catch (NSError *ex) {
+        reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing isHostUser", ex);
+    }
+}
+
+RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService] ;
+        
+            if (!ms) {
+                NSLog(@"no object");
+                return;
+            }
+            
+        NSUInteger myselfUserID = [ms myselfUserID];
+        resolve(@(myselfUserID));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing isHostUser", ex);
     }
@@ -1023,6 +1039,7 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
 }
 
 - (void)onBOOptionChanged:(MobileRTCBOOption *_Nonnull)newOption {}
+
 
 
 - (void)onHostVideoOrderUpdated:(NSArray <NSNumber *>* _Nullable)orderArr;

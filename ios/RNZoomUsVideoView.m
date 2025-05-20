@@ -921,9 +921,9 @@ CXCallController *callController;
 - (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *)meetingParam{
     NSLog(@"RNZoomUsVideoView onMeetingParameterNotification");
 }
-- (void)onMeetingError:(MobileRTCMeetError)error message:(NSString *)message{
-    NSLog(@"RNZoomUsVideoView onMeetingError");
-}
+//- (void)onMeetingError:(MobileRTCMeetError)error message:(NSString *)message{
+//    NSLog(@"RNZoomUsVideoView onMeetingError");
+//}
 - (void)onMobileRTCLoginResult:(MobileRTCLoginFailReason)resultValue{
     NSLog(@"RNZoomUsVideoView onMobileRTCLoginResult");
 }
@@ -1220,8 +1220,8 @@ CXCallController *callController;
     if (!ms) return;
     [ms connectMyAudio: YES];
     [zoomSettings setAutoConnectInternetAudio:YES];
-    //    [ms muteMyAudio: YES];
-    //    [ms muteMyVideo: YES];
+//    [ms muteMyAudio: YES];
+//    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 

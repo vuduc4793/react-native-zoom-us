@@ -601,15 +601,21 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             return;
           }
 
-          final List<Long> userList = zoomSDK.getInMeetingService().getInMeetingUserList();
 
-          for (final Long userId : userList) {
-            rnUserList.pushString(userId.toString());
+          List<?> userListRaw = zoomSDK.getInMeetingService().getInMeetingUserList();
+          if (userListRaw != null) {
+            for (Object userIdObj : userListRaw) {
+              if (userIdObj instanceof Long) {
+                rnUserList.pushString(String.valueOf(userIdObj));
+              } else {
+                rnUserList.pushString(userIdObj.toString());
+              }
+            }
           }
 
           promise.resolve(rnUserList);
         } catch (Exception ex) {
-          promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
+          promise.reject("ERR_UNEXPECTED_EXCEPTION getInMeetingUserIdList", ex);
         }
       }
     });
@@ -994,11 +1000,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             Log.d(TAG, "run: " + (hostId != 0));
             if (!messageToHost.isEmpty() && hostId != 0) {
               inMeetingChatController.deleteChatMessage(previousChatId);
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               chatMessageBuilder.setContent(messageToHost);
               chatMessageBuilder.setReceiver(hostId);
               chatMessageBuilder.setMessageType(ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual);
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
             }
           }
@@ -1042,6 +1048,29 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             promise.resolve(inMeetingService.isHostUser(userId));
           }
           promise.resolve(false);
+        } catch (Exception ex) {
+          promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
+        }
+      }
+    });
+  }
+  @ReactMethod
+  public void getMyselfUserID(final Promise promise) {
+    UiThreadUtil.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
+          if (inMeetingService != null) {
+            long userIdLong = inMeetingService.getMyUserID();
+            if (userIdLong >= Integer.MIN_VALUE && userIdLong <= Integer.MAX_VALUE) {
+              int userIdInt = (int) userIdLong;
+              promise.resolve(userIdInt);
+            } else {
+              promise.reject("ERR_USER_ID_OVERFLOW", "User ID is too large to convert to int.");
+            }
+          }
+          promise.resolve(null);
         } catch (Exception ex) {
           promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
         }
