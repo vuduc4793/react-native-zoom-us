@@ -1,7 +1,10 @@
 package ch.milosz.reactnative;
 
 import static us.zoom.sdk.ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_All;
+import static us.zoom.sdk.ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
@@ -68,6 +71,7 @@ import us.zoom.sdk.MeetingSettingsHelper;
 import us.zoom.sdk.ReturnToMainSessionHandler;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomError;
+import us.zoom.sdk.ZoomSDKChatMessageType;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 import us.zoom.sdk.ZoomSDKInitParams;
 import us.zoom.sdk.FreeMeetingNeedUpgradeType;
@@ -936,18 +940,89 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
   }
 
   @ReactMethod
-  public void sendChatMsg(final String content, final Promise promise) {
+  public void sendChatMsg(final ReadableMap msgData, final Promise promise) {
     UiThreadUtil.runOnUiThread(new Runnable() {
       @Override
       public void run() {
         try {
-          InMeetingChatController inMeetingChatController = ZoomSDK.getInstance().getInMeetingService().getInMeetingChatController();
+          ZoomSDK zoomSDK = ZoomSDK.getInstance();
+          if(!zoomSDK.isInitialized()) {
+            return;
+          }
+          InMeetingChatController inMeetingChatController = zoomSDK.getInMeetingService().getInMeetingChatController();
           if (inMeetingChatController != null) {
             ChatMessageBuilder chatMessageBuilder = new ChatMessageBuilder();
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            String content = msgData.getString("content");
+            int receiverId = msgData.getInt("receiverId");
+            int chatTypeValue = msgData.getInt("chatMessageType");
+            int hostId = msgData.getType("hostId").name().equals("String") ? Integer.parseInt(msgData.getString("hostId")) : msgData.getInt("hostId");
+            String messageToHost = msgData.getString("messageToHost");
+            String previousChatId = msgData.getString("previousChatId");
+            ZoomSDKChatMessageType chatMessageType;
+            switch (chatTypeValue) {
+              case 0:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_None;
+                break;
+              case 1:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_All;
+                break;
+              case 2:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_All_Panelist;
+                break;
+              case 3:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual_Panelist;
+                break;
+              case 4:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual;
+                break;
+              case 5:
+                chatMessageType = ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_WaitingRoomUsers;
+                break;
+              default:
+                promise.reject("ERR_INVALID_CHAT_TYPE", "Invalid chat message type: " + chatTypeValue);
+                return;
+            }
             chatMessageBuilder.setContent(content);
-            chatMessageBuilder.setMessageType(ZoomSDKChatMessageType_To_All);
+            chatMessageBuilder.setReceiver(receiverId);
+            chatMessageBuilder.setMessageType(chatMessageType);
             InMeetingChatMessage inMeetingChatMessage = chatMessageBuilder.build();
             inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
+            Log.d(TAG, "run: " + inMeetingChatMessage);
+            Log.d(TAG, "run: " + !messageToHost.isEmpty());
+            Log.d(TAG, "run: " + (hostId != 0));
+            if (!messageToHost.isEmpty() && hostId != 0) {
+              inMeetingChatController.deleteChatMessage(previousChatId);
+              Thread.sleep(1000);
+              chatMessageBuilder.setContent(messageToHost);
+              chatMessageBuilder.setReceiver(hostId);
+              chatMessageBuilder.setMessageType(ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual);
+              Thread.sleep(1000);
+              inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
+            }
+          }
+          promise.resolve(true);
+        } catch (Exception ex) {
+          promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
+        }
+      }
+    });
+  }
+  @ReactMethod
+  public void deleteChatMessage(final String msgId, final Promise promise) {
+    UiThreadUtil.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          ZoomSDK zoomSDK = ZoomSDK.getInstance();
+          if(!zoomSDK.isInitialized()) {
+            promise.resolve(false);
+            return;
+          }
+          InMeetingChatController inMeetingChatController = zoomSDK.getInMeetingService().getInMeetingChatController();
+          if (inMeetingChatController != null) {
+            inMeetingChatController.deleteChatMessage(msgId);
           }
           promise.resolve(true);
         } catch (Exception ex) {

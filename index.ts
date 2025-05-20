@@ -54,6 +54,28 @@ type InitializeSettings = {
   meetingMoreHidden?: boolean;
 };
 
+export interface ZoomChatInfo {
+  chatId?: string
+  chatMessageType?: number
+  content: string
+  date?: string
+  isChatToAll?: boolean
+  isChatToAllPanelist?: boolean
+  isChatToWaitingroom?: boolean
+  isComment?: boolean
+  isMyself?: boolean
+  isPrivate?: boolean
+  isThread?: boolean
+  receiverId: number
+  receiverName?: string
+  senderId?: string
+  senderName?: string
+  threadID?: string
+  hostId?: number
+  messageToHost?: string
+  previousChatId?: string
+}
+
 async function initialize(
   {
     domain = "zoom.us",
@@ -290,10 +312,13 @@ async function getAllChatMessageID() {
   return RNZoomUs.getAllChatMessageID();
 }
 
-async function sendChatMsg({ content }: { content: string }) {
-  return RNZoomUs.sendChatMsg(content);
+async function sendChatMsg(msgData: ZoomChatInfo) {
+  return RNZoomUs.sendChatMsg(msgData);
 }
 
+async function deleteChatMessage(msgId: string)  {
+  return RNZoomUs.deleteChatMessage(msgId);
+}
 
 async function isHostUser({ userId }: { userId: number }) {
   return RNZoomUs.isHostUser(userId);
@@ -333,5 +358,6 @@ export default {
   getAllChatMessageID,
   sendChatMsg,
   isHostUser,
+  deleteChatMessage,
   ...events,
 };

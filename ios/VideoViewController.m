@@ -75,7 +75,6 @@
     self.activeVideoView.hidden = NO;
     [self.view bringSubviewToFront:self.activeVideoView];
     [self.activeVideoView showAttendeeVideoWithUserID:userID];
-    
     CGRect frame = self.view.frame;
     frame.origin.y = 0;
     self.view.frame = frame;

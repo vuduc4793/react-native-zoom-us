@@ -23,7 +23,7 @@ RCT_EXPORT_MODULE(RNZoomUsVideoView)
     return containerView;
 }
 
-
+// event Props
 RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingUserLeft, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingUserJoin, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMeetingStateChange, RCTBubblingEventBlock);
@@ -37,13 +37,11 @@ RCT_EXPORT_VIEW_PROPERTY(onMeetingPreviewStopped, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onSinkMeetingVideoStatusChange, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onChatMessageNotification, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onChatMsgDeleteNotification, RCTBubblingEventBlock);
-
-
-
-
+// params Props
 RCT_EXPORT_VIEW_PROPERTY(muteMyAudio, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(muteMyCamera, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(fullScreen, BOOL);
+//RCT_EXPORT_VIEW_PROPERTY(layout, NSArray);
 
 RCT_CUSTOM_VIEW_PROPERTY(color, NSString, UIView)
 {

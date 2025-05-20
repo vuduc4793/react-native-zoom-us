@@ -24,11 +24,14 @@
     [self.vcArray addObject:self.videoVC];
     [self.vcArray addObject:self.remoteShareVC];
     [self.view addSubview:self.thumbView];
+    //    self.thumbView.hidden = NO;
+    //    [self.thumbView showThumbView];
+//    [self.view addSubview:self.thumbPreviewView];
+//    [self.thumbPreviewView startPreviewWithMyself];
     [self showVideoView];
     [self updateVideoOrShare];
-    //    [self setMuteMyCamera: YES];
-    //    [self setMuteMyAudio: YES];
-    self.thumbView.hidden = YES;
+//    [self setMuteMyCamera: YES];
+//    [self setMuteMyAudio: YES];
 }
 
 - (void)uninitSubView
@@ -38,6 +41,7 @@
     self.videoVC = nil;
     self.remoteShareVC = nil;
     self.thumbView = nil;
+    self.thumbPreviewView = nil;
 }
 
 - (void)dealloc {
@@ -48,6 +52,8 @@
 {
     [super viewDidLayoutSubviews];
     [self initSubView];
+//    [self.thumbView updateFrame];
+    [self.thumbPreviewView updateLayout];
     [self updateVideoOrShare];
     [self setNeedsUpdateOfHomeIndicatorAutoHidden];
     [self prefersHomeIndicatorAutoHidden];
@@ -67,7 +73,7 @@
         [self.remoteShareVC updateShareView];
     }
     
-    //    [self.thumbView updateThumbViewVideo];
+        [self.thumbView updateThumbViewVideo];
     BOOL isWebinarAttendee = [ms isWebinarAttendee];
     BOOL isViewingShare = [ms isViewingShare];
     if (isWebinarAttendee) {
@@ -215,6 +221,14 @@
 -(void)setMuteMyCamera:(BOOL)isMute{
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     [ms muteMyVideo:isMute];
+}
+
+- (ThumbPreviewView *)thumbPreviewView {
+    if (!_thumbPreviewView) {
+        _thumbPreviewView = [[ThumbPreviewView alloc] init];
+        _thumbPreviewView.backgroundColor = [UIColor redColor];
+    }
+    return _thumbPreviewView;
 }
 
 @end

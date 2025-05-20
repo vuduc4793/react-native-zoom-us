@@ -11,12 +11,14 @@
 #import "RemoteShareViewController.h"
 #import "ThumbViewController.h"
 #import "ThumbView.h"
+#import "ThumbPreviewView.h"
 
 @interface CustomMeetingViewController : UIViewController <MobileRTCMeetingServiceDelegate>
 
 @property (strong, nonatomic) UIView                    * baseView;
 //@property (assign, nonatomic) NSInteger                 pinUserId;
 @property (strong, nonatomic) ThumbView                 * thumbView;
+@property (strong, nonatomic) ThumbPreviewView          * thumbPreviewView;
 
 @property (strong, nonatomic) NSMutableArray                * vcArray;
 @property (strong, nonatomic) VideoViewController           * videoVC;

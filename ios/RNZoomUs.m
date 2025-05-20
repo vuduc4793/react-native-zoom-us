@@ -284,7 +284,7 @@ RCT_EXPORT_METHOD(
             
             NSLog(@"RNZoomUs onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
             [ms connectMyAudio: YES];
-            
+            resolve(@(YES));
         }
     } @catch (NSError *ex) {
         reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing joinMeeting", ex);
@@ -314,8 +314,8 @@ RCT_EXPORT_METHOD(connectAudio: (RCTPromiseResolveBlock)resolve rejecter:(RCTPro
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (!ms) return;
     [ms connectMyAudio: YES];
-    [ms muteMyAudio: YES];
-    [ms muteMyVideo: YES];
+//    [ms muteMyAudio: YES];
+//    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 
@@ -600,14 +600,44 @@ RCT_EXPORT_METHOD(getAllChatMessageID: (RCTPromiseResolveBlock)resolve rejecter:
     }
 }
 
-RCT_EXPORT_METHOD(sendChatMsg: (NSString * _Nullable)content resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(sendChatMsg: (NSDictionary *)msgData resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     @try {
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
         if (ms) {
+            NSNumber *receiverIdNumber = msgData[@"receiverId"];
+            NSInteger receiverId = [receiverIdNumber integerValue];
+            NSString *content = msgData[@"content"];
+            NSNumber *hostIdNumber = msgData[@"hostId"];
+            NSInteger hostId = [hostIdNumber integerValue];
+            NSString *messageToHost = msgData[@"messageToHost"];
+            NSString *previousChatId = msgData[@"previousChatId"];
+            MobileRTCChatMessageType chatMessageType =(MobileRTCChatMessageType)[msgData[@"chatMessageType"] unsignedIntegerValue];
             MobileRTCMeetingChatBuilder *builder = [[MobileRTCMeetingChatBuilder alloc] init];
-            MobileRTCMeetingChat *newChat = [[[[[builder setContent:content] setReceiver:0] setThreadId:@""] setMessageType:MobileRTCChatMessageType_To_All] build];
+            MobileRTCMeetingChat *newChat = [[[[builder setContent:content] setReceiver:receiverId] setMessageType:chatMessageType] build];
             bool ret = [ms sendChatMsg:newChat];
             NSLog(@"sendCommentsChatMsg==>%@", @(ret));
+            if (messageToHost.length > 0 && hostId != 0) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                    [ms deleteChatMessage:previousChatId];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                        MobileRTCMeetingChat *newReplaceChat = [[[[builder setContent:messageToHost] setReceiver:hostId] setMessageType:MobileRTCChatMessageType_To_Individual] build];
+                        [ms sendChatMsg:newReplaceChat];});
+                });
+            }
+        }
+        resolve(@(YES));
+    } @catch (NSError *ex) {
+        reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing sendChatMsg", ex);
+    }
+}
+
+RCT_EXPORT_METHOD(deleteChatMessage: (NSString * _Nullable)msgId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+        if (ms) {
+            bool isCanDelete =[ms isChatMessageCanBeDeleted:msgId];
+            bool ret = [ms deleteChatMessage:msgId];
+            NSLog(@"deleteChatMessage==>%@", @(ret));
         }
         resolve(@(YES));
     } @catch (NSError *ex) {
@@ -834,6 +864,44 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
     [self sendEventWithName:@"MeetingEvent" event:[self meetingEndReasonName:reason]];
 }
 
+- (void)onChatMessageNotification:(MobileRTCMeetingChat * _Nullable)chatInfo;
+{
+    if (!isInitialized) {
+        return;
+    }
+    NSLog(@"RNZoomUsVideoView MobileRTCMeetingChat-->%@",chatInfo.content);
+        NSDictionary *chatInfoDict = nil;
+        if (chatInfo) {
+            //            MobileRTCMeetingUserInfo *userInfo = [self getUserInfo:chatInfo.chatId];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
+            NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
+            chatInfoDict = @{
+                //                  @"avatar": userInfo.avatarPath,
+                @"chatId": chatInfo.chatId,
+                @"senderId": chatInfo.senderId,
+                @"senderName": chatInfo.senderName,
+                @"receiverId": chatInfo.receiverId,
+                @"receiverName": chatInfo.receiverName,
+                @"content": chatInfo.content,
+                @"date": dateString,
+                @"chatMessageType": @(chatInfo.chatMessageType),
+                @"isMyself": @(chatInfo.isMyself),
+                @"isPrivate": @(chatInfo.isPrivate),
+                @"isChatToAll": @(chatInfo.isChatToAll),
+                @"isChatToAllPanelist": @(chatInfo.isChatToAllPanelist),
+                @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
+                @"isComment": @(chatInfo.isComment),
+                @"isThread": @(chatInfo.isThread),
+                @"threadID": chatInfo.threadID,
+                
+            };
+        }
+        [self sendEventWithName:@"MeetingEvent" body: @{
+            @"event": @"onChatMessageNotification",
+            @"chatInfo": chatInfoDict
+        }];
+}
 #pragma mark - Screen share functionality
 
 - (void)onSinkShareSizeChange:(NSUInteger)userID {
