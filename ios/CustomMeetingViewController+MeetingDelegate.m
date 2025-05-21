@@ -84,8 +84,13 @@
     [self updateVideoOrShare];
 }
 
-- (void)onSinkSharingStatus:(MobileRTCSharingStatus)status userID:(NSUInteger)userID
+- (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo
 {
+    MobileRTCSharingStatus status = [shareInfo getStatus];
+    NSUInteger userID = [shareInfo getUserID];
+    NSInteger shareSourceID = [shareInfo getShareSourceID];
+    NSLog(@"--- %s status:%@",__FUNCTION__,shareInfo.description);
+    
     if (status == MobileRTCSharingStatus_Self_Send_Begin) {
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
         if ([ms isMeetingChatLegalNoticeAvailable]) {
@@ -105,9 +110,9 @@
     else if (status == MobileRTCSharingStatus_Other_Share_Begin)
     {
 //        self.remoteShareVC.activeShareID = userID;
-        [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
+        [[GlobalData sharedInstance] setGlobalActiveShareID:shareSourceID];
         [self showRemoteShareView];
-        [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
+        [self.remoteShareVC.shareView changeShareScaleWithShareSourceID:shareSourceID];
     }
     else if (status == MobileRTCSharingStatus_Self_Send_End ||
              status == MobileRTCSharingStatus_Other_Share_End)
@@ -122,13 +127,13 @@
 //    self.remoteShareVC.activeShareID = userID;
     [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
 //    [self showRemoteShareView];
-    [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
+    [self.remoteShareVC.shareView changeShareScaleWithShareSourceID:userID];
 }
 
 - (void)onSinkMeetingShareReceiving:(NSUInteger)userID
 {
     [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
-    [self.remoteShareVC.shareView changeShareScaleWithUserID:userID];
+    [self.remoteShareVC.shareView changeShareScaleWithShareSourceID:userID];
 }
 
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting

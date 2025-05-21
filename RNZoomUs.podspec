@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/vuduc4793/react-native-zoom-us"
   s.license      = "MIT"
-  s.author       = { "author" => "author@domain.cn" }
+  s.author       = { "author" => "vuduc4793@gmail.com" }
   s.platform     = :ios, "12.0"
 
   s.source       = { :git => "https://github.com/vuduc4793/react-native-zoom-us" }

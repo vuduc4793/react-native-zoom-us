@@ -12,6 +12,8 @@
 @property (strong, nonatomic) MobileRTCPreviewVideoView  * preVideoView;
 @property (strong, nonatomic) MobileRTCVideoView         * videoView;
 @property (strong, nonatomic) MobileRTCActiveVideoView   * activeVideoView;
+@property (nonatomic, assign) NSUInteger lastUserID;
+@property (nonatomic, assign) UIInterfaceOrientation lastOrientation;
 
 - (void)showAttendeeVideoWithUserID:(NSUInteger)userID;
 - (void)showActiveVideoWithUserID:(NSUInteger)userID;

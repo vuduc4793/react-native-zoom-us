@@ -22,6 +22,7 @@ CXCallController *callController;
     //    callController = nil;
     providerDelegate = [[ProviderDelegate alloc] init];
     callController = [[CXCallController alloc] init];
+    self.lastVideoStatusByUserID = [NSMutableDictionary dictionary];
     _rnZoomUsVideoViewController = [[CustomMeetingViewController alloc] init];
     _rnZoomUsVideoViewController.view.frame = self.bounds;
     [self addSubview:_rnZoomUsVideoViewController.view];
@@ -226,10 +227,6 @@ CXCallController *callController;
     }
 }
 
-- (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID {
-    NSLog(@"RNZoomUsVideoView onSinkMeetingVideoStatusChange => %@",@(userID));
-}
-
 - (void)onMyVideoStateChange {
     NSLog(@"RNZoomUsVideoView onMyVideoStateChange");
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onMyVideoStateChange)])
@@ -256,6 +253,13 @@ CXCallController *callController;
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID videoStatus:(MobileRTC_VideoStatus)videoStatus{
     NSLog(@"RNZoomUsVideoView onSinkMeetingVideoStatusChange=%@, videoStatus=%@",@(userID), @(videoStatus));
+    
+    NSNumber *lastStatus = self.lastVideoStatusByUserID[@(userID)];
+    if (lastStatus && [lastStatus integerValue] == videoStatus) {
+        return;
+    }
+    self.lastVideoStatusByUserID[@(userID)] = @(videoStatus);
+    
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isHostUser = [ms isHostUser:userID];
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
@@ -637,8 +641,12 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onSharingContentStartReceiving");
 }
 
-- (void)onSinkSharingStatus:(MobileRTCSharingStatus)status userID:(NSUInteger)userID
+- (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo
 {
+    MobileRTCSharingStatus status = [shareInfo getStatus];
+    NSInteger userID = [shareInfo getUserID];
+    NSInteger shareSourceID = [shareInfo getShareSourceID];
+    NSLog(@"--- %s status:%@",__FUNCTION__,shareInfo.description);
     NSLog(@"RNZoomUsVideoView onSinkSharingStatus==%@ userID==%@", @(status),@(userID));
     
     
@@ -652,7 +660,7 @@ CXCallController *callController;
     }
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkSharingStatus:userID:)])
     {
-        [_rnZoomUsVideoViewController onSinkSharingStatus:status userID:userID];
+        [_rnZoomUsVideoViewController onSinkSharingStatus:shareInfo];
     }
 }
 

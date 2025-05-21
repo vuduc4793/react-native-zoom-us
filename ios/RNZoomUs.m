@@ -952,7 +952,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
 }
 
-- (void)onSinkSharingStatus:(MobileRTCSharingStatus)status userID:(NSUInteger)userID {}
+- (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo {}
 
 #pragma mark - https://marketplacefront.zoom.us/sdk/meeting/ios/_mobile_r_t_c_meeting_delegate_8h_source.html
 

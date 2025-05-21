@@ -71,7 +71,7 @@
     NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
     if (0 != globalActiveShareID)
     {
-        [self.shareView showActiveShareWithUserID:globalActiveShareID];
+        [self.shareView showActiveShareWithShareSourceID:globalActiveShareID];
         MobileRTCAnnotationService *as = [[MobileRTC sharedRTC] getAnnotationService];
         if (as) [as startAnnotationWithSharedView:self.shareView];
     }

@@ -29,7 +29,7 @@
     [self.view addSubview:self.thumbPreviewView];
     [self.thumbPreviewView startPreviewWithMyself];
     [self showVideoView];
-    [self updateVideoOrShare];
+//    [self updateVideoOrShare];
 //    [self setMuteMyCamera: YES];
 //    [self setMuteMyAudio: YES];
 }
@@ -53,7 +53,6 @@
     [super viewDidLayoutSubviews];
     [self initSubView];
 //    [self.thumbView updateFrame];
-    [self.thumbPreviewView updateLayout];
     [self updateVideoOrShare];
     [self setNeedsUpdateOfHomeIndicatorAutoHidden];
     [self prefersHomeIndicatorAutoHidden];
@@ -67,33 +66,34 @@
 {
     NSUInteger pinUserId = [[GlobalData sharedInstance] userID];
     NSUInteger globalActiveShareID = [[GlobalData sharedInstance] globalActiveShareID];
-    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (self.remoteShareVC.parentViewController)
     {
         [self.remoteShareVC updateShareView];
     }
     
-        [self.thumbView updateThumbViewVideo];
-    BOOL isWebinarAttendee = [ms isWebinarAttendee];
-    BOOL isViewingShare = [ms isViewingShare];
+    [self.thumbView updateThumbViewVideo];
+    
+    BOOL isWebinarAttendee = [[[MobileRTC sharedRTC] getMeetingService] isWebinarAttendee];
     if (isWebinarAttendee) {
         self.thumbPreviewView.hidden = YES;
-            if (pinUserId) {
-                [self.videoVC showActiveVideoWithUserID:pinUserId];
+        self.thumbPreviewView = nil;
+        if (pinUserId) {
+            [self.videoVC showActiveVideoWithUserID:pinUserId];
         } else {
             NSUInteger activeUserID = [[[MobileRTC sharedRTC] getMeetingService] activeUserID];
             [self.videoVC showActiveVideoWithUserID:activeUserID];
         }
     } else {
+        [self.thumbPreviewView updateLayout];
         if (pinUserId) {
             [self.videoVC showAttendeeVideoWithUserID:pinUserId];
         } else {
             [self.videoVC showAttendeeVideoWithUserID:[[[MobileRTC sharedRTC] getMeetingService] myselfUserID]];
         }
     }
-    CGRect frame = self.videoVC.view.frame;
-    frame.origin.y = 0;
-    self.videoVC.view.frame = frame;
+//    CGRect frame = self.videoVC.view.frame;
+//    frame.origin.y = 0;
+//    self.videoVC.view.frame = frame;
 }
 
 - (void) showCurrentShareVideo {

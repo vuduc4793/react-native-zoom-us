@@ -25,6 +25,9 @@
     
     [self.view addSubview:self.preVideoView];
     self.preVideoView.hidden = YES;
+    
+    self.lastUserID = NSNotFound;
+    self.lastOrientation = UIInterfaceOrientationUnknown;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -42,6 +45,8 @@
     self.videoView = nil;
     self.preVideoView = nil;
     self.activeVideoView = nil;
+    self.lastUserID = NSNotFound;
+    self.lastOrientation = UIInterfaceOrientationUnknown;
 }
 
 
@@ -65,6 +70,24 @@
 
 - (void)showActiveVideoWithUserID:(NSUInteger)userID
 {
+    UIInterfaceOrientation currentOrientation = UIInterfaceOrientationUnknown;
+    
+    if (@available(iOS 13.0, *)) {
+        currentOrientation = self.view.window.windowScene.interfaceOrientation;
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+#pragma clang diagnostic pop
+    }
+
+    if (userID == self.lastUserID && currentOrientation == self.lastOrientation) {
+        return;
+    }
+
+    self.lastUserID = userID;
+    self.lastOrientation = currentOrientation;
+    
     self.videoView.hidden = YES;
     
     [self.activeVideoView stopAttendeeVideo];
