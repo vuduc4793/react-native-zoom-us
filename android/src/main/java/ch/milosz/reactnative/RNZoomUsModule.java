@@ -1014,12 +1014,26 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                         ChatMessageBuilder chatMessageBuilder = new ChatMessageBuilder();
 
                         Handler handler = new Handler(Looper.getMainLooper());
-                        String content = msgData.getString("content");
-                        int receiverId = msgData.getInt("receiverId");
-                        int chatTypeValue = msgData.getInt("chatMessageType");
-                        int hostId = msgData.getType("hostId").name().equals("String") ? Integer.parseInt(msgData.getString("hostId")) : msgData.getInt("hostId");
-                        String messageToHost = msgData.getString("messageToHost");
-                        String previousChatId = msgData.getString("previousChatId");
+
+                        String content;
+                        int receiverId;
+                        int chatTypeValue;
+                        int hostId = 0;
+                        String messageToHost = "";
+                        String previousChatId = "";
+
+                            content = msgData.getString("content");
+                            receiverId = msgData.getInt("receiverId");
+                            chatTypeValue = msgData.getInt("chatMessageType");
+                        if (msgData.hasKey("hostId")) {
+                            hostId = msgData.getType("hostId").name().equals("String") ? Integer.parseInt(msgData.getString("hostId")) : msgData.getInt("hostId");
+                        }
+                        if (msgData.hasKey("messageToHost")) {
+                            messageToHost = msgData.getString("messageToHost");
+                        }
+                        if (msgData.hasKey("previousChatId")) {
+                            previousChatId = msgData.getString("previousChatId");
+                        }
                         ZoomSDKChatMessageType chatMessageType;
                         switch (chatTypeValue) {
                             case 0:
@@ -1049,15 +1063,12 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                         chatMessageBuilder.setMessageType(chatMessageType);
                         InMeetingChatMessage inMeetingChatMessage = chatMessageBuilder.build();
                         inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
-                        Log.d(TAG, "run: " + inMeetingChatMessage);
-                        Log.d(TAG, "run: " + !messageToHost.isEmpty());
-                        Log.d(TAG, "run: " + (hostId != 0));
-                        if (!messageToHost.isEmpty() && hostId != 0) {
+                        if ( !messageToHost.isEmpty() && hostId != 0 && !previousChatId.isEmpty()) {
                             inMeetingChatController.deleteChatMessage(previousChatId);
                             Thread.sleep(2000);
                             chatMessageBuilder.setContent(messageToHost);
                             chatMessageBuilder.setReceiver(hostId);
-                            chatMessageBuilder.setMessageType(ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual);
+                            chatMessageBuilder.setMessageType(ZoomSDKChatMessageType_To_Individual);
                             Thread.sleep(2000);
                             inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
                         }
