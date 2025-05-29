@@ -3,7 +3,8 @@
 #import <React/RCTViewManager.h>
 #import "ProviderDelegate.h"
 #import "GlobalData.h"
-
+#import <AVFoundation/AVFoundation.h>
+#import "MobileRTC/MobileRTCMeetingService+Audio.h"
 @implementation RNZoomUs
 {
     BOOL isInitialized;
@@ -261,6 +262,7 @@ RCT_EXPORT_METHOD(
                   )
 {
     @try {
+        [self configureAudioSession];
         shouldAutoConnectAudio = [[data objectForKey:@"autoConnectAudio"] boolValue];
         meetingPromiseResolve = resolve;
         meetingPromiseReject = reject;
@@ -283,11 +285,31 @@ RCT_EXPORT_METHOD(
             MobileRTCMeetError joinMeetingResult = [ms joinMeetingWithJoinParam:joinParam];
             
             NSLog(@"RNZoomUs onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
-            [ms connectMyAudio: YES];
+            [self connectAudio];
             resolve(@(YES));
         }
     } @catch (NSError *ex) {
         reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing joinMeeting", ex);
+    }
+}
+
+- (void)configureAudioSession {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+
+    // Đặt category phù hợp: playAndRecord để có thể vừa thu vừa phát
+    BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
+                            withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
+                                  error:&error];
+
+    if (!success) {
+        NSLog(@"[Audio] Failed to set category: %@", error);
+    }
+
+    // Kích hoạt session
+    success = [session setActive:YES error:&error];
+    if (!success) {
+        NSLog(@"[Audio] Failed to activate session: %@", error);
     }
 }
 
@@ -313,6 +335,8 @@ RCT_EXPORT_METHOD(connectAudio: (RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 - (void)connectAudio {
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (!ms) return;
+    [ms connectMyAudio: YES];
+    [ms resetMeetingAudioSession];
     [ms connectMyAudio: YES];
 //    [ms muteMyAudio: YES];
 //    [ms muteMyVideo: YES];

@@ -70,7 +70,7 @@ CXCallController *callController;
 
     AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
     BOOL isHeadphonesConnected = NO;
-
+//    [self connectAudio];
     for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
         NSLog(@"RNZoomUsVideoView PortType: %@", output.portType );
         NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
@@ -87,6 +87,9 @@ CXCallController *callController;
     if (!isHeadphonesConnected) {
         [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
         if (error) {
+            [self connectAudio];
+//            [self resetAudioSession];
+            
             NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
         }
     }
@@ -119,6 +122,50 @@ CXCallController *callController;
 -(void)addViewControllerAsSubView
 {
 }
+
+- (void)connectAudio {
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
+    
+    if (!ms) return;
+    [ms connectMyAudio: YES];
+    [zoomSettings setAutoConnectInternetAudio:YES];
+    [ms resetMeetingAudioSession];
+    [ms connectMyAudio: YES];
+//    [ms muteMyAudio: YES];
+//    [ms muteMyVideo: YES];
+    NSLog(@"connectAudio");
+}
+
+- (void)resetAudioSession {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+
+    // Remove any audio port override
+    [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
+    if (error) {
+        NSLog(@"Error removing audio port override: %@", error.localizedDescription);
+    }
+
+    // Optionally reset the category and mode (can be customized based on your app needs)
+    [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:&error];
+    if (error) {
+        NSLog(@"Error setting default category: %@", error.localizedDescription);
+    }
+
+    [audioSession setMode:AVAudioSessionModeDefault error:&error];
+    if (error) {
+        NSLog(@"Error setting default mode: %@", error.localizedDescription);
+    }
+
+    // Deactivate the audio session
+    [audioSession setActive:NO error:&error];
+    if (error) {
+        NSLog(@"Error deactivating audio session: %@", error.localizedDescription);
+    }
+}
+
+
 #pragma mark - Meeting Service Delegate
 - (void)onMeetingStateChange:(MobileRTCMeetingState)state{
     NSLog(@"RNZoomUsVideoView onMeetingStateChange =>%@", @(state));
@@ -1220,17 +1267,6 @@ CXCallController *callController;
 }
 - (void)onZoomIdentityExpired{
     NSLog(@"RNZoomUsVideoView onZoomIdentityExpired");
-}
-- (void)connectAudio {
-    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-    MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
-    
-    if (!ms) return;
-    [ms connectMyAudio: YES];
-    [zoomSettings setAutoConnectInternetAudio:YES];
-//    [ms muteMyAudio: YES];
-//    [ms muteMyVideo: YES];
-    NSLog(@"connectAudio");
 }
 
 - (void)setMuteMyAudio:(BOOL *)isMute{
