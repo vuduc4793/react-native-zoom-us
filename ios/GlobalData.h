@@ -5,5 +5,6 @@
 @property (nonatomic, assign) NSUInteger globalActiveShareID;
 @property (nonatomic, assign) NSUUID *globalCallingUUID;
 @property (nonatomic, assign) NSUInteger globalWebinarFirstActiveVideoID;
+@property (nonatomic, assign) BOOL globalIsInMeeting;
 
 @end

@@ -61,39 +61,40 @@ CXCallController *callController;
 - (void)updateAudioOutput {
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *error = nil;
-
+    
     [audioSession setActive:YES error:&error];
     if (error) {
         NSLog(@"RNZoomUsVideoView Error activating audio session: %@", error.localizedDescription);
         return;
     }
-
+    
     AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
     BOOL isHeadphonesConnected = NO;
-//    [self connectAudio];
     for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
         NSLog(@"RNZoomUsVideoView PortType: %@", output.portType );
         NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
                                     AVAudioSessionPortBluetoothHFP,
                                     AVAudioSessionPortBluetoothLE,
                                     AVAudioSessionPortBluetoothA2DP];
-
+        
         if ([headphoneTypes containsObject:output.portType]) {
             isHeadphonesConnected = YES;
             break;
         }
     }
-
+    
     if (!isHeadphonesConnected) {
         [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
         if (error) {
-            [self connectAudio];
-//            [self resetAudioSession];
-            
+            BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
+            if (isInmeeting) {
+                [self connectAudio];
+            }
             NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
         }
     }
 }
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -129,35 +130,33 @@ CXCallController *callController;
     
     if (!ms) return;
     [ms connectMyAudio: YES];
-    [zoomSettings setAutoConnectInternetAudio:YES];
     [ms resetMeetingAudioSession];
-    [ms connectMyAudio: YES];
-//    [ms muteMyAudio: YES];
-//    [ms muteMyVideo: YES];
+    //    [ms muteMyAudio: YES];
+    //    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 
 - (void)resetAudioSession {
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *error = nil;
-
+    
     // Remove any audio port override
     [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
     if (error) {
         NSLog(@"Error removing audio port override: %@", error.localizedDescription);
     }
-
+    
     // Optionally reset the category and mode (can be customized based on your app needs)
     [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:&error];
     if (error) {
         NSLog(@"Error setting default category: %@", error.localizedDescription);
     }
-
+    
     [audioSession setMode:AVAudioSessionModeDefault error:&error];
     if (error) {
         NSLog(@"Error setting default mode: %@", error.localizedDescription);
     }
-
+    
     // Deactivate the audio session
     [audioSession setActive:NO error:&error];
     if (error) {
@@ -176,26 +175,27 @@ CXCallController *callController;
             break;
         case MobileRTCMeetingState_Connecting:
             result = @"MEETING_STATUS_CONNECTING";
-            if (providerDelegate.callingUUID == nil) {
-                NSUUID *callUUID = [NSUUID UUID];
-                
-                CXStartCallAction *startCallAction = [[CXStartCallAction alloc] initWithCallUUID:callUUID handle:[[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@"Học Viện Minh Trí Thành"]];
-                CXCallUpdate *callUpdate = [[CXCallUpdate alloc] init];
-                callUpdate.remoteHandle = startCallAction.handle;
-                callUpdate.hasVideo = startCallAction.video;
-                CXTransaction *transaction = [[CXTransaction alloc] initWithAction:startCallAction];
-                [callController requestTransaction:transaction completion:^(NSError * _Nullable error) {
-                    if (error) {
-                        NSLog(@"Error requesting start call transaction: %@", error.localizedDescription);
-                        providerDelegate.callingUUID = nil;
-                    } else {
-                        NSLog(@"Requested start call transaction succeeded");
-                        NSLog(@"callUUID 1: %@", callUUID);
-                        providerDelegate.callingUUID = callUUID;
-                        NSLog(@"callUUID 2: %@", providerDelegate.callingUUID);
-                    }
-                }];
-            }
+            [self connectAudio];
+//            if (providerDelegate.callingUUID == nil) {
+//                NSUUID *callUUID = [NSUUID UUID];
+//                
+//                CXStartCallAction *startCallAction = [[CXStartCallAction alloc] initWithCallUUID:callUUID handle:[[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@"Học Viện Minh Trí Thành"]];
+//                CXCallUpdate *callUpdate = [[CXCallUpdate alloc] init];
+//                callUpdate.remoteHandle = startCallAction.handle;
+//                callUpdate.hasVideo = startCallAction.video;
+//                CXTransaction *transaction = [[CXTransaction alloc] initWithAction:startCallAction];
+//                [callController requestTransaction:transaction completion:^(NSError * _Nullable error) {
+//                    if (error) {
+//                        NSLog(@"Error requesting start call transaction: %@", error.localizedDescription);
+//                        providerDelegate.callingUUID = nil;
+//                    } else {
+//                        NSLog(@"Requested start call transaction succeeded");
+//                        NSLog(@"callUUID 1: %@", callUUID);
+//                        providerDelegate.callingUUID = callUUID;
+//                        NSLog(@"callUUID 2: %@", providerDelegate.callingUUID);
+//                    }
+//                }];
+//            }
             break;
         case MobileRTCMeetingState_WaitingForHost:
             result = @"MEETING_STATUS_WAITINGFORHOST";
@@ -322,13 +322,13 @@ CXCallController *callController;
         }
     }
     if (videoStatus == MobileRTC_VideoStatus_Video_OFF) {
-//        if (isWebinarMeeting) {
-//            NSUInteger globalWebinarFirstActiveVideoID = [[GlobalData sharedInstance] globalWebinarFirstActiveVideoID];
-//            if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
-//            {
-//                [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:globalWebinarFirstActiveVideoID];
-//            }
-//        }
+        //        if (isWebinarMeeting) {
+        //            NSUInteger globalWebinarFirstActiveVideoID = [[GlobalData sharedInstance] globalWebinarFirstActiveVideoID];
+        //            if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingVideoStatusChange:)])
+        //            {
+        //                [_rnZoomUsVideoViewController onSinkMeetingVideoStatusChange:globalWebinarFirstActiveVideoID];
+        //            }
+        //        }
     }
     if (self.onSinkMeetingVideoStatusChange) {
         self.onSinkMeetingVideoStatusChange(@{
@@ -1304,7 +1304,7 @@ CXCallController *callController;
 }
 
 
-- (BOOL)onCheckIfMeetingVoIPCallRunning{
-    return [providerDelegate isInCall];
-}
+//- (BOOL)onCheckIfMeetingVoIPCallRunning{
+//    return [providerDelegate isInCall];
+//}
 @end

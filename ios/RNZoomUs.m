@@ -759,6 +759,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
             break;
         case MobileRTCMeetingState_Connecting:
             result = @"MEETING_STATUS_CONNECTING";
+            [self connectAudio];
             break;
         case MobileRTCMeetingState_WaitingForHost:
             result = @"MEETING_STATUS_WAITINGFORHOST";
@@ -766,6 +767,8 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         case MobileRTCMeetingState_InMeeting:{
             result = @"MEETING_STATUS_INMEETING";
 //            [self getCurrentActiveId];
+            [self connectAudio];
+            [[GlobalData sharedInstance] setGlobalIsInMeeting:YES];
             break;
         }
         case MobileRTCMeetingState_Disconnecting:

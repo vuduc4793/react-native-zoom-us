@@ -34,6 +34,8 @@
 @property(nonatomic, copy)RCTBubblingEventBlock onChatMessageNotification;
 @property(nonatomic, copy)RCTBubblingEventBlock onChatMsgDeleteNotification;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSNumber *> *lastVideoStatusByUserID;
+@property (nonatomic, assign) BOOL audioIsConnected;
+@property (nonatomic, assign) BOOL isInMeeting;
 
 
 
