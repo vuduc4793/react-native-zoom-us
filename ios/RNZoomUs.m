@@ -51,6 +51,13 @@
         providerDelegate = nil;
         callController = nil;
     }
+    
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(audioRouteChanged:)
+                                                     name:AVAudioSessionRouteChangeNotification
+                                                   object:nil];
+    }
     return self;
 }
 
@@ -708,6 +715,54 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
  // Keep: Required for RN built in Event Emitter Calls.
  }
  */
+
+- (void)audioRouteChanged:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
+    
+    if (reason == AVAudioSessionRouteChangeReasonNewDeviceAvailable) {
+        NSLog(@"RNZoomUs Headphones connected");
+    } else if (reason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        NSLog(@"RNZoomUs Headphones disconnected");
+    }
+    [self updateAudioOutput];
+}
+- (void)updateAudioOutput {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+    
+    [audioSession setActive:YES error:&error];
+    if (error) {
+        NSLog(@"RNZoomUs Error activating audio session: %@", error.localizedDescription);
+        return;
+    }
+    
+    AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
+    BOOL isHeadphonesConnected = NO;
+    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
+        NSLog(@"RNZoomUs PortType: %@", output.portType );
+        NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
+                                    AVAudioSessionPortBluetoothHFP,
+                                    AVAudioSessionPortBluetoothLE,
+                                    AVAudioSessionPortBluetoothA2DP];
+        
+        if ([headphoneTypes containsObject:output.portType]) {
+            isHeadphonesConnected = YES;
+            break;
+        }
+    }
+    
+    if (!isHeadphonesConnected) {
+        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+        if (error) {
+            BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
+            if (isInmeeting) {
+                [self connectAudio];
+            }
+            NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
+        }
+    }
+}
 
 - (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *_Nullable)meetingParam {}
 

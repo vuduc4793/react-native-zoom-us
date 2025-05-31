@@ -26,12 +26,12 @@ CXCallController *callController;
     _rnZoomUsVideoViewController = [[CustomMeetingViewController alloc] init];
     _rnZoomUsVideoViewController.view.frame = self.bounds;
     [self addSubview:_rnZoomUsVideoViewController.view];
-    if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(audioRouteChanged:)
-                                                     name:AVAudioSessionRouteChangeNotification
-                                                   object:nil];
-    }
+//    if (self) {
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(audioRouteChanged:)
+//                                                     name:AVAudioSessionRouteChangeNotification
+//                                                   object:nil];
+//    }
     return self;
 }
 
