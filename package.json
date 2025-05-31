@@ -1,6 +1,6 @@
 {
   "name": "@vuduc4793/react-native-zoomus",
-  "version": "11.0.0",
+  "version": "12.0.0",
   "description": "React-native bridge for ZoomUs SDK",
   "homepage": "https://github.com/vuduc4793/react-native-zoom-us",
   "main": "index",
