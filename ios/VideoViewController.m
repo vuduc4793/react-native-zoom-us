@@ -8,6 +8,7 @@
 
 #import "VideoViewController.h"
 #import <MobileRTC/MobileRTC.h>
+#import "GlobalData.h"
 
 @interface VideoViewController ()
 
@@ -70,17 +71,8 @@
 
 - (void)showActiveVideoWithUserID:(NSUInteger)userID
 {
-    UIInterfaceOrientation currentOrientation = UIInterfaceOrientationUnknown;
+    UIInterfaceOrientation currentOrientation = [[GlobalData sharedInstance] globalOrientation];
     
-    if (@available(iOS 13.0, *)) {
-        currentOrientation = self.view.window.windowScene.interfaceOrientation;
-    } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-#pragma clang diagnostic pop
-    }
-
     if (userID == self.lastUserID && currentOrientation == self.lastOrientation) {
         return;
     }
@@ -130,9 +122,13 @@
 
 - (MobileRTCActiveVideoView *)activeVideoView
 {
-    UIWindowScene *windowScene = (UIWindowScene *)[UIApplication.sharedApplication.connectedScenes anyObject];
-    UIInterfaceOrientation orientation = windowScene.interfaceOrientation;
-    BOOL isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+//    UIWindowScene *windowScene = (UIWindowScene *)[UIApplication.sharedApplication.connectedScenes anyObject];
+//    UIInterfaceOrientation orientation = windowScene.interfaceOrientation;
+//    NSLog(@"VideoViewController activeVideoView orientation: %ld", (long)orientation);
+//    self.lastOrientation = orientation;
+    
+    BOOL isLandscape = UIInterfaceOrientationIsLandscape(self.lastOrientation);
+    
     CGFloat defaultWidth = self.view.bounds.size.width;
     CGFloat videoAspectRatio = 1.77777777778;
     CGFloat desiredHeight = isLandscape ? self.view.bounds.size.height : defaultWidth/videoAspectRatio;

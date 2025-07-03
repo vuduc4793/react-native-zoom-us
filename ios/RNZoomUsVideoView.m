@@ -87,10 +87,10 @@ CXCallController *callController;
         [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
         if (error) {
             BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
-            if (isInmeeting) {
-                [self connectAudio];
-            }
-            NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
+//            if (isInmeeting) {
+//                [self connectAudio];
+//            }
+            NSLog(@"RNZoomUsVideoView Error overriding to speaker: %@", error.localizedDescription);
         }
     }
 }
@@ -130,7 +130,7 @@ CXCallController *callController;
     
     if (!ms) return;
     [ms connectMyAudio: YES];
-    [ms resetMeetingAudioSession];
+//    [ms resetMeetingAudioSession];
     //    [ms muteMyAudio: YES];
     //    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
@@ -175,7 +175,6 @@ CXCallController *callController;
             break;
         case MobileRTCMeetingState_Connecting:
             result = @"MEETING_STATUS_CONNECTING";
-            [self connectAudio];
 //            if (providerDelegate.callingUUID == nil) {
 //                NSUUID *callUUID = [NSUUID UUID];
 //                
@@ -206,6 +205,7 @@ CXCallController *callController;
             break;
         case MobileRTCMeetingState_Disconnecting:
             result = @"MEETING_STATUS_DISCONNECTING";
+            [[GlobalData sharedInstance] setGlobalIsInMeeting:NO];
             break;
         case MobileRTCMeetingState_Reconnecting:
             result = @"MEETING_STATUS_RECONNECTING";
@@ -1301,6 +1301,7 @@ CXCallController *callController;
 
 - (void)setFullScreen:(BOOL *)fullScreen {
     NSLog(@"RNZoomUsVideoView setFullScreen");
+    [[GlobalData sharedInstance] setGlobalOrientation:fullScreen == Nil ? 1 : 3];
 }
 
 

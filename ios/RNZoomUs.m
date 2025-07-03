@@ -185,6 +185,7 @@ RCT_EXPORT_METHOD(
         return;
     }
     
+    [[GlobalData sharedInstance] setGlobalIsInMeeting:NO];
     @try {
         isInitialized = NO;
         shouldAutoConnectAudio = NO;
@@ -292,7 +293,6 @@ RCT_EXPORT_METHOD(
             MobileRTCMeetError joinMeetingResult = [ms joinMeetingWithJoinParam:joinParam];
             
             NSLog(@"RNZoomUs onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
-            [self connectAudio];
             resolve(@(YES));
         }
     } @catch (NSError *ex) {
@@ -303,16 +303,16 @@ RCT_EXPORT_METHOD(
 - (void)configureAudioSession {
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
-
+    
     // Đặt category phù hợp: playAndRecord để có thể vừa thu vừa phát
     BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
                             withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
                                   error:&error];
-
+    
     if (!success) {
         NSLog(@"[Audio] Failed to set category: %@", error);
     }
-
+    
     // Kích hoạt session
     success = [session setActive:YES error:&error];
     if (!success) {
@@ -341,12 +341,15 @@ RCT_EXPORT_METHOD(connectAudio: (RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 
 - (void)connectAudio {
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-    if (!ms) return;
-    [ms connectMyAudio: YES];
+    MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
+    if (!ms || !isInitialized) return;
+    [zoomSettings setAutoConnectInternetAudio:YES];
     [ms resetMeetingAudioSession];
+    
     [ms connectMyAudio: YES];
-//    [ms muteMyAudio: YES];
-//    [ms muteMyVideo: YES];
+    //    [ms connectMyAudio: YES];
+    [ms muteMyAudio: YES];
+    [ms muteMyVideo: YES];
     NSLog(@"connectAudio");
 }
 
@@ -552,13 +555,13 @@ RCT_EXPORT_METHOD(joinBO: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
     @try {
         MobileRTCBOAttendee *attendee = [[[MobileRTC sharedRTC] getMeetingService] getAttedeeHelper];
         
-            if (!attendee) {
-                reject(@"BO_UNASSIGNED", @"BO_UNASSIGNED", nil);
-                return;
-            }
-            
-            BOOL ret = [attendee joinBO];
-            NSLog(@"attendee join BO: %@", ret? @"Success": @"Fail");
+        if (!attendee) {
+            reject(@"BO_UNASSIGNED", @"BO_UNASSIGNED", nil);
+            return;
+        }
+        
+        BOOL ret = [attendee joinBO];
+        NSLog(@"attendee join BO: %@", ret? @"Success": @"Fail");
         resolve(@(ret));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing joinBO", ex);
@@ -569,13 +572,13 @@ RCT_EXPORT_METHOD(leaveBO: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseR
     @try {
         MobileRTCBOAttendee *attendee = [[[MobileRTC sharedRTC] getMeetingService] getAttedeeHelper];
         
-            if (!attendee) {
-                NSLog(@"no object");
-                return;
-            }
-            
-            BOOL ret = [attendee leaveBO];
-            NSLog(@"attendee leave BO: %@", ret? @"Success": @"Fail");
+        if (!attendee) {
+            NSLog(@"no object");
+            return;
+        }
+        
+        BOOL ret = [attendee leaveBO];
+        NSLog(@"attendee leave BO: %@", ret? @"Success": @"Fail");
         resolve(@(ret));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing leaveBO", ex);
@@ -586,13 +589,13 @@ RCT_EXPORT_METHOD(requestForHelp: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
     @try {
         MobileRTCBOAttendee *attendee = [[[MobileRTC sharedRTC] getMeetingService] getAttedeeHelper];
         
-            if (!attendee) {
-                NSLog(@"no object");
-                return;
-            }
-            
-            BOOL requestResult = [attendee requestForHelp];
-            NSString *resultMsg = requestResult? @"succeed" : @"failed";
+        if (!attendee) {
+            NSLog(@"no object");
+            return;
+        }
+        
+        BOOL requestResult = [attendee requestForHelp];
+        NSString *resultMsg = requestResult? @"succeed" : @"failed";
         resolve(@(requestResult));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing requestForHelp", ex);
@@ -603,13 +606,13 @@ RCT_EXPORT_METHOD(isHostInThisBO: (RCTPromiseResolveBlock)resolve rejecter:(RCTP
     @try {
         MobileRTCBOAttendee *attendee = [[[MobileRTC sharedRTC] getMeetingService] getAttedeeHelper];
         
-            if (!attendee) {
-                NSLog(@"no object");
-                return;
-            }
-            
-            BOOL requestResult = [attendee isHostInThisBO];
-            NSString *resultMsg = requestResult? @"succeed" : @"failed";
+        if (!attendee) {
+            NSLog(@"no object");
+            return;
+        }
+        
+        BOOL requestResult = [attendee isHostInThisBO];
+        NSString *resultMsg = requestResult? @"succeed" : @"failed";
         resolve(@(requestResult));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing requestForHelp", ex);
@@ -679,12 +682,12 @@ RCT_EXPORT_METHOD(isHostUser: (NSUInteger)userId resolver:(RCTPromiseResolveBloc
     @try {
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService] ;
         
-            if (!ms) {
-                NSLog(@"no object");
-                return;
-            }
-            
-            BOOL requestResult = [ms isHostUser:userId];
+        if (!ms) {
+            NSLog(@"no object");
+            return;
+        }
+        
+        BOOL requestResult = [ms isHostUser:userId];
         resolve(@(requestResult));
     } @catch (NSError *ex) {
         reject(@"ERR_ZOOM_MEETING_CONTROL", @"Executing isHostUser", ex);
@@ -695,11 +698,11 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     @try {
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService] ;
         
-            if (!ms) {
-                NSLog(@"no object");
-                return;
-            }
-            
+        if (!ms) {
+            NSLog(@"no object");
+            return;
+        }
+        
         NSUInteger myselfUserID = [ms myselfUserID];
         resolve(@(myselfUserID));
     } @catch (NSError *ex) {
@@ -707,7 +710,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
 }
 /*
- NOTE: this is only required for android    
+ NOTE: this is only required for android
  RCT_EXPORT_METHOD(addListener : (NSString *)eventName) {
  // Keep: Required for RN built in Event Emitter Calls.
  }
@@ -728,6 +731,9 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     [self updateAudioOutput];
 }
 - (void)updateAudioOutput {
+    BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
+    BOOL isConnectedDefaultAudioSession = [[GlobalData sharedInstance] globalIsConnectedDefaultAudioSession];
+    if (!isInmeeting) return;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *error = nil;
     
@@ -737,31 +743,38 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         return;
     }
     
-    AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
-    BOOL isHeadphonesConnected = NO;
-    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
-        NSLog(@"RNZoomUs PortType: %@", output.portType );
-        NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
-                                    AVAudioSessionPortBluetoothHFP,
-                                    AVAudioSessionPortBluetoothLE,
-                                    AVAudioSessionPortBluetoothA2DP];
-        
-        if ([headphoneTypes containsObject:output.portType]) {
-            isHeadphonesConnected = YES;
-            break;
+    if (!isConnectedDefaultAudioSession) {
+    BOOL isConnectToDefaulPort = [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
+        [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:isConnectToDefaulPort];
+    } else {
+        AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
+        BOOL isHeadphonesConnected = NO;
+        for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
+            NSLog(@"RNZoomUs PortType: %@", output.portType );
+            NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
+                                        AVAudioSessionPortBluetoothHFP,
+                                        AVAudioSessionPortBluetoothLE,
+                                        AVAudioSessionPortBluetoothA2DP];
+            
+            if ([headphoneTypes containsObject:output.portType]) {
+                isHeadphonesConnected = YES;
+                break;
+            }
         }
-    }
-    
-    if (!isHeadphonesConnected) {
-        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
-        if (error) {
-            BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
-            if (isInmeeting) {
+        
+        if (!isHeadphonesConnected) {
+            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+            if (error) {
+                [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
+                NSLog(@"RNZoomUs Error overriding to speaker: %@", error.localizedDescription);
                 [self connectAudio];
             }
-            NSLog(@"Error overriding to speaker: %@", error.localizedDescription);
         }
     }
+}
+- (void)audioSessionError:(NSNotification *)notification {
+    NSLog(@"[AudioSession] Notification: %@", notification.name);
+    NSLog(@"UserInfo: %@", notification.userInfo);
 }
 
 - (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *_Nullable)meetingParam {}
@@ -814,20 +827,20 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
             break;
         case MobileRTCMeetingState_Connecting:
             result = @"MEETING_STATUS_CONNECTING";
-            [self connectAudio];
             break;
         case MobileRTCMeetingState_WaitingForHost:
             result = @"MEETING_STATUS_WAITINGFORHOST";
             break;
         case MobileRTCMeetingState_InMeeting:{
             result = @"MEETING_STATUS_INMEETING";
-//            [self getCurrentActiveId];
+            //            [self getCurrentActiveId];
             [self connectAudio];
             [[GlobalData sharedInstance] setGlobalIsInMeeting:YES];
             break;
         }
         case MobileRTCMeetingState_Disconnecting:
             result = @"MEETING_STATUS_DISCONNECTING";
+            [[GlobalData sharedInstance] setGlobalIsInMeeting:NO];
             break;
         case MobileRTCMeetingState_Reconnecting:
             result = @"MEETING_STATUS_RECONNECTING";
@@ -855,9 +868,13 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
             break;
         case MobileRTCMeetingState_JoinBO: // only iOS (guessed naming)
             result = @"MEETING_STATUS_JOIN_BO";
+//            [self connectAudio];
+            [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
             break;
         case MobileRTCMeetingState_LeaveBO: // only iOS (guessed naming)
             result = @"MEETING_STATUS_LEAVE_BO";
+//            [self connectAudio];
+            [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
             break;
             
         default:
@@ -871,11 +888,11 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
-        if(isViewingShare) {
-            [[GlobalData sharedInstance] setGlobalActiveShareID:[ms activeShareUserID]];
-        } else {
-            [[GlobalData sharedInstance] setUserID:[ms activeUserID]];
-        }
+    if(isViewingShare) {
+        [[GlobalData sharedInstance] setGlobalActiveShareID:[ms activeShareUserID]];
+    } else {
+        [[GlobalData sharedInstance] setUserID:[ms activeUserID]];
+    }
 }
 - (void)onMeetingStateChange:(MobileRTCMeetingState)state {
     NSLog(@"onMeetingStatusChanged, meetingState=%@", @(state));
@@ -918,10 +935,6 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
                 self->providerDelegate.callingUUID = nil;
             }
         }];
-    }
-    
-    if (state == MobileRTCMeetingState_InMeeting) {
-        [self connectAudio];
     }
     
     if (state == MobileRTCMeetingState_InMeeting || state == MobileRTCMeetingState_Idle) {
@@ -968,37 +981,37 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         return;
     }
     NSLog(@"RNZoomUsVideoView MobileRTCMeetingChat-->%@",chatInfo.content);
-        NSDictionary *chatInfoDict = nil;
-        if (chatInfo) {
-            //            MobileRTCMeetingUserInfo *userInfo = [self getUserInfo:chatInfo.chatId];
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
-            NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
-            chatInfoDict = @{
-                //                  @"avatar": userInfo.avatarPath,
-                @"chatId": chatInfo.chatId,
-                @"senderId": chatInfo.senderId,
-                @"senderName": chatInfo.senderName,
-                @"receiverId": chatInfo.receiverId,
-                @"receiverName": chatInfo.receiverName,
-                @"content": chatInfo.content,
-                @"date": dateString,
-                @"chatMessageType": @(chatInfo.chatMessageType),
-                @"isMyself": @(chatInfo.isMyself),
-                @"isPrivate": @(chatInfo.isPrivate),
-                @"isChatToAll": @(chatInfo.isChatToAll),
-                @"isChatToAllPanelist": @(chatInfo.isChatToAllPanelist),
-                @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
-                @"isComment": @(chatInfo.isComment),
-                @"isThread": @(chatInfo.isThread),
-                @"threadID": chatInfo.threadID,
-                
-            };
-        }
-        [self sendEventWithName:@"MeetingEvent" body: @{
-            @"event": @"onChatMessageNotification",
-            @"chatInfo": chatInfoDict
-        }];
+    NSDictionary *chatInfoDict = nil;
+    if (chatInfo) {
+        //            MobileRTCMeetingUserInfo *userInfo = [self getUserInfo:chatInfo.chatId];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
+        NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
+        chatInfoDict = @{
+            //                  @"avatar": userInfo.avatarPath,
+            @"chatId": chatInfo.chatId,
+            @"senderId": chatInfo.senderId,
+            @"senderName": chatInfo.senderName,
+            @"receiverId": chatInfo.receiverId,
+            @"receiverName": chatInfo.receiverName,
+            @"content": chatInfo.content,
+            @"date": dateString,
+            @"chatMessageType": @(chatInfo.chatMessageType),
+            @"isMyself": @(chatInfo.isMyself),
+            @"isPrivate": @(chatInfo.isPrivate),
+            @"isChatToAll": @(chatInfo.isChatToAll),
+            @"isChatToAllPanelist": @(chatInfo.isChatToAllPanelist),
+            @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
+            @"isComment": @(chatInfo.isComment),
+            @"isThread": @(chatInfo.isThread),
+            @"threadID": chatInfo.threadID,
+            
+        };
+    }
+    [self sendEventWithName:@"MeetingEvent" body: @{
+        @"event": @"onChatMessageNotification",
+        @"chatInfo": chatInfoDict
+    }];
 }
 #pragma mark - Screen share functionality
 
@@ -1046,7 +1059,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     
     if (videoStatus == MobileRTC_VideoStatus_Video_ON) {
-            [[GlobalData sharedInstance] setUserID:userID];
+        [[GlobalData sharedInstance] setUserID:userID];
     }
     if ([ms isMyself:userID]) {
         [self sendEventWithName:@"MeetingEvent" event:@"myVideoStatusChanged" userInfo:[ms userInfoByID:[ms myselfUserID]]];
@@ -1071,7 +1084,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)onSinkMeetingActiveVideo:(NSUInteger)userID {
     NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
-//    [[GlobalData sharedInstance] setUserID:userID];
+    //    [[GlobalData sharedInstance] setUserID:userID];
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isViewingShare = [ms isViewingShare];
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
@@ -1085,7 +1098,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinar = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
-//    if (isViewingShare) [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
+    //    if (isViewingShare) [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
 }
 
 - (void)onMyVideoStateChange {
@@ -1107,17 +1120,17 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onSinkMeetingShowMinimizeMeetingOrBackZoomUI:(MobileRTCMinimizeMeetingState)state {
-        switch (state) {
-            case MobileRTCMinimizeMeeting_ShowMinimizeMeeting:
-                [self sendEventWithName:@"MeetingEvent" body:@{@"event": @"showMinimizeMeeting", @"status": @"showMinimizeMeeting"}];
-                break;
-                
-            case MobileRTCMinimizeMeeting_BackFullScreenMeeting:
-                [self sendEventWithName:@"MeetingEvent" body:@{@"event": @"backFullScreenMeeting", @"status": @"backFullScreenMeeting"}];
-                break;
-            default:
-                break;
-        }
+    switch (state) {
+        case MobileRTCMinimizeMeeting_ShowMinimizeMeeting:
+            [self sendEventWithName:@"MeetingEvent" body:@{@"event": @"showMinimizeMeeting", @"status": @"showMinimizeMeeting"}];
+            break;
+            
+        case MobileRTCMinimizeMeeting_BackFullScreenMeeting:
+            [self sendEventWithName:@"MeetingEvent" body:@{@"event": @"backFullScreenMeeting", @"status": @"backFullScreenMeeting"}];
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)onBOOptionChanged:(MobileRTCBOOption *_Nonnull)newOption {}
