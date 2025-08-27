@@ -57,6 +57,11 @@
                                                  selector:@selector(audioRouteChanged:)
                                                      name:AVAudioSessionRouteChangeNotification
                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(appDidBecomeActive:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -718,7 +723,9 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
  // Keep: Required for RN built in Event Emitter Calls.
  }
  */
-
+- (void)appDidBecomeActive:(NSNotification *)notification {
+    [self connectAudio];
+}
 - (void)audioRouteChanged:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
     AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
@@ -732,43 +739,39 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 - (void)updateAudioOutput {
     BOOL isInmeeting = [[GlobalData sharedInstance] globalIsInMeeting];
-    BOOL isConnectedDefaultAudioSession = [[GlobalData sharedInstance] globalIsConnectedDefaultAudioSession];
     if (!isInmeeting) return;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *error = nil;
     
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    MobileRTCAudioOutput audioOutput = [ms myAudioOutputDescription];
+    NSLog(@"RNZoomUs MobileRTCAudioOutput: %lu", (unsigned long)audioOutput);
     [audioSession setActive:YES error:&error];
     if (error) {
         NSLog(@"RNZoomUs Error activating audio session: %@", error.localizedDescription);
+        [self connectAudio];
         return;
     }
-    
-    if (!isConnectedDefaultAudioSession) {
-    BOOL isConnectToDefaulPort = [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
-        [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:isConnectToDefaulPort];
-    } else {
-        AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
-        BOOL isHeadphonesConnected = NO;
-        for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
-            NSLog(@"RNZoomUs PortType: %@", output.portType );
-            NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
-                                        AVAudioSessionPortBluetoothHFP,
-                                        AVAudioSessionPortBluetoothLE,
-                                        AVAudioSessionPortBluetoothA2DP];
-            
-            if ([headphoneTypes containsObject:output.portType]) {
-                isHeadphonesConnected = YES;
-                break;
-            }
+    AVAudioSessionRouteDescription *currentRoute = audioSession.currentRoute;
+    BOOL isHeadphonesConnected = NO;
+    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
+        NSLog(@"RNZoomUs PortType: %@", output.portType );
+        NSArray *headphoneTypes = @[AVAudioSessionPortHeadphones,
+                                    AVAudioSessionPortBluetoothHFP,
+                                    AVAudioSessionPortBluetoothLE,
+                                    AVAudioSessionPortBluetoothA2DP];
+        NSArray *receiverTypes = @[AVAudioSessionPortBuiltInReceiver];
+        if ([headphoneTypes containsObject:output.portType]) {
+            isHeadphonesConnected = YES;
+            break;
         }
-        
-        if (!isHeadphonesConnected) {
-            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
-            if (error) {
-                [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
-                NSLog(@"RNZoomUs Error overriding to speaker: %@", error.localizedDescription);
-                [self connectAudio];
-            }
+    }
+    
+    if (!isHeadphonesConnected) {
+        [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+        if (error) {
+            NSLog(@"RNZoomUs Error overriding to speaker: %@", error.localizedDescription);
+            [self connectAudio];
         }
     }
 }
@@ -868,12 +871,12 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
             break;
         case MobileRTCMeetingState_JoinBO: // only iOS (guessed naming)
             result = @"MEETING_STATUS_JOIN_BO";
-//            [self connectAudio];
+            //            [self connectAudio];
             [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
             break;
         case MobileRTCMeetingState_LeaveBO: // only iOS (guessed naming)
             result = @"MEETING_STATUS_LEAVE_BO";
-//            [self connectAudio];
+            //            [self connectAudio];
             [[GlobalData sharedInstance] setGlobalIsConnectedDefaultAudioSession:NO];
             break;
             
@@ -1343,6 +1346,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         case MobileRTCMeetError_VideoError: return @"videoError"; // iOS only
         case MobileRTCMeetError_WriteConfigFile: return @"writeConfigFile"; // iOS only
         case MobileRTCMeetError_ZCCertificateChanged: return @"zcCertificateChanged"; // iOS only
+        case MobileRTCMeetError_UnableToJoinExternalMeeting: return @"unableToJoinExternalMeeting";
         default: return @"unknown";
     }
 }
