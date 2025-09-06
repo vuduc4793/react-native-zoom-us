@@ -1,5 +1,5 @@
 {
-  "name": "@vuduc4793/react-native-zoomus",
+  "name": "@vuduc4793/react-native-zoom-us",
   "version": "12.0.1",
   "description": "React-native bridge for ZoomUs SDK",
   "homepage": "https://github.com/vuduc4793/react-native-zoom-us",
@@ -17,6 +17,10 @@
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-native": ">0.60.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "devDependencies": {
     "@types/invariant": "^2.2.34",
