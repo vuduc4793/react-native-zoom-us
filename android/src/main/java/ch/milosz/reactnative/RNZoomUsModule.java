@@ -134,6 +134,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     private Boolean closeCaptionHidden = false;
     private Boolean disableCloudWhiteboard = false;
     private Boolean meetingMoreHidden = false;
+
+    private static final int MAX_RETRY = 5;
+    private int retryCount = 0;
     MobileRTCShareView shareView = new MobileRTCShareView(getReactApplicationContext());
 
     private List<Integer> videoViews = Collections.synchronizedList(new ArrayList<Integer>());
@@ -253,7 +256,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                     Locale locale = parts.length == 1
                             ? new Locale(parts[0])
                             : new Locale(parts[0], parts[1]);
-                    zoomSDK.setSdkLocale(reactContext, locale);
+//                    zoomSDK.setSdkLocale(reactContext, Locale.ROOT);
 
                     ZoomSDKInitParams initParams = new ZoomSDKInitParams();
                     initParams.jwtToken = params.getString("jwtToken");
@@ -1147,22 +1150,38 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     // Internal user list update trigger
     private void updateVideoView() {
-        UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
+        runUpdateVideoView(false);
+    }
 
-        uiManager.addUIBlock(new UIBlock() {
-            @Override
-            public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                synchronized (videoViews) {
-                    Log.i(TAG, "updateVideoView");
-                    Iterator<Integer> iterator = videoViews.iterator();
-                    while (iterator.hasNext()) {
-                        final int tagId = iterator.next();
-                        try {
-                            final RNZoomUsVideoView view = (RNZoomUsVideoView) nativeViewHierarchyManager.resolveView(tagId);
-                            if (view != null) view.update();
-                        } catch (Exception ex) {
-                            Log.e(TAG, ex.getMessage());
-                        }
+    private void runUpdateVideoView(boolean isRetry) {
+        final UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
+
+        if (uiManager == null) {
+            if (retryCount < MAX_RETRY) {
+                retryCount++;
+                Log.w(TAG, "UIManagerModule is null, retry " + retryCount);
+                new android.os.Handler(Looper.getMainLooper())
+                        .postDelayed(() -> runUpdateVideoView(true), 300); // retry sau 300ms
+            } else {
+                Log.e(TAG, "UIManagerModule is still null after " + MAX_RETRY + " retries");
+            }
+            return;
+        }
+
+        retryCount = 0; // reset nếu thành công
+
+        uiManager.addUIBlock(nativeViewHierarchyManager -> {
+            synchronized (videoViews) {
+                Log.i(TAG, "updateVideoView");
+                Iterator<Integer> iterator = videoViews.iterator();
+                while (iterator.hasNext()) {
+                    final int tagId = iterator.next();
+                    try {
+                        final RNZoomUsVideoView view =
+                                (RNZoomUsVideoView) nativeViewHierarchyManager.resolveView(tagId);
+                        if (view != null) view.update();
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Error updating video view", ex);
                     }
                 }
             }
