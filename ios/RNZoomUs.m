@@ -1,5 +1,6 @@
 #import <ReplayKit/ReplayKit.h>
 #import "RNZoomUs.h"
+#import "RNZoomUsEvents.h"
 #import <React/RCTViewManager.h>
 #import "ProviderDelegate.h"
 #import "GlobalData.h"
@@ -216,7 +217,11 @@ RCT_EXPORT_METHOD(
 - (void)setMeetingSettings {
     MobileRTCMeetingSettings *zoomSettings = [[MobileRTC sharedRTC] getMeetingSettings];
     if (zoomSettings != nil) {
-        [zoomSettings enableVideoCallPictureInPicture:YES];
+        // Zoom iOS SDK 7.1.x removed -enableVideoCallPictureInPicture:.
+        // PiP is now driven by the SDK itself; only the getter
+        // -videoCallPictureInPictureEnabled remains. The old setter was
+        // documented as "only works in ZoomUI", so it was already a no-op
+        // whenever enableCustomizedMeetingUI is on.
         //        [zoomSettings setMeetingChatHidden:YES];
         [zoomSettings setAutoConnectInternetAudio:YES];
         [zoomSettings disableDriveMode:YES];
@@ -257,7 +262,11 @@ RCT_EXPORT_METHOD(
             MobileRTCMeetingStartParam4WithoutLoginUser * params = [[MobileRTCMeetingStartParam4WithoutLoginUser alloc]init];
             params.userName = data[@"userName"];
             params.meetingNumber = data[@"meetingNumber"];
-            params.userType = data[@"userType"];
+            // data[@"userType"] is an NSNumber; MobileRTCUserType is an
+            // NSUInteger enum. Assigning the object directly stored the
+            // pointer address as the user type, so the value sent to the SDK
+            // was never the one the caller passed.
+            params.userType = (MobileRTCUserType)[data[@"userType"] unsignedIntegerValue];
             params.zak = data[@"zoomAccessToken"];
             
             MobileRTCMeetError startMeetingResult = [ms startMeetingWithStartParam:params];
@@ -447,7 +456,10 @@ RCT_EXPORT_METHOD(muteAttendee: (NSString *)userId muted:(BOOL)muted resolver:(R
             reject(@"ERR_ZOOM_MEETING_CONTROL", @"Cannot get meeting service.", nil);
             return;
         }
-        NSNumber *zoomUserId = @([userId intValue]);
+        // -muteUserAudio:withUID: takes an NSUInteger. Passing the boxed
+        // NSNumber handed the SDK the pointer address instead of the user id,
+        // so this never muted the requested attendee.
+        NSUInteger zoomUserId = (NSUInteger)[userId longLongValue];
         if ([ms muteUserAudio:muted withUID:zoomUserId]) {
             resolve(nil);
         } else {
@@ -780,7 +792,8 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     NSLog(@"UserInfo: %@", notification.userInfo);
 }
 
-- (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *_Nullable)meetingParam {}
+- (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *_Nullable)meetingParam {
+    RNZoomUsEmit(@"onMeetingParameterNotification", @{@"meetingParamPresent": @(meetingParam != nil)});}
 
 - (void)onMobileRTCAuthReturn:(MobileRTCAuthError)returnValue {
     NSLog(@"nZoomSDKInitializeResult, errorCode=%d", returnValue);
@@ -898,6 +911,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
 }
 - (void)onMeetingStateChange:(MobileRTCMeetingState)state {
+    RNZoomUsEmit(@"onMeetingStateChange", @{@"state": @(state)});
     NSLog(@"onMeetingStatusChanged, meetingState=%@", @(state));
     
     NSString* statusString = [self formatStateToString:state];
@@ -953,6 +967,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onMeetingError:(MobileRTCMeetError)errorCode message:(NSString *)message {
+    RNZoomUsEmit(@"onMeetingError", @{@"errorCode": @(errorCode), @"message": message ?: [NSNull null]});
     NSLog(@"onMeetingError, errorCode=%d, message=%@", errorCode, message);
     [self sendEventWithName:@"MeetingEvent" event:[self meetErrorName:errorCode]];
     
@@ -975,6 +990,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onMeetingEndedReason:(MobileRTCMeetingEndReason)reason {
+    RNZoomUsEmit(@"onMeetingEndedReason", @{@"reason": @(reason)});
     [self sendEventWithName:@"MeetingEvent" event:[self meetingEndReasonName:reason]];
 }
 
@@ -1019,6 +1035,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 #pragma mark - Screen share functionality
 
 - (void)onSinkShareSizeChange:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkShareSizeChange", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkShareSizeChange==%@",@(userID));
 }
 
@@ -1039,6 +1056,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onClickShareScreen:(UIViewController *)parentVC {
+    RNZoomUsEmit(@"onClickShareScreen", @{@"parentVCPresent": @(parentVC != nil)});
     if (@available(iOS 12.0, *)) {
         CGRect frame = parentVC.view.bounds;
         RPSystemBroadcastPickerView *pickerView = [[RPSystemBroadcastPickerView alloc] initWithFrame:frame];
@@ -1050,7 +1068,8 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
 }
 
-- (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo {}
+- (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo {
+    RNZoomUsEmit(@"onSinkSharingStatus", @{@"shareInfoPresent": @(shareInfo != nil)});}
 
 #pragma mark - https://marketplacefront.zoom.us/sdk/meeting/ios/_mobile_r_t_c_meeting_delegate_8h_source.html
 
@@ -1058,6 +1077,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 #pragma mark - MobileRTCVideoServiceDelegate
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID videoStatus:(MobileRTC_VideoStatus)videoStatus {
+    RNZoomUsEmit(@"onSinkMeetingVideoStatusChange", @{@"userID": @(userID), @"videoStatus": @(videoStatus)});
     NSLog(@"RNZoomUs onSinkMeetingVideoStatusChange=%@, videoStatus=%@",@(userID), @(videoStatus));
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     
@@ -1070,6 +1090,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 -  (void)onSinkMeetingVideoRequestUnmuteByHost:(MobileRTCSDKError (^_Nonnull)(BOOL Accept))completion {
+    RNZoomUsEmit(@"onSinkMeetingVideoRequestUnmuteByHost", nil);
     [self sendEventWithName:@"MeetingEvent" event:@"askUnMuteVideo"];
     NSLog(@"RNZoomUs onSinkMeetingVideoRequestUnmuteByHost");
     if (completion)
@@ -1082,10 +1103,12 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 - (void)onVideoOrderUpdated:(NSArray <NSNumber *>* _Nullable)orderArr {}
 
 - (void)onFollowHostVideoOrderChanged:(BOOL)follow {
+    RNZoomUsEmit(@"onFollowHostVideoOrderChanged", @{@"follow": @(follow)});
     NSLog(@"[Video Order] callback onFollowHostVideoOrderChanged: %@", @(follow));
 }
 
 - (void)onSinkMeetingActiveVideo:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingActiveVideo", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
     //    [[GlobalData sharedInstance] setUserID:userID];
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
@@ -1097,6 +1120,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingVideoStatusChange", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingVideoStatusChange=%@",@(userID));
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     BOOL isWebinar = [ms isWebinarMeeting];
@@ -1105,24 +1129,30 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onMyVideoStateChange {
+    RNZoomUsEmit(@"onMyVideoStateChange", nil);
     NSLog(@"RNZoomUs onMyVideoStateChange");
 }
 
-- (void)onSpotlightVideoChange:(BOOL)on {}
+- (void)onSpotlightVideoChange:(BOOL)on {
+    RNZoomUsEmit(@"onSpotlightVideoChange", @{@"on": @(on)});}
 
 - (void)onSinkMeetingPreviewStopped {
+    RNZoomUsEmit(@"onSinkMeetingPreviewStopped", nil);
     NSLog(@"RNZoomUs onSinkMeetingPreviewStopped");
 }
 
 - (void)onSinkMeetingActiveVideoForDeck:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingActiveVideoForDeck", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
 }
 
 - (void)onSinkMeetingVideoQualityChanged:(MobileRTCNetworkQuality)qality userID:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingVideoQualityChanged", @{@"qality": @(qality), @"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingVideoQualityChanged: %zd userID:%zd",qality,userID);
 }
 
 - (void)onSinkMeetingShowMinimizeMeetingOrBackZoomUI:(MobileRTCMinimizeMeetingState)state {
+    RNZoomUsEmit(@"onSinkMeetingShowMinimizeMeetingOrBackZoomUI", @{@"state": @(state)});
     switch (state) {
         case MobileRTCMinimizeMeeting_ShowMinimizeMeeting:
             [self sendEventWithName:@"MeetingEvent" body:@{@"event": @"showMinimizeMeeting", @"status": @"showMinimizeMeeting"}];
@@ -1136,7 +1166,8 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
 }
 
-- (void)onBOOptionChanged:(MobileRTCBOOption *_Nonnull)newOption {}
+- (void)onBOOptionChanged:(MobileRTCBOOption *_Nonnull)newOption {
+    RNZoomUsEmit(@"onBOOptionChanged", @{@"newOptionPresent": @(newOption != nil)});}
 
 
 
@@ -1147,17 +1178,20 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)onLocalVideoOrderUpdated:(NSArray <NSNumber *>* _Nullable)localOrderArr
 {
+    RNZoomUsEmit(@"onLocalVideoOrderUpdated", @{@"localOrderArr": localOrderArr ?: @[]});
     NSLog(@"[Video Order] callback onLocalVideoOrderUpdated: %@", localOrderArr);
 }
 
 #pragma mark - MobileRTCAudioServiceDelegate
 
 - (void)onSinkMeetingMyAudioTypeChange {
+    RNZoomUsEmit(@"onSinkMeetingMyAudioTypeChange", nil);
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     [self sendEventWithName:@"MeetingEvent" event:@"myAudioTypeChanged" userInfo:[ms userInfoByID:[ms myselfUserID]]];
 }
 
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID audioStatus:(MobileRTC_AudioStatus)audioStatus {
+    RNZoomUsEmit(@"onSinkMeetingAudioStatusChange", @{@"userID": @(userID), @"audioStatus": @(audioStatus)});
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     
     if ([ms isMyself:userID]) {
@@ -1168,18 +1202,23 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 // This looks like it doesnt get called check
 // https://github.com/mieszko4/react-native-zoom-us/pull/144#issuecomment-931189245
 - (void)onSinkMeetingAudioRequestUnmuteByHost {
+    RNZoomUsEmit(@"onSinkMeetingAudioRequestUnmuteByHost", nil);
     [self sendEventWithName:@"MeetingEvent" event:@"askUnMuteAudio"];
 }
 
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingAudioStatusChange", @{@"userID": @(userID)});
     NSLog(@"onSinkMeetingAudioStatusChange");
 }
 
-- (void)onSinkMeetingAudioTypeChange:(NSUInteger)userID {}
+- (void)onSinkMeetingAudioTypeChange:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingAudioTypeChange", @{@"userID": @(userID)});}
 
-- (void)onAudioOutputChange {}
+- (void)onAudioOutputChange {
+    RNZoomUsEmit(@"onAudioOutputChange", nil);}
 
 - (void)onMyAudioStateChange {
+    RNZoomUsEmit(@"onMyAudioStateChange", nil);
     NSLog(@"onMyAudioStateChange");
 }
 
@@ -1187,19 +1226,26 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 #pragma mark - MobileRTCUserServiceDelegate
 
-- (void)onMyHandStateChange {}
+- (void)onMyHandStateChange {
+    RNZoomUsEmit(@"onMyHandStateChange", nil);}
 
-- (void)onInMeetingUserUpdated {}
+- (void)onInMeetingUserUpdated {
+    RNZoomUsEmit(@"onInMeetingUserUpdated", nil);}
 
-- (void)onSinkMeetingUserRaiseHand:(NSUInteger)userID {}
+- (void)onSinkMeetingUserRaiseHand:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserRaiseHand", @{@"userID": @(userID)});}
 
-- (void)onSinkMeetingUserLowerHand:(NSUInteger)userID {}
+- (void)onSinkMeetingUserLowerHand:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserLowerHand", @{@"userID": @(userID)});}
 
-- (void)onSinkUserNameChanged:(NSArray <NSNumber*>* _Nullable)userNameChangedArr {}
+- (void)onSinkUserNameChanged:(NSArray <NSNumber*>* _Nullable)userNameChangedArr {
+    RNZoomUsEmit(@"onSinkUserNameChanged", @{@"userNameChangedArr": userNameChangedArr ?: @[]});}
 
-- (void)onClaimHostResult:(MobileRTCClaimHostError)error {}
+- (void)onClaimHostResult:(MobileRTCClaimHostError)error {
+    RNZoomUsEmit(@"onClaimHostResult", @{@"error": @(error)});}
 
 - (void)onMeetingHostChange:(NSUInteger)userId {
+    RNZoomUsEmit(@"onMeetingHostChange", @{@"userId": @(userId)});
     [self sendEventWithName:@"MeetingEvent" params:@{
         @"event": @"hostChanged",
         @"userId": @(userId)
@@ -1207,6 +1253,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onMeetingCoHostChange:(NSUInteger)userId isCoHost:(BOOL)isCoHost {
+    RNZoomUsEmit(@"onMeetingCoHostChange", @{@"userId": @(userId), @"isCoHost": @(isCoHost)});
     [self sendEventWithName:@"MeetingEvent" params:@{
         @"event": @"coHostChanged",
         @"userId": @(userId)
@@ -1214,6 +1261,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 }
 
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserLeft", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingUserLeft==%@", @(userID));
     [self sendEventWithName:@"MeetingEvent" params:@{
         @"event": @"userLeave",
@@ -1221,6 +1269,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }];
 }
 - (void)onSinkMeetingUserJoin:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserJoin", @{@"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingUserJoin==%@", @(userID));
     
     [self sendEventWithName:@"MeetingEvent" params:@{
@@ -1251,20 +1300,60 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)startObserving {
     hasObservers = YES;
+    // Callbacks raised while RNZoomUsVideoView holds ms.delegate arrive here.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleSDKCallbackNotification:)
+                                                 name:RNZoomUsSDKCallbackNotification
+                                               object:nil];
 }
 
 - (void)stopObserving {
     hasObservers = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:RNZoomUsSDKCallbackNotification
+                                                  object:nil];
 }
 
+- (void)handleSDKCallbackNotification:(NSNotification *)notification {
+    NSString *event = notification.userInfo[RNZoomUsSDKCallbackEventKey];
+    NSDictionary *payload = notification.userInfo[RNZoomUsSDKCallbackPayloadKey];
+    if (![event isKindOfClass:[NSString class]]) return;
+
+    // sendEventWithName: must be called on the JS thread's behalf via the
+    // bridge; hop to main so callbacks raised on Zoom's own threads are safe.
+    if ([NSThread isMainThread]) {
+        [self emitZoomEvent:event payload:payload];
+    } else {
+        __weak __typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf emitZoomEvent:event payload:payload];
+        });
+    }
+}
+
+// Unified event channel. Every SDK delegate callback is forwarded here,
+// including ones nothing consumes yet, so adding a feature later never needs a
+// native rebuild. The three legacy channels still emit exactly as before.
+static NSString *const kZoomEventChannel = @"ZoomUsEvent";
+
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"AuthEvent", @"MeetingEvent", @"MeetingStatus"];
+    return @[@"AuthEvent", @"MeetingEvent", @"MeetingStatus", kZoomEventChannel];
+}
+
+- (void)emitZoomEvent:(NSString *)event payload:(nullable NSDictionary *)payload {
+    if (!hasObservers) return;
+    NSMutableDictionary *body = payload ? [payload mutableCopy] : [NSMutableDictionary dictionary];
+    body[@"event"] = event;
+    [self sendEventWithName:kZoomEventChannel body:body];
 }
 
 - (void)sendEventWithName:(NSString *)name event:(NSString *)event {
     if (hasObservers) {
         [self sendEventWithName:name body:@{@"event": event}];
     }
+    // Mirror onto the unified channel so subscribers there see every callback,
+    // not just the ones without a legacy emitter.
+    [self emitZoomEvent:event payload:@{@"channel": name}];
 }
 - (void)sendEventWithName:(NSString *)name event:(NSString *)event status:(NSString *)status {
     if (hasObservers) {
@@ -1317,7 +1406,9 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         case MobileRTCMeetError_MeetingRestrictedJBH: return @"meetingRestrictedJBH";
         case MobileRTCMeetError_MeetingUserFull: return @"meetingUserFull";
         case MobileRTCMeetError_MMRError: return @"mmrError";
-        case MobileRTCMeetError_NetworkError: return @"networkError";
+        // Renamed from MobileRTCMeetError_NetworkError in SDK 7.1.x (same value).
+        // The JS string is kept as-is so consumers do not have to change.
+        case MobileRTCMeetError_ConnectionError: return @"networkError";
         case MobileRTCMeetError_NoMMR: return @"noMMR";
         case MobileRTCMeetError_RegisterWebinarDeniedEmail: return @"registerWebinarDeniedEmail";
         case MobileRTCMeetError_RegisterWebinarEnforceLogin: return @"registerWebinarEnforceLogin";
@@ -1355,8 +1446,14 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     switch (reason) {
         case MobileRTCMeetingEndReason_EndByHost: return @"endedByHost";
         case MobileRTCMeetingEndReason_HostEndForAnotherMeeting: return @"endedByHostForAnotherMeeting";
-        case MobileRTCMeetingEndReason_SelfLeave: return @"endedBySelf";
-        case MobileRTCMeetingEndReason_ConnectBroken: return @"endedConnectBroken";
+        // Renamed from MobileRTCMeetingEndReason_SelfLeave in 7.1.x; still value 0
+        // and still documented as "User leaves meeting".
+        case MobileRTCMeetingEndReason_None: return @"endedBySelf";
+        // MobileRTCMeetingEndReason_ConnectBroken was removed in 7.1.x. Value 7
+        // is now _Undefined, which means "end reason the client does not know
+        // about" rather than "connection broken", so it falls through to the
+        // default instead of being reported as a dropped connection.
+        case MobileRTCMeetingEndReason_DueToAuthorizedUserLeave: return @"endedDueToAuthorizedUserLeave";
         case MobileRTCMeetingEndReason_FreeMeetingTimeout: return @"endedFreeMeetingTimeout";
         case MobileRTCMeetingEndReason_JBHTimeout: return @"endedJBHTimeout";
         case MobileRTCMeetingEndReason_RemovedByHost: return @"endedRemovedByHost";
@@ -1368,6 +1465,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     return [providerDelegate isInCall];
 }
 - (void)onStartBOError:(MobileRTCBOControllerError)errType {
+    RNZoomUsEmit(@"onStartBOError", @{@"errType": @(errType)});
     
     [self sendEventWithName:@"onStartBOError" event:[self startBOErrorName:errType]];
 }

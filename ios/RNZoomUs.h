@@ -12,5 +12,6 @@
 #import <AVKit/AVKit.h>
 
 @interface RNZoomUs : RCTEventEmitter<RCTBridgeModule, MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate, UIAlertViewDelegate, AVPictureInPictureControllerDelegate>
-@end
+- (void)emitZoomEvent:(NSString *)event payload:(nullable NSDictionary *)payload;
 
+@end

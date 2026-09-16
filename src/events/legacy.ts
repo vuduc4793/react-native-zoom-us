@@ -1,5 +1,5 @@
 import { NativeEventEmitter, NativeModule } from 'react-native'
-import { RNZoomUs } from '../native'
+import { RNZoomUs } from '../../native'
 
 export const ZoomEmitter = RNZoomUs as NativeModule
 const EventEmitter = new NativeEventEmitter(ZoomEmitter)

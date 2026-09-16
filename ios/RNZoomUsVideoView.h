@@ -16,6 +16,7 @@
 #import <MobileRTC/MobileRTCMeetingDelegate.h>
 #import "CustomMeetingViewController.h"
 #import "RCTEventEmitter.h"
+#import <React/UIView+React.h>
 @interface RNZoomUsVideoView : UIView<MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate, MobileRTCShareActionDelegate>
 
 @property(nonatomic, strong)CustomMeetingViewController* rnZoomUsVideoViewController;

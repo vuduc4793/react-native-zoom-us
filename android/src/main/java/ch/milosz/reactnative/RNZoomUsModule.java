@@ -66,6 +66,11 @@ import us.zoom.sdk.InMeetingAudioController;
 import us.zoom.sdk.InMeetingChatMessage;
 import us.zoom.sdk.InMeetingEventHandler;
 import us.zoom.sdk.InMeetingService;
+// Added in Zoom Meeting SDK 7.1.x
+import us.zoom.sdk.InMeetingPreviewHandler;
+import us.zoom.sdk.InMeetingAppSignalPanelHandler;
+import us.zoom.sdk.EnumComponentType;
+import us.zoom.sdk.MobileRTCNetworkQuality;
 import us.zoom.sdk.InMeetingServiceListener;
 import us.zoom.sdk.InMeetingShareController;
 import us.zoom.sdk.InMeetingUserInfo;
@@ -302,18 +307,24 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     private final IBOAdminEvent iboAdminEvent = new IBOAdminEvent() {
         @Override
         public void onStartBOResponse(boolean bSuccess) {
-
-        }
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("bSuccess", bSuccess);
+        emitZoomEvent("onStartBOResponse", __p);
+    }
 
         @Override
         public void onStopBOResponse(boolean bSuccess) {
-
-        }
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("bSuccess", bSuccess);
+        emitZoomEvent("onStopBOResponse", __p);
+    }
 
         @Override
         public void onHelpRequestReceived(String strUserID) {
-
-        }
+        WritableMap __p = Arguments.createMap();
+        __p.putString("strUserID", strUserID);
+        emitZoomEvent("onHelpRequestReceived", __p);
+    }
 
         @Override
         public void onStartBOError(BOControllerError error) {
@@ -323,8 +334,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
         @Override
         public void onBOEndTimerUpdated(int remaining, boolean isTimesUpNotice) {
-
-        }
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("remaining", (double) remaining);
+        __p.putBoolean("isTimesUpNotice", isTimesUpNotice);
+        emitZoomEvent("onBOEndTimerUpdated", __p);
+    }
 
         private String getStartBOErrorName(final BOControllerError errorCode) {
             return switch (errorCode) {
@@ -344,9 +358,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     };
 
     @ReactMethod
-    public void addVideoView(final int tagId, final Promise promise) {
+    public void addVideoView(final double tagId, final Promise promise) {
         try {
-            videoViews.add(new Integer(tagId));
+            videoViews.add(Integer.valueOf((int) tagId));
             promise.resolve(null);
         } catch (Exception ex) {
             promise.reject("ERR_ZOOM_VIDEO_VIEW", ex.toString());
@@ -354,9 +368,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     @ReactMethod
-    public void removeVideoView(final int tagId, final Promise promise) {
+    public void removeVideoView(final double tagId, final Promise promise) {
         try {
-            videoViews.remove(new Integer(tagId));
+            videoViews.remove(Integer.valueOf((int) tagId));
             promise.resolve(null);
         } catch (Exception ex) {
             promise.reject("ERR_ZOOM_VIDEO_VIEW", ex.toString());
@@ -706,7 +720,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     @ReactMethod
-    public void rotateMyVideo(final int rotation, final Promise promise) {
+    public void rotateMyVideo(final double rotation, final Promise promise) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -720,7 +734,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
                     final InMeetingVideoController videoController = zoomSDK.getInMeetingService().getInMeetingVideoController();
 
-                    if (videoController.rotateMyVideo(rotation)) {
+                    if (videoController.rotateMyVideo((int) rotation)) {
                         promise.resolve(null);
                     } else {
                         promise.reject("ERR_ZOOM_MEETING_CONTROL", "Error: Rotate video failed");
@@ -997,7 +1011,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     @ReactMethod
-    public void removeListeners(Integer count) {
+    public void removeListeners(double count) {
         // Keep: Required for RN built in Event Emitter Calls.
     }
 
@@ -1107,14 +1121,15 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     @ReactMethod
-    public void isHostUser(final int userId, final Promise promise) {
+    public void isHostUser(final double userId, final Promise promise) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
                     if (inMeetingService != null) {
-                        promise.resolve(inMeetingService.isHostUser(userId));
+                        promise.resolve(inMeetingService.isHostUser((long) userId));
+                        return;
                     }
                     promise.resolve(false);
                 } catch (Exception ex) {
@@ -1224,6 +1239,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onZoomAuthIdentityExpired() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onZoomAuthIdentityExpired", __p);
     }
 
     // MeetingServiceListener
@@ -1420,201 +1437,351 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     // InMeetingServiceListener required listeners but unused for now
     @Override
     public void onAllowParticipantsRequestCloudRecording(boolean bAllow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("bAllow", bAllow);
+        emitZoomEvent("onAllowParticipantsRequestCloudRecording", __p);
+    }
+
+    // Added in Zoom Meeting SDK 7.1.x
+    @Override
+    public void onMeetingNeedConfirmPreview(InMeetingPreviewHandler inMeetingPreviewHandler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("inMeetingPreviewHandlerPresent", inMeetingPreviewHandler != null);
+        emitZoomEvent("onMeetingNeedConfirmPreview", __p);
+    }
+
+    @Override
+    public void onUserNetworkStatusChanged(EnumComponentType componentType, MobileRTCNetworkQuality quality, long userId, boolean isMyself) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("componentType", componentType == null ? null : componentType.name());
+        __p.putString("quality", quality == null ? null : quality.name());
+        __p.putDouble("userId", (double) userId);
+        __p.putBoolean("isMyself", isMyself);
+        emitZoomEvent("onUserNetworkStatusChanged", __p);
+    }
+
+    @Override
+    public void onAppSignalPanelUpdated(InMeetingAppSignalPanelHandler inMeetingAppSignalPanelHandler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("inMeetingAppSignalPanelHandlerPresent", inMeetingAppSignalPanelHandler != null);
+        emitZoomEvent("onAppSignalPanelUpdated", __p);
     }
 
     @Override
     public void onSinkJoin3rdPartyTelephonyAudio(String s) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putString("s", s);
+        emitZoomEvent("onSinkJoin3rdPartyTelephonyAudio", __p);
     }
 
     @Override
     public void onUserConfirmToStartArchive(IMeetingArchiveConfirmHandler iMeetingArchiveConfirmHandler) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("iMeetingArchiveConfirmHandlerPresent", iMeetingArchiveConfirmHandler != null);
+        emitZoomEvent("onUserConfirmToStartArchive", __p);
     }
 
     @Override
     public void onCameraControlRequestReceived(long l, CameraControlRequestType cameraControlRequestType, ICameraControlRequestHandler iCameraControlRequestHandler) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        __p.putString("cameraControlRequestType", cameraControlRequestType == null ? null : cameraControlRequestType.name());
+        __p.putBoolean("iCameraControlRequestHandlerPresent", iCameraControlRequestHandler != null);
+        emitZoomEvent("onCameraControlRequestReceived", __p);
     }
 
     @Override
     public void onCameraControlRequestResult(long l, boolean b) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        __p.putBoolean("b", b);
+        emitZoomEvent("onCameraControlRequestResult", __p);
     }
 
     @Override
     public void onCameraControlRequestResult(long l, CameraControlRequestResult cameraControlRequestResult) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        __p.putString("cameraControlRequestResult", cameraControlRequestResult == null ? null : cameraControlRequestResult.name());
+        emitZoomEvent("onCameraControlRequestResult", __p);
     }
 
     @Override
     public void onFileSendStart(ZoomSDKFileSender zoomSDKFileSender) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("zoomSDKFileSenderPresent", zoomSDKFileSender != null);
+        emitZoomEvent("onFileSendStart", __p);
     }
 
     @Override
     public void onFileReceived(ZoomSDKFileReceiver zoomSDKFileReceiver) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("zoomSDKFileReceiverPresent", zoomSDKFileReceiver != null);
+        emitZoomEvent("onFileReceived", __p);
     }
 
     @Override
     public void onFileTransferProgress(ZoomSDKFileTransferInfo zoomSDKFileTransferInfo) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("zoomSDKFileTransferInfoPresent", zoomSDKFileTransferInfo != null);
+        emitZoomEvent("onFileTransferProgress", __p);
     }
 
     @Override
     public void onMuteOnEntryStatusChange(boolean b) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("b", b);
+        emitZoomEvent("onMuteOnEntryStatusChange", __p);
     }
 
     @Override
     public void onMeetingTopicChanged(String s) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putString("s", s);
+        emitZoomEvent("onMeetingTopicChanged", __p);
     }
 
     @Override
     public void onMeetingFullToWatchLiveStream(String s) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putString("s", s);
+        emitZoomEvent("onMeetingFullToWatchLiveStream", __p);
     }
 
     @Override
     public void onBotAuthorizerRelationChanged(long l) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        emitZoomEvent("onBotAuthorizerRelationChanged", __p);
     }
 
     @Override
     public void onVirtualNameTagStatusChanged(boolean b, long l) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("b", b);
+        __p.putDouble("l", (double) l);
+        emitZoomEvent("onVirtualNameTagStatusChanged", __p);
     }
 
     @Override
     public void onVirtualNameTagRosterInfoUpdated(long l) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        emitZoomEvent("onVirtualNameTagRosterInfoUpdated", __p);
     }
 
     @Override
     public void onCreateCompanionRelation(long l, long l1) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        __p.putDouble("l1", (double) l1);
+        emitZoomEvent("onCreateCompanionRelation", __p);
     }
 
     @Override
     public void onRemoveCompanionRelation(long l) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        emitZoomEvent("onRemoveCompanionRelation", __p);
     }
 
     @Override
     public void onUserConfirmRecoverMeeting(IRecoverMeetingHandle iRecoverMeetingHandle) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("iRecoverMeetingHandlePresent", iRecoverMeetingHandle != null);
+        emitZoomEvent("onUserConfirmRecoverMeeting", __p);
     }
 
     @Override
     public void onUVCCameraStatusChange(String cameraId, UVCCameraStatus status) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("cameraId", cameraId);
+        __p.putString("status", status == null ? null : status.name());
+        emitZoomEvent("onUVCCameraStatusChange", __p);
     }
 
     @Override
     public void onVideoAlphaChannelStatusChanged(boolean isAlphaModeOn) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("isAlphaModeOn", isAlphaModeOn);
+        emitZoomEvent("onVideoAlphaChannelStatusChanged", __p);
     }
 
     @Override
     public void onFocusModeStateChanged(boolean on) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("on", on);
+        emitZoomEvent("onFocusModeStateChanged", __p);
     }
 
     @Override
     public void onFocusModeShareTypeChanged(MobileRTCFocusModeShareType shareType) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("shareType", shareType == null ? null : shareType.name());
+        emitZoomEvent("onFocusModeShareTypeChanged", __p);
     }
 
     @Override
     public void onAICompanionActiveChangeNotice(boolean b) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("b", b);
+        emitZoomEvent("onAICompanionActiveChangeNotice", __p);
     }
 
     @Override
     public void onParticipantProfilePictureStatusChange(boolean b) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("b", b);
+        emitZoomEvent("onParticipantProfilePictureStatusChange", __p);
     }
 
     @Override
     public void onCloudRecordingStorageFull(long l) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        emitZoomEvent("onCloudRecordingStorageFull", __p);
     }
 
     @Override
     public void onInMeetingUserAvatarPathUpdated(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onInMeetingUserAvatarPathUpdated", __p);
     }
 
     @Override
     public void onSuspendParticipantsActivities() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onSuspendParticipantsActivities", __p);
     }
 
     @Override
     public void onAllowParticipantsStartVideoNotification(boolean allow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("allow", allow);
+        emitZoomEvent("onAllowParticipantsStartVideoNotification", __p);
     }
 
     @Override
     public void onAllowParticipantsRenameNotification(boolean allow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("allow", allow);
+        emitZoomEvent("onAllowParticipantsRenameNotification", __p);
     }
 
     @Override
     public void onAllowParticipantsUnmuteSelfNotification(boolean allow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("allow", allow);
+        emitZoomEvent("onAllowParticipantsUnmuteSelfNotification", __p);
     }
 
     @Override
     public void onAllowParticipantsShareWhiteBoardNotification(boolean allow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("allow", allow);
+        emitZoomEvent("onAllowParticipantsShareWhiteBoardNotification", __p);
     }
 
     @Override
     public void onMeetingLockStatus(boolean isLock) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("isLock", isLock);
+        emitZoomEvent("onMeetingLockStatus", __p);
     }
 
     @Override
     public void onFollowHostVideoOrderChanged(boolean bFollow) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("bFollow", bFollow);
+        emitZoomEvent("onFollowHostVideoOrderChanged", __p);
     }
 
     @Override
     public void onMeetingParameterNotification(MeetingParameter meetingParameter) {
+        WritableMap __p = Arguments.createMap();
+        __p.putMap("meetingParameter", toMeetingParameter(meetingParameter));
+        emitZoomEvent("onMeetingParameterNotification", __p);
     }
 
     @Override
     public void onHostVideoOrderUpdated(List<Long> orderList) {
+        WritableMap __p = Arguments.createMap();
+        __p.putArray("orderList", toLongArray(orderList));
+        emitZoomEvent("onHostVideoOrderUpdated", __p);
     }
 
     @Override
     public void onMeetingNeedPasswordOrDisplayName(boolean needPassword, boolean needDisplayName, InMeetingEventHandler handler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("needPassword", needPassword);
+        __p.putBoolean("needDisplayName", needDisplayName);
+        __p.putBoolean("handlerPresent", handler != null);
+        emitZoomEvent("onMeetingNeedPasswordOrDisplayName", __p);
     }
 
     @Override
     public void onWebinarNeedRegister(String registerUrl) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("registerUrl", registerUrl);
+        emitZoomEvent("onWebinarNeedRegister", __p);
     }
 
     @Override
     public void onJoinMeetingNeedUserInfo(IMeetingInputUserInfoHandler iMeetingInputUserInfoHandler) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("iMeetingInputUserInfoHandlerPresent", iMeetingInputUserInfoHandler != null);
+        emitZoomEvent("onJoinMeetingNeedUserInfo", __p);
     }
 
     @Override
     public void onJoinWebinarNeedUserNameAndEmail(InMeetingEventHandler handler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("handlerPresent", handler != null);
+        emitZoomEvent("onJoinWebinarNeedUserNameAndEmail", __p);
     }
 
     @Override
     public void onWebinarNeedInputScreenName(InMeetingEventHandler inMeetingEventHandler) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("inMeetingEventHandlerPresent", inMeetingEventHandler != null);
+        emitZoomEvent("onWebinarNeedInputScreenName", __p);
     }
 
     @Override
     public void onMeetingNeedCloseOtherMeeting(InMeetingEventHandler handler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("handlerPresent", handler != null);
+        emitZoomEvent("onMeetingNeedCloseOtherMeeting", __p);
     }
 
     @Override
     public void onMeetingFail(int errorCode, int internalErrorCode) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("errorCode", (double) errorCode);
+        __p.putDouble("internalErrorCode", (double) internalErrorCode);
+        emitZoomEvent("onMeetingFail", __p);
     }
 
     @Override
     public void onMeetingUserUpdated(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onMeetingUserUpdated", __p);
     }
 
     @Override
     public void onActiveVideoUserChanged(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onActiveVideoUserChanged", __p);
     }
 
     @Override
     public void onActiveSpeakerVideoUserChanged(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onActiveSpeakerVideoUserChanged", __p);
     }
 
     @Deprecated
@@ -1623,10 +1790,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onSpotlightVideoChanged(List<Long> userList) {
+        WritableMap __p = Arguments.createMap();
+        __p.putArray("userList", toLongArray(userList));
+        emitZoomEvent("onSpotlightVideoChanged", __p);
     }
 
     @Override
     public void onSinkPanelistChatPrivilegeChanged(InMeetingChatController.MobileRTCWebinarPanelistChatPrivilege privilege) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("privilege", privilege == null ? null : privilege.name());
+        emitZoomEvent("onSinkPanelistChatPrivilegeChanged", __p);
     }
 
     @Deprecated
@@ -1637,18 +1810,32 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onSinkMeetingVideoQualityChanged(VideoQuality videoQuality, long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("videoQuality", videoQuality == null ? null : videoQuality.name());
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onSinkMeetingVideoQualityChanged", __p);
     }
 
     @Override
     public void onMicrophoneStatusError(InMeetingAudioController.MobileRTCMicrophoneError error) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("error", error == null ? null : error.name());
+        emitZoomEvent("onMicrophoneStatusError", __p);
     }
 
     @Override
     public void onUserAudioTypeChanged(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onUserAudioTypeChanged", __p);
     }
 
     @Override
     public void onLowOrRaiseHandStatusChanged(long userId, boolean isRaisedHand) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        __p.putBoolean("isRaisedHand", isRaisedHand);
+        emitZoomEvent("onLowOrRaiseHandStatusChanged", __p);
     }
 
     @Override
@@ -1674,24 +1861,37 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onChatMessageEditNotification(InMeetingChatMessage inMeetingChatMessage) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("inMeetingChatMessagePresent", inMeetingChatMessage != null);
+        emitZoomEvent("onChatMessageEditNotification", __p);
     }
 
     @Override
     public void onSilentModeChanged(boolean inSilentMode) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("inSilentMode", inSilentMode);
+        emitZoomEvent("onSilentModeChanged", __p);
     }
 
     @Override
     public void onMeetingActiveVideo(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onMeetingActiveVideo", __p);
     }
 
     @Override
     public void onSinkAttendeeChatPrivilegeChanged(int i) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("i", (double) i);
+        emitZoomEvent("onSinkAttendeeChatPrivilegeChanged", __p);
     }
 
     @Override
     public void onSinkAllowAttendeeChatNotification(int privilege) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("privilege", (double) privilege);
+        emitZoomEvent("onSinkAllowAttendeeChatNotification", __p);
     }
 
     @Deprecated
@@ -1700,66 +1900,114 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onUserNamesChanged(List<Long> userList) {
+        WritableMap __p = Arguments.createMap();
+        __p.putArray("userList", toLongArray(userList));
+        emitZoomEvent("onUserNamesChanged", __p);
     }
 
     @Override
     public void onInvalidReclaimHostkey() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onInvalidReclaimHostkey", __p);
     }
 
     @Override
     public void onRecordingStatus(RecordingStatus status) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("status", status == null ? null : status.name());
+        emitZoomEvent("onRecordingStatus", __p);
     }
 
     @Override
     public void onLocalRecordingStatus(long userId, RecordingStatus recordingStatus) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        __p.putString("recordingStatus", recordingStatus == null ? null : recordingStatus.name());
+        emitZoomEvent("onLocalRecordingStatus", __p);
     }
 
     @Override
     public void onClosedCaptionReceived(String message, long senderId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("message", message);
+        __p.putDouble("senderId", (double) senderId);
+        emitZoomEvent("onClosedCaptionReceived", __p);
     }
 
     @Override
     public void onFreeMeetingReminder(boolean isHost, boolean canUpgrade, boolean isFirstGift) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("isHost", isHost);
+        __p.putBoolean("canUpgrade", canUpgrade);
+        __p.putBoolean("isFirstGift", isFirstGift);
+        emitZoomEvent("onFreeMeetingReminder", __p);
     }
 
     @Override
     public void onFreeMeetingUpgradeToProMeeting() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onFreeMeetingUpgradeToProMeeting", __p);
     }
 
     @Override
     public void onFreeMeetingUpgradeToGiftFreeTrialStop() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onFreeMeetingUpgradeToGiftFreeTrialStop", __p);
     }
 
     @Override
     public void onFreeMeetingUpgradeToGiftFreeTrialStart() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onFreeMeetingUpgradeToGiftFreeTrialStart", __p);
     }
 
     @Override
     public void onFreeMeetingNeedToUpgrade(FreeMeetingNeedUpgradeType type, String gifUrl) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("type", type == null ? null : type.name());
+        __p.putString("gifUrl", gifUrl);
+        emitZoomEvent("onFreeMeetingNeedToUpgrade", __p);
     }
 
     @Override
     public void onLocalVideoOrderUpdated(List<Long> localOrderList) {
+        WritableMap __p = Arguments.createMap();
+        __p.putArray("localOrderList", toLongArray(localOrderList));
+        emitZoomEvent("onLocalVideoOrderUpdated", __p);
     }
 
     @Override
     public void onAllHandsLowered() {
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onAllHandsLowered", __p);
     }
 
     @Override
     public void onPermissionRequested(String[] permissions) {
+        WritableMap __p = Arguments.createMap();
+        __p.putArray("permissions", toStringArray(permissions));
+        emitZoomEvent("onPermissionRequested", __p);
     }
 
     @Override
     public void onShareMeetingChatStatusChanged(boolean start) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("start", start);
+        emitZoomEvent("onShareMeetingChatStatusChanged", __p);
     }
 
     @Override
     public void onLocalRecordingPrivilegeRequested(IRequestLocalRecordingPrivilegeHandler handler) {
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("handlerPresent", handler != null);
+        emitZoomEvent("onLocalRecordingPrivilegeRequested", __p);
     }
 
     @Override
     public void onRequestLocalRecordingPrivilegeChanged(LocalRecordingRequestPrivilegeStatus status) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("status", status == null ? null : status.name());
+        emitZoomEvent("onRequestLocalRecordingPrivilegeChanged", __p);
     }
 
     // InMeetingShareListener event listeners
@@ -1767,6 +2015,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onShareSettingTypeChanged(ShareSettingType type) {
+        WritableMap __p = Arguments.createMap();
+        __p.putString("type", type == null ? null : type.name());
+        emitZoomEvent("onShareSettingTypeChanged", __p);
     }
 
     @Override
@@ -1818,11 +2069,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onShareUserReceivingStatus(long userId) {
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", (double) userId);
+        emitZoomEvent("onShareUserReceivingStatus", __p);
     }
 
     @Override
     public void onGrantCoOwnerPrivilegeChanged(boolean canGrantOther) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("canGrantOther", canGrantOther);
+        emitZoomEvent("onGrantCoOwnerPrivilegeChanged", __p);
     }
 
     // React LifeCycle
@@ -1907,6 +2163,12 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(name, params);
+
+        // Mirror onto the unified channel so subscribers there see every
+        // callback, not just the ones without a legacy emitter.
+        WritableMap mirrored = Arguments.createMap();
+        mirrored.putString("channel", name);
+        emitZoomEvent(event, mirrored);
     }
 
     private void sendEvent(String name, String event, InMeetingUserInfo userInfo) {
@@ -2248,7 +2510,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onShareFromMainSession(long l, SharingStatus sharingStatus, IShareAction iShareAction) {
-
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("l", (double) l);
+        __p.putString("sharingStatus", sharingStatus == null ? null : sharingStatus.name());
+        __p.putBoolean("iShareActionPresent", iShareAction != null);
+        emitZoomEvent("onShareFromMainSession", __p);
     }
 
     @ReactMethod
@@ -2357,6 +2623,63 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 }
             }
         });
+    }
+
+
+    // ------------------------------------------------------------------
+    // Unified event channel
+    //
+    // Every SDK listener callback is forwarded here, including ones nothing
+    // consumes yet, so adding a feature later never requires a native rebuild
+    // and a new library release.
+    //
+    // The legacy "MeetingEvent" / "MeetingStatus" / "AuthEvent" channels still
+    // emit exactly as before; this is an additional stream, not a replacement.
+    // ------------------------------------------------------------------
+    static final String ZOOM_EVENT_CHANNEL = "ZoomUsEvent";
+
+    private void emitZoomEvent(String event, WritableMap payload) {
+        try {
+            WritableMap params = payload == null ? Arguments.createMap() : payload;
+            params.putString("event", event);
+            if (!reactContext.hasActiveReactInstance()) return;
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(ZOOM_EVENT_CHANNEL, params);
+        } catch (Exception ex) {
+            Log.e(TAG, "emitZoomEvent(" + event + ") failed", ex);
+        }
+    }
+
+    private static WritableArray toLongArray(List<Long> values) {
+        WritableArray array = Arguments.createArray();
+        if (values != null) {
+            for (Long value : values) {
+                if (value != null) array.pushDouble(value.doubleValue());
+            }
+        }
+        return array;
+    }
+
+    private static WritableArray toStringArray(String[] values) {
+        WritableArray array = Arguments.createArray();
+        if (values != null) {
+            for (String value : values) array.pushString(value);
+        }
+        return array;
+    }
+
+    private static WritableMap toMeetingParameter(MeetingParameter parameter) {
+        if (parameter == null) return null;
+        WritableMap map = Arguments.createMap();
+        map.putString("meetingType", parameter.meeting_type == null ? null : parameter.meeting_type.name());
+        map.putBoolean("isViewOnly", parameter.isViewOnly);
+        map.putBoolean("isAutoRecordingLocal", parameter.is_auto_recording_local);
+        map.putBoolean("isAutoRecordingCloud", parameter.is_auto_recording_cloud);
+        map.putDouble("meetingNumber", (double) parameter.meeting_number);
+        map.putString("meetingTopic", parameter.meeting_topic);
+        map.putString("meetingHost", parameter.meeting_host);
+        return map;
     }
 
 }

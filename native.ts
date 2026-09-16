@@ -27,7 +27,13 @@ export interface NativeLayoutUnit {
   border?: boolean;
   showUsername?: boolean;
   showAudioOff?: boolean;
+  /**
+   * Index into the participant list Zoom reports, excluding yourself. Fragile:
+   * the index shifts as people join and leave. Prefer userId.
+   */
   userIndex?: number;
+  /** Zoom user id. Takes precedence over userIndex when both are given. */
+  userId?: number;
   background?: string;
   aspectMode?: VideoAspectMode;
 }
@@ -35,6 +41,8 @@ export interface NativeLayoutUnit {
 export interface NativeVideoProps {
   style?: StyleProp<ViewStyle>;
   layout: NativeLayoutUnit[];
+  /** Android only. How the video surface is composited. */
+  zOrder?: "mediaOverlay" | "onTop" | "behind";
   muteMyCamera?: boolean
   muteMyAudio?: boolean
   onSinkMeetingUserJoin?: (event: any) => void;

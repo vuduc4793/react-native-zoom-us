@@ -20,8 +20,6 @@ import us.zoom.sdk.InMeetingService;
 import java.util.Collections;
 import java.util.List;
 
-// TODO: Solve SurfaceView blank problem.
-
 class RNZoomUsVideoView extends MobileRTCVideoView {
 
   private final static String TAG = "RNZoomUs";
@@ -33,6 +31,90 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
 
   public RNZoomUsVideoView(Context context) {
     super(context);
+
+    // MobileRTCVideoView is a RelativeLayout wrapping Zoom's own SDKVideoView
+    // (a GLSurfaceView). A bare SurfaceView is composited *behind* the window,
+    // so once this view is nested inside anything that paints a background it
+    // disappears. Compositing it as a media overlay instead keeps it visible
+    // under normal React Native views, which is what lets callers put controls
+    // on top of the video.
+    setZOrderMediaOverlay(true);
+  }
+
+  // React Native does not run the traditional measure/layout pass: it assigns
+  // frames straight from the shadow tree and swallows requestLayout() coming
+  // from native children. Zoom adds its video surfaces as children of this
+  // RelativeLayout at runtime, so without this those children stay at 0x0 and
+  // the view renders blank -- which is why it only ever "worked" when it
+  // happened to be the full-screen root. Re-running measure+layout on
+  // ourselves after every requestLayout() restores normal behaviour and lets
+  // the view be nested anywhere.
+  private boolean layoutScheduled = false;
+
+  private final Runnable measureAndLayout = new Runnable() {
+    @Override
+    public void run() {
+      layoutScheduled = false;
+      measure(
+        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+        MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY)
+      );
+      layout(getLeft(), getTop(), getRight(), getBottom());
+    }
+  };
+
+  @Override
+  public void requestLayout() {
+    super.requestLayout();
+    // Zoom re-lays out its surfaces on every frame while video is running, so
+    // coalesce: one pass per message-queue turn is enough and keeps this off
+    // the hot path.
+    if (!layoutScheduled) {
+      layoutScheduled = true;
+      post(measureAndLayout);
+    }
+  }
+
+  // MobileRTCVideoView holds a GL context that has to be torn down and rebuilt
+  // with the window, otherwise the surface leaks and comes back black after the
+  // view is detached and re-attached (backgrounding, tab switches, remounts).
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    onResume();
+    isNewConfig = true;
+    update();
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    onPause();
+    super.onDetachedFromWindow();
+  }
+
+  /** Tear down the GL surface and drop every video unit. */
+  public void release() {
+    try {
+      MobileRTCVideoViewManager manager = getVideoViewManager();
+      if (manager != null) manager.removeAllVideoUnits();
+    } catch (Exception ex) {
+      Log.e(TAG, "release() failed", ex);
+    }
+    currentLayout = null;
+    lastAttendeeUserList = null;
+    lastActiveUser = -1;
+    onPause();
+  }
+
+  public void setZOrderMode(String mode) {
+    if ("onTop".equals(mode)) {
+      setZOrderOnTop(true);
+    } else if ("behind".equals(mode)) {
+      setZOrderMediaOverlay(false);
+      setZOrderOnTop(false);
+    } else {
+      setZOrderMediaOverlay(true);
+    }
   }
 
   public void setZoomLayout(ReadableArray layout) {
@@ -80,6 +162,18 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
     return inMeetingService.activeShareUserID();
   }
 
+  /**
+   * Resolve which participant a unit refers to. An explicit userId wins; the
+   * index is only consulted when no id was given, and is bounds-checked because
+   * the participant list changes underneath it.
+   */
+  private static long resolveUser(boolean hasUserId, long userId, List<Long> users, int userIndex) {
+    if (hasUserId) return userId;
+    if (users == null || userIndex < 0 || userIndex >= users.size()) return -1;
+    Long resolved = users.get(userIndex);
+    return resolved == null ? -1 : resolved;
+  }
+
   public void update() {
     if (currentLayout == null) {
       Log.e(TAG, "The video view no layout");
@@ -118,6 +212,11 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
         boolean showUsername = unit.hasKey("showUsername") ? unit.getBoolean("showUsername") : true;
         boolean showAudioOff = unit.hasKey("showAudioOff") ? unit.getBoolean("showAudioOff") : true;
         int userIndex = unit.hasKey("userIndex") ? unit.getInt("userIndex") : 0;
+        // A userId addresses a participant directly. userIndex is an offset into
+        // the participant list, which shifts as people join and leave, so a unit
+        // pinned by index silently starts rendering somebody else.
+        boolean hasUserId = unit.hasKey("userId");
+        long userId = hasUserId ? (long) unit.getDouble("userId") : -1;
         int aspectMode = unit.hasKey("aspectMode") ? unit.getInt("aspectMode") : 0;
         int background = unit.hasKey("background") ? unit.getInt("background") : 0x000000;
         MobileRTCVideoUnitRenderInfo renderInfo = new MobileRTCVideoUnitRenderInfo(x, y, width, height);
@@ -146,27 +245,31 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
               manager.addPreviewVideoUnit(renderInfo);
             }
             break;
-          case "share":
-            if (users == null || userIndex >= users.size() || userIndex < 0) {
-              Log.i(TAG, "Index over user count, skip add");
+          case "share": {
+            long target = resolveUser(hasUserId, userId, users, userIndex);
+            if (target < 0) {
+              Log.i(TAG, "No such user for share unit, skip add");
               break;
             }
             if (reLyout) {
-              manager.addShareVideoUnit(users.get(userIndex), renderInfo);
+              manager.addShareVideoUnit(target, renderInfo);
             } else {
               manager.updateShareVideoUnit(renderInfo);
             }
             break;
-          case "attendee":
-            if (users == null || userIndex >= users.size() || userIndex < 0) {
-              Log.i(TAG, "Index over user count, skip add");
+          }
+          case "attendee": {
+            long target = resolveUser(hasUserId, userId, users, userIndex);
+            if (target < 0) {
+              Log.i(TAG, "No such user for attendee unit, skip add");
               break;
             }
             if (reLyout) {
-              manager.addAttendeeVideoUnit(users.get(userIndex), renderInfo);
+              manager.addAttendeeVideoUnit(target, renderInfo);
             } else {
-              manager.updateAttendeeVideoUnit(users.get(userIndex), renderInfo);
+              manager.updateAttendeeVideoUnit(target, renderInfo);
             }
+          }
             break;
           case "active-share":
             if (reLyout) {

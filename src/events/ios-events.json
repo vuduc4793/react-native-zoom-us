@@ -1,0 +1,1443 @@
+{
+ "on3DAvatarItemDataDownloaded": [
+  [
+   "success",
+   "number"
+  ],
+  [
+   "index",
+   "number"
+  ]
+ ],
+ "on3DAvatarItemDataDownloading": [
+  [
+   "index",
+   "number"
+  ]
+ ],
+ "on3DAvatarItemThumbnailsDownloaded": [],
+ "onAICompanionActiveChangeNotice": [
+  [
+   "isActive",
+   "boolean"
+  ]
+ ],
+ "onAICompanionFeatureCanNotBeTurnedOff": [
+  [
+   "featuresArr",
+   "number[]"
+  ]
+ ],
+ "onAICompanionFeatureSwitchRequestResponse": [
+  [
+   "timeout",
+   "boolean"
+  ],
+  [
+   "agree",
+   "boolean"
+  ],
+  [
+   "turnOn",
+   "boolean"
+  ]
+ ],
+ "onAICompanionFeatureSwitchRequested": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onAICompanionFeatureTurnOffByParticipant": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onActiveSpeakerVideoUserChanged": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onAllowAskQuestionStatus": [
+  [
+   "bEnabled",
+   "boolean"
+  ]
+ ],
+ "onAllowAttendeeRaiseHandStatusChanged": [
+  [
+   "canRaiseHand",
+   "boolean"
+  ]
+ ],
+ "onAllowAttendeeViewTheParticipantCountStatusChanged": [
+  [
+   "canViewParticipantCount",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsRenameNotification": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsRequestCloudRecording": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsShareStatusNotification": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsShareWhiteBoardNotification": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsStartVideoNotification": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowParticipantsUnmuteSelfNotification": [
+  [
+   "allow",
+   "boolean"
+  ]
+ ],
+ "onAllowWebinarReactionStatusChanged": [
+  [
+   "canReaction",
+   "boolean"
+  ]
+ ],
+ "onAppShareSplash": [],
+ "onAppSignalPanelUpdated": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onAudioOutputChange": [],
+ "onAvailableLanguageListUpdated": [
+  [
+   "availableLanguageListPresent",
+   "boolean"
+  ]
+ ],
+ "onAvailableSignLanguageListUpdated": [
+  [
+   "availableSignLanguageListPresent",
+   "boolean"
+  ]
+ ],
+ "onBOCreateSuccess": [
+  [
+   "BOID",
+   "string | null"
+  ]
+ ],
+ "onBOEndTimerUpdated": [
+  [
+   "remaining",
+   "number"
+  ],
+  [
+   "isTimesUpNotice",
+   "boolean"
+  ]
+ ],
+ "onBOInfoUpdated": [
+  [
+   "boId",
+   "string | null"
+  ]
+ ],
+ "onBOListInfoUpdated": [],
+ "onBOOptionChanged": [
+  [
+   "newOptionPresent",
+   "boolean"
+  ]
+ ],
+ "onBOStatusChanged": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onBOStopCountDown": [
+  [
+   "seconds",
+   "number"
+  ]
+ ],
+ "onBOSwitchRequestReceived": [
+  [
+   "newBOName",
+   "string | null"
+  ],
+  [
+   "newBOID",
+   "string | null"
+  ]
+ ],
+ "onBotAuthorizerRelationChanged": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onBroadcastBOVoiceStatus": [
+  [
+   "bStart",
+   "boolean"
+  ]
+ ],
+ "onCallRoomDeviceStateChanged": [
+  [
+   "state",
+   "number"
+  ]
+ ],
+ "onCameraNoPrivilege": [],
+ "onCaptionStatusChanged": [
+  [
+   "enable",
+   "boolean"
+  ]
+ ],
+ "onChatMessageEditNotification": [
+  [
+   "chatInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onChatMessageNotification": [
+  [
+   "chatInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onChatMsgDeleteNotification": [
+  [
+   "msgID",
+   "string | null"
+  ],
+  [
+   "deleteBy",
+   "number"
+  ]
+ ],
+ "onCheckCMRPrivilege": [
+  [
+   "result",
+   "number"
+  ]
+ ],
+ "onClaimHostResult": [
+  [
+   "error",
+   "number"
+  ]
+ ],
+ "onClickShareScreen": [
+  [
+   "parentVCPresent",
+   "boolean"
+  ]
+ ],
+ "onClickedDialOut": [
+  [
+   "parentVCPresent",
+   "boolean"
+  ],
+  [
+   "me",
+   "boolean"
+  ]
+ ],
+ "onClosedCaptionReceived": [
+  [
+   "message",
+   "string | null"
+  ],
+  [
+   "speakerID",
+   "number"
+  ],
+  [
+   "msgTimePresent",
+   "boolean"
+  ]
+ ],
+ "onCloudRecordingStorageFull": [
+  [
+   "gracePeriodDate",
+   "number"
+  ]
+ ],
+ "onCompanionRelationChangedParentUserID": [
+  [
+   "parentUserID",
+   "number"
+  ],
+  [
+   "childUserID",
+   "number"
+  ]
+ ],
+ "onCreateBOResponse": [
+  [
+   "success",
+   "boolean"
+  ],
+  [
+   "BOID",
+   "string | null"
+  ]
+ ],
+ "onDialOutStatusChanged": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onDocsPermissionChangedCreateOption": [
+  [
+   "createOption",
+   "number"
+  ],
+  [
+   "shareOption",
+   "number"
+  ]
+ ],
+ "onDocsStatusChanged": [
+  [
+   "sourceInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onE2EEMeetingSecurityCodeChanged": [],
+ "onEmojiFeedbackCanceled": [
+  [
+   "userId",
+   "number"
+  ]
+ ],
+ "onEmojiFeedbackReceived": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "type",
+   "number"
+  ]
+ ],
+ "onEmojiReactionReceived": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "type",
+   "number"
+  ],
+  [
+   "skinTone",
+   "number"
+  ]
+ ],
+ "onEmojiReactionReceivedInWebinar": [
+  [
+   "type",
+   "number"
+  ]
+ ],
+ "onFailedToStartShare": [],
+ "onFileReceived": [
+  [
+   "receiverPresent",
+   "boolean"
+  ]
+ ],
+ "onFileSendStart": [
+  [
+   "senderPresent",
+   "boolean"
+  ]
+ ],
+ "onFileTransferProgress": [
+  [
+   "infoPresent",
+   "boolean"
+  ]
+ ],
+ "onFocusModeShareTypeChanged": [
+  [
+   "shareType",
+   "number"
+  ]
+ ],
+ "onFocusModeStateChanged": [
+  [
+   "on",
+   "boolean"
+  ]
+ ],
+ "onFollowHostVideoOrderChanged": [
+  [
+   "follow",
+   "boolean"
+  ]
+ ],
+ "onFreeMeetingNeedToUpgrade": [
+  [
+   "type",
+   "number"
+  ],
+  [
+   "giftURL",
+   "string | null"
+  ]
+ ],
+ "onFreeMeetingUpgradeToGiftFreeTrialStart": [],
+ "onFreeMeetingUpgradeToGiftFreeTrialStop": [],
+ "onFreeMeetingUpgradedToProMeeting": [],
+ "onGetRightAnswerListPrivilege": [
+  [
+   "bCan",
+   "boolean"
+  ]
+ ],
+ "onGrantCoOwnerPrivilegeChanged": [
+  [
+   "canGrantOther",
+   "boolean"
+  ]
+ ],
+ "onHasAdminRightsNotification": [
+  [
+   "adminPresent",
+   "boolean"
+  ]
+ ],
+ "onHasAssistantRightsNotification": [
+  [
+   "assistantPresent",
+   "boolean"
+  ]
+ ],
+ "onHasAttendeeRightsNotification": [
+  [
+   "attendeePresent",
+   "boolean"
+  ]
+ ],
+ "onHasCreatorRightsNotification": [
+  [
+   "creatorPresent",
+   "boolean"
+  ]
+ ],
+ "onHasDataHelperRightsNotification": [
+  [
+   "dataHelperPresent",
+   "boolean"
+  ]
+ ],
+ "onHelpRequestHandleResultReceived": [
+  [
+   "eResult",
+   "number"
+  ]
+ ],
+ "onHelpRequestReceived": [
+  [
+   "strUserID",
+   "string | null"
+  ]
+ ],
+ "onHostInviteReturnToMainSession": [
+  [
+   "hostName",
+   "string | null"
+  ],
+  [
+   "replyHandlerPresent",
+   "boolean"
+  ]
+ ],
+ "onHostJoinedThisBOMeeting": [],
+ "onHostLeaveThisBOMeeting": [],
+ "onHostUnsupportedStopNotesRequest": [],
+ "onHostVideoOrderUpdated": [
+  [
+   "orderArr",
+   "number[]"
+  ]
+ ],
+ "onInMeetingUserAvatarPathUpdated": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onInMeetingUserUpdated": [],
+ "onIndicatorItemReceived": [
+  [
+   "inMeetingIndicatorHandlerPresent",
+   "boolean"
+  ]
+ ],
+ "onIndicatorItemRemoved": [
+  [
+   "inMeetingIndicatorHandlerPresent",
+   "boolean"
+  ]
+ ],
+ "onInterpretationStart": [],
+ "onInterpretationStop": [],
+ "onInterpreterActiveLanguageChanged": [
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "activeLanID",
+   "number"
+  ]
+ ],
+ "onInterpreterLanguageChanged": [
+  [
+   "lanID1",
+   "number"
+  ],
+  [
+   "lanID2",
+   "number"
+  ]
+ ],
+ "onInterpreterLanguagesUpdated": [
+  [
+   "availableLanguagesPresent",
+   "boolean"
+  ]
+ ],
+ "onInterpreterListChanged": [],
+ "onInterpreterRoleChanged": [
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "isInterpreter",
+   "boolean"
+  ]
+ ],
+ "onJBHWaitingWithCmd": [
+  [
+   "cmd",
+   "number"
+  ]
+ ],
+ "onJoinMeetingConfirmed": [],
+ "onJoinMeetingInfoRequired": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onJoinMeetingNeedUserInfo": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onLiveStreamReminderStatusChanged": [
+  [
+   "enable",
+   "boolean"
+  ]
+ ],
+ "onLiveStreamReminderStatusChangedFailed": [],
+ "onLiveStreamStatusChange": [
+  [
+   "liveStreamStatus",
+   "number"
+  ]
+ ],
+ "onLiveTranscriptionMsgError": [
+  [
+   "speakLanguagePresent",
+   "boolean"
+  ],
+  [
+   "transcriptLanguagePresent",
+   "boolean"
+  ]
+ ],
+ "onLiveTranscriptionMsgInfoReceived": [
+  [
+   "messageInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onLocalRecordingStatus": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onLocalVideoOrderUpdated": [
+  [
+   "localOrderArr",
+   "number[]"
+  ]
+ ],
+ "onLostAdminRightsNotification": [],
+ "onLostAssistantRightsNotification": [],
+ "onLostAttendeeRightsNotification": [],
+ "onLostCreatorRightsNotification": [],
+ "onLostDataHelperRightsNotification": [],
+ "onManualCaptionStatusChanged": [
+  [
+   "bEnabled",
+   "boolean"
+  ]
+ ],
+ "onMeetingCoHostChange": [
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "isCoHost",
+   "boolean"
+  ]
+ ],
+ "onMeetingEndedReason": [
+  [
+   "reason",
+   "number"
+  ]
+ ],
+ "onMeetingError": [
+  [
+   "error",
+   "number"
+  ],
+  [
+   "message",
+   "string | null"
+  ]
+ ],
+ "onMeetingFullToWatchLiveStream": [
+  [
+   "liveStreamUrl",
+   "string | null"
+  ]
+ ],
+ "onMeetingHostChange": [
+  [
+   "hostId",
+   "number"
+  ]
+ ],
+ "onMeetingLockStatus": [
+  [
+   "isLock",
+   "boolean"
+  ]
+ ],
+ "onMeetingParameterNotification": [
+  [
+   "meetingParamPresent",
+   "boolean"
+  ]
+ ],
+ "onMeetingQAStatusChanged": [
+  [
+   "isMeetingQAFeatureOn",
+   "boolean"
+  ]
+ ],
+ "onMeetingReady": [],
+ "onMeetingStateChange": [
+  [
+   "state",
+   "number"
+  ]
+ ],
+ "onMeetingTopicChanged": [
+  [
+   "meetingTopic",
+   "string | null"
+  ]
+ ],
+ "onMicrophoneNoPrivilege": [],
+ "onMicrophoneStatusError": [
+  [
+   "error",
+   "number"
+  ]
+ ],
+ "onMuteOnEntryStatusChange": [
+  [
+   "bEnabled",
+   "boolean"
+  ]
+ ],
+ "onMyAudioStateChange": [],
+ "onMyHandStateChange": [],
+ "onMyVideoStateChange": [],
+ "onNewBroadcastMessageReceived": [
+  [
+   "broadcastMsg",
+   "string | null"
+  ],
+  [
+   "senderID",
+   "number"
+  ],
+  [
+   "senderName",
+   "string | null"
+  ]
+ ],
+ "onNoHostMeetingWillTerminate": [
+  [
+   "minutes",
+   "number"
+  ]
+ ],
+ "onOngoingShareStopped": [],
+ "onOptimizingShareForVideoClipStatusChanged": [
+  [
+   "shareInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onOriginalLanguageMsgReceived": [
+  [
+   "messageInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onPSUserStatusChanged": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "isStart",
+   "boolean"
+  ]
+ ],
+ "onParticipantProfilePictureStatusChange": [
+  [
+   "hidden",
+   "boolean"
+  ]
+ ],
+ "onPollingActionResult": [
+  [
+   "actionType",
+   "number"
+  ],
+  [
+   "pollingID",
+   "string | null"
+  ],
+  [
+   "bSuccess",
+   "boolean"
+  ],
+  [
+   "errorMsg",
+   "string | null"
+  ]
+ ],
+ "onPollingElapsedTime": [
+  [
+   "pollingID",
+   "string | null"
+  ],
+  [
+   "uElapsedtime",
+   "number"
+  ]
+ ],
+ "onPollingInactive": [],
+ "onPollingListUpdated": [],
+ "onPollingQuestionImageDownloaded": [
+  [
+   "questionID",
+   "string | null"
+  ],
+  [
+   "path",
+   "string | null"
+  ]
+ ],
+ "onPollingResultUpdated": [
+  [
+   "pollingID",
+   "string | null"
+  ]
+ ],
+ "onPollingStatusChanged": [
+  [
+   "pollingID",
+   "string | null"
+  ],
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onRawLiveStreamPrivilegeChanged": [
+  [
+   "hasPrivilege",
+   "boolean"
+  ]
+ ],
+ "onRawLiveStreamPrivilegeRequestTimeout": [],
+ "onRawLiveStreamPrivilegeRequested": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onRecordingStatus": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onRemoveBOResponse": [
+  [
+   "success",
+   "boolean"
+  ],
+  [
+   "BOID",
+   "string | null"
+  ]
+ ],
+ "onRemoveCompanionRelation": [
+  [
+   "childUserID",
+   "number"
+  ]
+ ],
+ "onRequestCloudRecordingResponse": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onRequestLocalRecordingPrivilegeChanged": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onRequestLocalRecordingPrivilegeReceived": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onRequestSignInterpreterToTalk": [],
+ "onSendPairingCodeStateChanged": [
+  [
+   "state",
+   "number"
+  ],
+  [
+   "meetingNumber",
+   "number"
+  ]
+ ],
+ "onShareContentChanged": [
+  [
+   "shareInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onShareFromMainSession": [
+  [
+   "sharingID",
+   "number"
+  ],
+  [
+   "status",
+   "number"
+  ],
+  [
+   "shareActionPresent",
+   "boolean"
+  ]
+ ],
+ "onSignInterpretationStatusChange": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onSignInterpreterLanguageChanged": [],
+ "onSignInterpreterListChanged": [],
+ "onSignInterpreterRoleChanged": [],
+ "onSinkAllowAttendeeChatNotification": [
+  [
+   "currentPrivilege",
+   "number"
+  ]
+ ],
+ "onSinkAttendeeChatPriviledgeChanged": [
+  [
+   "currentPrivilege",
+   "number"
+  ]
+ ],
+ "onSinkAttendeePromoteConfirmResult": [
+  [
+   "agree",
+   "boolean"
+  ],
+  [
+   "userId",
+   "number"
+  ]
+ ],
+ "onSinkDePromptPanelist2AttendeeResult": [
+  [
+   "errorCode",
+   "number"
+  ]
+ ],
+ "onSinkDeleteAnswer": [
+  [
+   "answerIDArray",
+   "string[]"
+  ]
+ ],
+ "onSinkDeleteQuestion": [
+  [
+   "questionIDArray",
+   "string[]"
+  ]
+ ],
+ "onSinkJoin3rdPartyTelephonyAudio": [
+  [
+   "audioInfo",
+   "string | null"
+  ]
+ ],
+ "onSinkLiveTranscriptionStatus": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onSinkLowerAllHands": [],
+ "onSinkMeetingActiveVideo": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingActiveVideoForDeck": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingAudioRequestUnmuteByHost": [],
+ "onSinkMeetingAudioStatusChange": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingAudioTypeChange": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingMyAudioTypeChange": [],
+ "onSinkMeetingPreviewStopped": [],
+ "onSinkMeetingShowMinimizeMeetingOrBackZoomUI": [
+  [
+   "state",
+   "number"
+  ]
+ ],
+ "onSinkMeetingUserJoin": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingUserLeft": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingUserLowerHand": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingUserRaiseHand": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingVideoQualityChanged": [
+  [
+   "qality",
+   "number"
+  ],
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkMeetingVideoStatusChange": [
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "videoStatus",
+   "number"
+  ]
+ ],
+ "onSinkPanelistCapacityExceed": [],
+ "onSinkPanelistChatPrivilegeChanged": [
+  [
+   "privilege",
+   "number"
+  ]
+ ],
+ "onSinkPromptAttendee2PanelistResult": [
+  [
+   "errorCode",
+   "number"
+  ]
+ ],
+ "onSinkQAAddAnswer": [
+  [
+   "answerID",
+   "string | null"
+  ],
+  [
+   "success",
+   "boolean"
+  ]
+ ],
+ "onSinkQAAddQuestion": [
+  [
+   "questionID",
+   "string | null"
+  ],
+  [
+   "success",
+   "boolean"
+  ]
+ ],
+ "onSinkQAAllowAskQuestionAnonymouslyNotification": [
+  [
+   "beAllowed",
+   "boolean"
+  ]
+ ],
+ "onSinkQAAllowAttendeeAnswerQuestionNotification": [
+  [
+   "beAllowed",
+   "boolean"
+  ]
+ ],
+ "onSinkQAAllowAttendeeUpVoteQuestionNotification": [
+  [
+   "beAllowed",
+   "boolean"
+  ]
+ ],
+ "onSinkQAAllowAttendeeViewAllQuestionNotification": [
+  [
+   "beAllowed",
+   "boolean"
+  ]
+ ],
+ "onSinkQAConnectStarted": [],
+ "onSinkQAConnected": [
+  [
+   "connected",
+   "boolean"
+  ]
+ ],
+ "onSinkQAOpenQuestionChanged": [
+  [
+   "count",
+   "number"
+  ]
+ ],
+ "onSinkQuestionMarkedAsDismissed": [
+  [
+   "questionID",
+   "string | null"
+  ]
+ ],
+ "onSinkReceiveAnswer": [
+  [
+   "answerID",
+   "string | null"
+  ]
+ ],
+ "onSinkReceiveQuestion": [
+  [
+   "questionID",
+   "string | null"
+  ]
+ ],
+ "onSinkReopenQuestion": [
+  [
+   "questionID",
+   "string | null"
+  ]
+ ],
+ "onSinkRequestForLiveTranscriptReceived": [
+  [
+   "requesterUserId",
+   "number"
+  ],
+  [
+   "bAnonymous",
+   "boolean"
+  ]
+ ],
+ "onSinkRevokeVoteupQuestion": [
+  [
+   "questionID",
+   "string | null"
+  ],
+  [
+   "orderChanged",
+   "boolean"
+  ]
+ ],
+ "onSinkSelfAllowTalkNotification": [],
+ "onSinkSelfDisallowTalkNotification": [],
+ "onSinkShareSettingTypeChanged": [
+  [
+   "shareSettingType",
+   "number"
+  ]
+ ],
+ "onSinkShareSizeChange": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onSinkSharingStatus": [
+  [
+   "shareInfoPresent",
+   "boolean"
+  ]
+ ],
+ "onSinkUserEndLiving": [
+  [
+   "questionID",
+   "string | null"
+  ]
+ ],
+ "onSinkUserLivingReply": [
+  [
+   "questionID",
+   "string | null"
+  ]
+ ],
+ "onSinkUserNameChanged": [
+  [
+   "userNameChangedArr",
+   "number[]"
+  ]
+ ],
+ "onSinkVoteupQuestion": [
+  [
+   "questionID",
+   "string | null"
+  ],
+  [
+   "orderChanged",
+   "boolean"
+  ]
+ ],
+ "onSinkWebinarNeedRegister": [
+  [
+   "registerURL",
+   "string | null"
+  ]
+ ],
+ "onSmartSummaryPrivilegeRequested": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onSmartSummaryStartReqResponse": [
+  [
+   "timeout",
+   "boolean"
+  ],
+  [
+   "isDecline",
+   "boolean"
+  ]
+ ],
+ "onSmartSummaryStatusChange": [
+  [
+   "isStarted",
+   "boolean"
+  ]
+ ],
+ "onSpokenLanguageChanged": [
+  [
+   "spokenLanguagePresent",
+   "boolean"
+  ]
+ ],
+ "onSpotlightVideoChange": [
+  [
+   "on",
+   "boolean"
+  ]
+ ],
+ "onSpotlightVideoUserChange": [
+  [
+   "spotlightedUserList",
+   "number[]"
+  ]
+ ],
+ "onStartBOError": [
+  [
+   "errType",
+   "number"
+  ]
+ ],
+ "onStartBOResponse": [
+  [
+   "success",
+   "boolean"
+  ]
+ ],
+ "onStartCaptionsRequestApproved": [],
+ "onStartCaptionsRequestReceived": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onStartCloudRecordingRequested": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onStopBOResponse": [
+  [
+   "success",
+   "boolean"
+  ]
+ ],
+ "onSubscribeUserFail": [
+  [
+   "errorCode",
+   "number"
+  ],
+  [
+   "size",
+   "number"
+  ],
+  [
+   "userId",
+   "number"
+  ]
+ ],
+ "onSuspendParticipantsActivities": [],
+ "onTalkPrivilegeChanged": [
+  [
+   "hasPrivilege",
+   "boolean"
+  ]
+ ],
+ "onUVCCameraStatusChange": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onUnAssignedUserUpdated": [],
+ "onUpdateBONameResponse": [
+  [
+   "success",
+   "boolean"
+  ],
+  [
+   "BOID",
+   "string | null"
+  ]
+ ],
+ "onUpgradeFreeMeetingResult": [
+  [
+   "result",
+   "number"
+  ]
+ ],
+ "onUserConfirmRecoverMeeting": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onUserConfirmToStartArchive": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onUserNetworkStatusChanged": [
+  [
+   "type",
+   "number"
+  ],
+  [
+   "level",
+   "number"
+  ],
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "uplink",
+   "boolean"
+  ]
+ ],
+ "onUserRawLiveStreamPrivilegeChanged": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "hasPrivilege",
+   "number"
+  ]
+ ],
+ "onUserRawLiveStreamingStatusChanged": [
+  [
+   "liveStreamListPresent",
+   "boolean"
+  ]
+ ],
+ "onUserThresholdReachedForLiveStream": [
+  [
+   "percent",
+   "number"
+  ]
+ ],
+ "onVideoAlphaChannelStatusChanged": [
+  [
+   "alphaChannelOn",
+   "boolean"
+  ]
+ ],
+ "onVirtualNameTagRosterInfoUpdated": [
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onVirtualNameTagStatusChanged": [
+  [
+   "bOn",
+   "boolean"
+  ],
+  [
+   "userID",
+   "number"
+  ]
+ ],
+ "onWaitingRoomEntranceEnabled": [
+  [
+   "enabled",
+   "boolean"
+  ]
+ ],
+ "onWaitingRoomStatusChange": [
+  [
+   "needWaiting",
+   "boolean"
+  ]
+ ],
+ "onWebPreAssignBODataDownloadStatusChanged": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onWebinarNeedInputScreenName": [
+  [
+   "handlerPresent",
+   "boolean"
+  ]
+ ],
+ "onWhiteboardSettingsChanged": [
+  [
+   "shareOption",
+   "number"
+  ],
+  [
+   "createOption",
+   "number"
+  ],
+  [
+   "enable",
+   "boolean"
+  ]
+ ],
+ "onWhiteboardStatusChanged": [
+  [
+   "status",
+   "number"
+  ]
+ ],
+ "onZoomIdentityExpired": []
+}

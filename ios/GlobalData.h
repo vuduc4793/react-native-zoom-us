@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>   // UIInterfaceOrientation; also pulls in Foundation
+
 @interface GlobalData : NSObject
 
 + (instancetype)sharedInstance;

@@ -330,9 +330,17 @@ async function getMyselfUserID(): Promise<number> {
 
 
 
+// v1 component. Still exported unchanged; it positions video units from a
+// hand-computed `layout` array and has to sit at the top of the view tree.
 export { default as ZoomUsVideoView } from "./video-view";
 
+// v2 component. Positions video units from ordinary React Native layout and can
+// be nested anywhere. See docs/VIDEO-VIEW-V2.md.
+export { ZoomVideoView } from "./src/components/ZoomVideoView";
+export type { ZoomVideoViewProps } from "./src/components/ZoomVideoView";
+
 export * from "./src/events";
+export * from "./src/hooks";
 export default {
   initialize,
   cleanup,
