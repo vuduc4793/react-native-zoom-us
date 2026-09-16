@@ -19,10 +19,32 @@ import us.zoom.sdk.InMeetingService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 class RNZoomUsVideoView extends MobileRTCVideoView {
 
   private final static String TAG = "RNZoomUs";
+
+  /**
+   * Every attached instance.
+   *
+   * The module used to reach its views through UIManagerModule.addUIBlock and a
+   * node handle. That does not exist under the New Architecture, so the views
+   * keep track of themselves instead -- which works the same under both.
+   */
+  private static final Set<RNZoomUsVideoView> ATTACHED = new CopyOnWriteArraySet<>();
+
+  /** Refresh every attached view. Must be called on the UI thread. */
+  static void updateAll() {
+    for (RNZoomUsVideoView view : ATTACHED) {
+      try {
+        view.update();
+      } catch (Exception ex) {
+        Log.e(TAG, "Error updating video view", ex);
+      }
+    }
+  }
 
   private ReadableArray currentLayout = null;
   private Boolean isNewConfig = false;
@@ -81,6 +103,7 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
+    ATTACHED.add(this);
     onResume();
     isNewConfig = true;
     update();
@@ -88,12 +111,14 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
 
   @Override
   protected void onDetachedFromWindow() {
+    ATTACHED.remove(this);
     onPause();
     super.onDetachedFromWindow();
   }
 
   /** Tear down the GL surface and drop every video unit. */
   public void release() {
+    ATTACHED.remove(this);
     try {
       MobileRTCVideoViewManager manager = getVideoViewManager();
       if (manager != null) manager.removeAllVideoUnits();

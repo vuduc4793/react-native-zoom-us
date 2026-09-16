@@ -1169,6 +1169,21 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     private void runUpdateVideoView(boolean isRetry) {
+        synchronized (videoViews) {
+            // Nothing is showing video, so there is nothing to refresh. Worth
+            // checking first: this runs on every meeting status change, and the
+            // lookup below is expensive to get wrong.
+            if (videoViews.isEmpty()) return;
+        }
+
+        // The New Architecture has no UIManagerModule. Asking for it there does
+        // not just return null, it reports a ReactNoCrashBridgeNotAllowedSoftException
+        // every time, and retrying cannot help because it will never appear.
+        if (reactContext.isBridgeless()) {
+            UiThreadUtil.runOnUiThread(RNZoomUsVideoView::updateAll);
+            return;
+        }
+
         final UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
 
         if (uiManager == null) {
