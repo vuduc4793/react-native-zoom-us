@@ -1,0 +1,65 @@
+apply plugin: 'com.android.library'
+
+// Implementation half of the library: the Zoom bridge plus the SDK itself.
+//
+// This module is NOT autolinked -- android/ is, and that is the loader. The app
+// includes this one explicitly from its on-demand feature module, so everything
+// below ends up in the feature's split instead of the base APK:
+//
+//   // android/settings.gradle
+//   include ':react-native-zoom-us-impl'
+//   project(':react-native-zoom-us-impl').projectDir =
+//       file('../node_modules/@vuduc4793/react-native-zoom-us/android-impl')
+//
+// See docs/DYNAMIC-FEATURE.md.
+
+// Zoom Meeting SDK for Android
+//   SDK version : 7.1.6.41900
+//   Artifact    : https://jitpack.io/#vuduc4793/jitpack-zoom-us
+//
+// NOTE: the JitPack artifact is published from a bare .aar via
+// `mvn install:install-file -DgeneratePom=true`, so its POM carries no
+// dependencies. Every transitive dependency mobilertc.aar needs must therefore
+// be declared explicitly below. The list is mirrored from
+//   zoom-sdk-android-7.1.6.41900/mobilertc-android-studio/mobilertc/build.gradle
+// resolved against that SDK's versions.gradle. Keep the two in sync on upgrade:
+// mobilertc is compiled against these exact versions and mismatches surface as
+// NoSuchMethodError at runtime, not at build time.
+def ZOOM_SDK_VERSION = '7.1.6.41900'
+
+android {
+    namespace 'ch.milosz.reactnative'
+
+    compileSdkVersion 36
+    buildToolsVersion '36.0.0'
+
+    defaultConfig {
+        // Zoom Meeting SDK 7.1.x declares minSdkVersion 28 in mobilertc.aar.
+        // Anything lower fails manifest merging in the consuming app.
+        minSdkVersion 28
+        targetSdkVersion 36
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+        consumerProguardFiles 'proguard.cfg'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-native:+' // From node_modules
+
+    implementation "com.github.vuduc4793:jitpack-zoom-us:${ZOOM_SDK_VERSION}"
+
+    // Shared with the base app: see zoom-deps.gradle
+}
+
+apply from: 'zoom-deps.gradle'

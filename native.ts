@@ -68,5 +68,16 @@ export const RNZoomUsVideoView = (
 ) as HostComponent<NativeVideoProps> | null;
 
 export const RNZoomUs = NativeModules.RNZoomUs;
-if (!RNZoomUs)
+
+/**
+ * On Android the SDK ships in an on-demand module, so RNZoomUs is legitimately
+ * absent until that module is installed -- which is the normal state of a fresh
+ * install. Only the loader's absence means the library is not linked at all.
+ * Reporting the expected case with console.error would raise a red box on every
+ * launch in development.
+ */
+export const RNZoomUsLoader = NativeModules.RNZoomUsLoader;
+
+if (!RNZoomUs && !RNZoomUsLoader) {
   console.error("[react-native-zoom-us] RNZoomUs native module is not linked.");
+}

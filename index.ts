@@ -341,6 +341,14 @@ export type { ZoomVideoViewProps } from "./src/components/ZoomVideoView";
 
 export * from "./src/events";
 export * from "./src/hooks";
+
+// Android: the SDK is delivered as an on-demand module. See docs/DYNAMIC-FEATURE.md.
+export { default as ZoomModule } from "./src/module";
+export type {
+  ZoomModuleStatus,
+  ZoomModuleProgress,
+  InstallOptions,
+} from "./src/module";
 export default {
   initialize,
   cleanup,

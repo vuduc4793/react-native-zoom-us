@@ -1,9 +1,11 @@
 # Shipping Zoom as an on-demand module
 
-> **Status: design, not yet implemented.** The library still ships as a single
-> `android/` module and `ZoomModule` is not exported yet. This describes the
-> split that is being built, and the reasoning behind each piece, so the shape
-> can be reviewed before the restructure lands.
+> **Status: work in progress.** The `android/` loader / `android-impl/` split
+> and `ZoomModule` exist, and the app's debug bundle builds with Zoom entirely
+> in the on-demand `zoom` module (base per-device download 126.6–126.9 MB,
+> debug, unminified). Not done yet: gating the join flow on `ZoomModule`,
+> on-device install testing, a release-build size check, and bringing
+> `armeabi-v7a` back.
 
 
 Zoom is roughly 140 MB of an Android build: ~124 MB of compressed native
@@ -18,29 +20,64 @@ does not count toward the initial download, so Zoom stops competing for the
 Install-time modules *do* count toward the limit, so `dist:on-demand` is not
 optional here.
 
-## Why the usual attempt fails with "resource not found"
+## Why "resource not found"
 
-Zoom ships an official sample (`feature_mobilertc` + `dynamic_sample` in the SDK
-zip). Comparing it against a typical first attempt, four things are usually
-missing:
+There are two separate causes, and the first is the one that actually shows up
+at build time.
 
-1. **`android.nonTransitiveRClass=false` and `android.nonFinalResIds=false`.**
-   Zoom's own `gradle.properties` sets both. AGP 8 defaults `nonTransitiveRClass`
-   to `true`, which gives each library an R class holding only its own
-   resources — and `mobilertc.aar` resolves resources through its own R. This is
-   the single most common cause of the resource errors.
-2. **`SplitCompat`.** The `Application` needs `SplitCompat.install(this)` in
-   `attachBaseContext`, and every `Activity` that touches the module's resources
-   needs `SplitCompat.installActivity(this)`. Zoom's meeting activities live
-   inside the AAR and cannot be patched, so this can never be made complete.
-3. **A process restart.** Point 2 stops mattering entirely once the process
-   restarts: the split is then in `ApplicationInfo.splitSourceDirs` and the
-   framework loads its classes, resources and `.so` files natively. This is the
-   reliable path, and the one used here.
-4. **Native library preloading.** Without a restart, `System.loadLibrary` cannot
-   find the module's `.so` files, which is why Zoom's sample preloads ~76
-   libraries through ReLinker in a specific order. With a restart, that is
-   unnecessary.
+**1. Manifest-referenced resources must live in the base.** An app bundle merges
+every feature module's manifest into the base manifest, and `:app` links that
+merged manifest against the *base* resource table. So any resource the Zoom
+AAR's manifest points at has to exist in the base module, even though the AAR
+itself is in the feature:
+
+```
+AAPT: error: resource drawable/zm_launcher not found.
+  task :app:processProductDebugResources
+```
+
+It is a short list, not Zoom's whole resource tree. On 7.1.6 the merged feature
+manifest references exactly four:
+
+| Resource | Used by | Handling |
+| --- | --- | --- |
+| `@string/module_zoom` | `dist:title` | base `strings.xml` |
+| `@xml/file_provider_paths` | Zoom's `FileProvider` | copied to base `res/xml` |
+| `@xml/msdk_network_security_config` | `<application networkSecurityConfig>` | copied to base `res/xml` |
+| `@drawable/zm_launcher` | icon of a signature IPC permission | `tools:remove="android:icon"` |
+
+`zm_launcher` is removed rather than copied because it is an adaptive icon that
+would pull its foreground and background layers along, for a permission icon
+nothing displays. The network security config applies app-wide, but so it did
+before: with Zoom in the base, the AAR's manifest was already setting it.
+
+The previous attempt (removed in `0d6b484a`) reacted to this by moving Zoom's
+resources into the base (`mobilertc_nres.aar`, `zoomRes`). Only these four are
+needed; recheck the list on every SDK upgrade with:
+
+```
+grep -oE '@(drawable|mipmap|style|string|xml|color)/[A-Za-z0-9_.]+' \
+  android/zoom/build/intermediates/metadata_feature_manifest/*/*/AndroidManifest.xml
+```
+
+**2. `android.nonTransitiveRClass=false` and `android.nonFinalResIds=false`.**
+Zoom's own `gradle.properties` sets both. AGP 8 defaults `nonTransitiveRClass`
+to `true`, giving each library an R class with only its own resources, while
+`mobilertc.aar` resolves resources through its own R. This one fails at runtime
+rather than build time.
+
+## Why the app restarts after installing
+
+Zoom's official sample does **not** restart: it calls
+`SplitCompat.installActivity` in its own activity and preloads ~76 native
+libraries through ReLinker, then launches the meeting.
+
+React Native needs the restart for a different reason. `getPackages()` runs once
+when the React instance is created, so a module installed mid-session is never
+registered and `NativeModules.RNZoomUs` stays undefined until the app starts
+again. A full process restart also puts the split into
+`ApplicationInfo.splitSourceDirs`, which makes the SplitCompat and ReLinker
+steps unnecessary.
 
 ## The React Native problem
 
@@ -55,22 +92,19 @@ So the library is split in two:
 | `android/` | **Loader.** Autolinked into the app. Contains no Zoom references: it only asks `SplitInstallManager` whether the module is present, downloads it, reports progress, and restarts the process. |
 | `android-impl/` | **Implementation.** The actual bridge — `RNZoomUsModule`, `RNZoomUsVideoView`, `RNZoomUsVideoViewManager`, `RNZoomUsPackage` — plus the Zoom AAR. Consumed by the app's feature module, never by the app. |
 
-The base app adds the real `ReactPackage` reflectively, so it never needs the
-class at compile time:
-
-```kotlin
-override fun getPackages(): List<ReactPackage> =
-    PackageList(this).packages.apply {
-        if (SplitInstallManagerFactory.create(this@MainApplication)
-                .installedModules.contains("zoom")) {
-            add(Class.forName("ch.milosz.reactnative.RNZoomUsPackage")
-                    .getDeclaredConstructor().newInstance() as ReactPackage)
-        }
-    }
-```
+The loader's `RNZoomUsLoaderPackage` adds the real `ReactPackage` reflectively,
+so nothing in the base needs the class at compile time and `MainApplication`
+needs no change for it. When `SplitInstallManager` reports `zoom` as installed,
+it instantiates `ch.milosz.reactnative.RNZoomUsPackage` and adds its native
+modules and view managers next to its own.
 
 Because the process restarts after installing, by the time `getPackages()` runs
 the class is genuinely loadable.
+
+Autolinking caches its result. After switching an existing checkout to this
+layout, delete `android/build/generated/autolinking` and
+`android/app/build/generated/autolinking`, or `PackageList.java` keeps importing
+the old `ch.milosz.reactnative` package and the build fails.
 
 ## App wiring
 
@@ -94,6 +128,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    // The feature must declare the same productFlavors as :app.
+    packaging {
+        // The only .so both modules ship. Same NDK build, different stripping,
+        // so bundletool rejects the bundle ("with different content").
+        jniLibs { excludes += ['lib/**/libc++_shared.so'] }
     }
 }
 dependencies {
@@ -126,6 +166,11 @@ android {
 dependencies {
     implementation 'com.google.android.play:feature-delivery:2.1.0'
 }
+// Same versions as the feature for everything Zoom pulls in. Without it the
+// base resolves older lifecycle / compose / kotlin artifacts than the feature
+// and bundletool fails with "Modules 'base' and 'zoom' contain entry ... with
+// different content".
+apply from: "../../node_modules/@vuduc4793/react-native-zoom-us/android-impl/zoom-deps.gradle"
 ```
 
 `android/gradle.properties`
