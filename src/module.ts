@@ -67,6 +67,17 @@ export interface InstallOptions {
  * Because the app relaunches, make sure the screen that needs Zoom is reachable
  * again afterwards: deep link back into it, or persist enough state to restore
  * it.
+ *
+ * Rejects -- always, rather than leaving the caller awaiting -- with:
+ *   `ERR_ZOOM_MODULE_CANCELED`      the download was canceled, including by the
+ *                                   user declining Play's own confirmation
+ *                                   dialog, which it shows for a module this
+ *                                   large on a metered connection
+ *   `ERR_ZOOM_MODULE_CONFIRMATION`  that dialog could not be shown, because no
+ *                                   activity is in the foreground
+ *   `ERR_ZOOM_MODULE_BUSY`          an install is already in progress
+ *   `ERR_ZOOM_MODULE_INSTALL`       Play reported a failure; the message carries
+ *                                   its error code
  */
 async function install({ onProgress }: InstallOptions = {}): Promise<boolean> {
   if (Platform.OS !== "android") return false;

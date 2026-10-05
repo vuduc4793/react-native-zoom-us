@@ -1,11 +1,12 @@
 # Shipping Zoom as an on-demand module
 
-> **Status: work in progress.** The `android/` loader / `android-impl/` split
-> and `ZoomModule` exist, and the app's debug bundle builds with Zoom entirely
-> in the on-demand `zoom` module (base per-device download 126.6–126.9 MB,
-> debug, unminified). Not done yet: gating the join flow on `ZoomModule`,
-> on-device install testing, a release-build size check, and bringing
-> `armeabi-v7a` back.
+> **Status: builds and measures as intended; not yet installed from Play.**
+> The `android/` loader / `android-impl/` split, `ZoomModule`, the join-flow
+> gate and both ABIs are in place, and a **release** bundle builds with Zoom
+> entirely in the on-demand `zoom` module. Measured below. What is left is the
+> one thing no local build can stand in for: installing from a Play track and
+> watching the module actually download, including Play's own confirmation
+> dialog on a metered connection.
 
 
 Zoom is roughly 140 MB of an Android build: ~124 MB of compressed native
@@ -22,7 +23,7 @@ optional here.
 
 ## Why "resource not found"
 
-There are two separate causes, and the first is the one that actually shows up
+There are three separate causes, and the first is the one that actually shows up
 at build time.
 
 **1. Manifest-referenced resources must live in the base.** An app bundle merges
@@ -65,6 +66,46 @@ Zoom's own `gradle.properties` sets both. AGP 8 defaults `nonTransitiveRClass`
 to `true`, giving each library an R class with only its own resources, while
 `mobilertc.aar` resolves resources through its own R. This one fails at runtime
 rather than build time.
+
+**3. A resource name the base already owns.** Resource names are global across
+the base and its features. When something in the base defines the same name,
+AAPT2 links the feature's copies against the base's id and leaves them out of
+the *feature's* resource table — but still packages the files. bundletool then
+rejects the bundle, in the very last task of a long build:
+
+```
+> Task :app:packageProductReleaseBundle FAILED
+Module 'zoom' contains resource files that are not referenced from the resource
+table: [res/drawable-anydpi-v24/ic_user.xml, res/drawable-xxhdpi-v4/ic_user.png]
+```
+
+Here `drawable/ic_user` is defined by **both** `mobilertc.aar` (anydpi-v24,
+xxhdpi) and `sdk-auth`, the Zalo SDK that `react-native-zalo-kit` pulls into the
+base (ldpi–xhdpi). The collision predates this work: in the single-APK build the
+two merged into one resource, where `anydpi-v24` won on every device at this
+minSdk — so Zalo's screens were already showing Zoom's icon.
+
+`android/zoom/build.gradle` drops the orphaned files from the module zip after
+`buildPreBundle`, listing the names in `ext.resourcesOwnedByBase`. Nothing
+changes at runtime: Zoom's screens resolve the same name, now always to the
+base's copy.
+
+Do not rerun the full build to test a fix for this — it fails at the last task
+after everything else has been done. The module zips Gradle already produced are
+enough to reproduce and verify it in seconds:
+
+```
+bundletool build-bundle --output=/tmp/t.aab --modules=\
+  app/build/intermediates/module_bundle/*/*/base.zip,\
+  zoom/build/intermediates/module_bundle/*/*/zoom.zip
+```
+
+Find who contributes a colliding name with AGP's own blame file:
+
+```
+grep -o '[^"]*<name>[^"]*' \
+  android/app/build/intermediates/incremental/*/mergeProductReleaseResources/merger.xml
+```
 
 ## Why the app restarts after installing
 
@@ -211,8 +252,30 @@ state to restore it.
 
 ## Size
 
-Moving Zoom out of the base leaves roughly 110–130 MB for the base download,
-against a 200 MB limit, with both ABIs shipping again.
+Measured on `:app:bundleProductRelease` (minified, both ABIs), with
+`bundletool get-size total --dimensions=ABI`. The per-device column counts only
+the modules downloaded on first install, which is what Play's 200 MB limit
+applies to; the on-demand `zoom` module is excluded by definition.
+
+| | per-device download | if Zoom were install-time |
+| --- | --- | --- |
+| `arm64-v8a` | **94.4–94.6 MB** | 230.3–231.4 MB |
+| `armeabi-v7a` | **89.1–89.3 MB** | 210.4–211.5 MB |
+
+The right-hand column is the honest statement of the problem: both ABIs are over
+the limit as a single download, and 230.3 MB matches the 241.5 MB release
+baseline this started from. On demand, the base has ~105 MB of headroom and
+32-bit ships again.
+
+Checks worth repeating after an SDK upgrade, all against the `.aab`:
+
+- Zoom's native libraries are in the feature, not the base. Here: 37 `.so` per
+  ABI in `base/`, 83 (arm64) / 82 (v7a) in `zoom/`. That is exactly what
+  `mobilertc.aar` carries (84 / 83) minus the `libc++_shared.so` the feature
+  drops. `libdvf.so` is arm64-only **in Zoom's own AAR** — not something the
+  split lost.
+- No Zoom classes leak into the base: `strings base/dex/*.dex | grep -c '^Lus/zoom/'`
+  must be 0.
 
 A second, independent win is available on the app side: `res/drawable-mdpi-v4`
 is ~28 MB of the current build, and it is the app's own PNG/JPG artwork, not

@@ -42,6 +42,8 @@ public class RNZoomUsLoaderModule extends ReactContextBaseJavaModule {
 
     private final SplitInstallManager splitInstallManager;
     private SplitInstallStateUpdatedListener listener;
+    /** The install() promise still in flight, or null. Settled exactly once. */
+    private Promise pendingInstall;
 
     public RNZoomUsLoaderModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -77,7 +79,13 @@ public class RNZoomUsLoaderModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        if (listener != null) splitInstallManager.unregisterListener(listener);
+        // A second call must not unregister the first one's listener: that would
+        // leave the first promise unsettled forever, and the caller awaiting it.
+        if (pendingInstall != null) {
+            promise.reject("ERR_ZOOM_MODULE_BUSY", "An install is already in progress");
+            return;
+        }
+        pendingInstall = promise;
 
         listener = new SplitInstallStateUpdatedListener() {
             @Override
@@ -88,30 +96,47 @@ public class RNZoomUsLoaderModule extends ReactContextBaseJavaModule {
 
                 switch (state.status()) {
                     case SplitInstallSessionStatus.INSTALLED:
-                        splitInstallManager.unregisterListener(this);
-                        listener = null;
+                        clearListener();
                         // The split's classes, resources and .so files only become
                         // visible to the framework once the process restarts. Doing
                         // that here avoids every SplitCompat problem, including the
                         // ones in Zoom's own activities, which cannot be patched.
-                        promise.resolve(true);
+                        settleResolve(true);
                         restartProcess();
                         break;
                     case SplitInstallSessionStatus.FAILED:
-                        splitInstallManager.unregisterListener(this);
-                        listener = null;
-                        promise.reject("ERR_ZOOM_MODULE_INSTALL",
+                        clearListener();
+                        settleReject("ERR_ZOOM_MODULE_INSTALL",
                                 "Install failed with error code " + state.errorCode());
+                        break;
+                    case SplitInstallSessionStatus.CANCELED:
+                        // Play asks for confirmation on a download this size over a
+                        // metered connection; declining lands here. Its own code, so
+                        // the caller can stay quiet instead of showing an error.
+                        clearListener();
+                        settleReject("ERR_ZOOM_MODULE_CANCELED",
+                                "The download was canceled");
                         break;
                     case SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION:
                         Activity activity = getCurrentActivity();
-                        if (activity != null && state.resolutionIntent() != null) {
-                            try {
-                                activity.startIntentSender(
-                                        state.resolutionIntent().getIntentSender(), null, 0, 0, 0);
-                            } catch (Throwable t) {
-                                Log.e(TAG, "Could not show install confirmation", t);
-                            }
+                        if (activity == null || state.resolutionIntent() == null) {
+                            // Nothing can show the dialog, so the session would sit
+                            // in this state indefinitely. Report it rather than
+                            // leaving the caller awaiting a promise that never
+                            // settles.
+                            Log.e(TAG, "Install needs confirmation but no activity is available");
+                            clearListener();
+                            settleReject("ERR_ZOOM_MODULE_CONFIRMATION",
+                                    "The download needs confirmation, but no activity is in the foreground");
+                            break;
+                        }
+                        try {
+                            activity.startIntentSender(
+                                    state.resolutionIntent().getIntentSender(), null, 0, 0, 0);
+                        } catch (Throwable t) {
+                            Log.e(TAG, "Could not show install confirmation", t);
+                            clearListener();
+                            settleReject("ERR_ZOOM_MODULE_CONFIRMATION", t.getMessage());
                         }
                         break;
                     default:
@@ -124,10 +149,34 @@ public class RNZoomUsLoaderModule extends ReactContextBaseJavaModule {
         splitInstallManager
                 .startInstall(SplitInstallRequest.newBuilder().addModule(FEATURE_MODULE).build())
                 .addOnFailureListener(e -> {
-                    splitInstallManager.unregisterListener(listener);
-                    listener = null;
-                    promise.reject("ERR_ZOOM_MODULE_INSTALL", e);
+                    clearListener();
+                    settleReject("ERR_ZOOM_MODULE_INSTALL", e.getMessage());
                 });
+    }
+
+    private void clearListener() {
+        if (listener != null) {
+            splitInstallManager.unregisterListener(listener);
+            listener = null;
+        }
+    }
+
+    /**
+     * Settle the in-flight install() promise, at most once.
+     *
+     * Play reports states on its own thread and can report more than one
+     * terminal state for a session, so every exit goes through here.
+     */
+    private void settleResolve(boolean value) {
+        Promise promise = pendingInstall;
+        pendingInstall = null;
+        if (promise != null) promise.resolve(value);
+    }
+
+    private void settleReject(String code, String message) {
+        Promise promise = pendingInstall;
+        pendingInstall = null;
+        if (promise != null) promise.reject(code, message);
     }
 
     private void emitProgress(SplitInstallSessionState state) {
