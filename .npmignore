@@ -1,2 +1,8 @@
 docs
 .github
+.claude
+
+# Gradle output. Without this the package ships ~7.8 MB of intermediates and a
+# compiled classes.dex from whatever was last built locally -- which is how
+# build artifacts ended up inside the app's patch-package patch once already.
+build
