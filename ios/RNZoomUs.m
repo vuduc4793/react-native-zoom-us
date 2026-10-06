@@ -1060,15 +1060,18 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
         NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
+        // Every string on MobileRTCMeetingChat is nullable, and a dictionary
+        // literal raises when handed nil -- which would take the process down on
+        // a chat message with, say, no receiver. NSNull reaches JavaScript as
+        // null, which is what the Android side sends for the same fields.
         chatInfoDict = @{
-            //                  @"avatar": userInfo.avatarPath,
-            @"chatId": chatInfo.chatId,
-            @"senderId": chatInfo.senderId,
-            @"senderName": chatInfo.senderName,
-            @"receiverId": chatInfo.receiverId,
-            @"receiverName": chatInfo.receiverName,
-            @"content": chatInfo.content,
-            @"date": dateString,
+            @"chatId": chatInfo.chatId ?: [NSNull null],
+            @"senderId": chatInfo.senderId ?: [NSNull null],
+            @"senderName": chatInfo.senderName ?: [NSNull null],
+            @"receiverId": chatInfo.receiverId ?: [NSNull null],
+            @"receiverName": chatInfo.receiverName ?: [NSNull null],
+            @"content": chatInfo.content ?: [NSNull null],
+            @"date": dateString ?: [NSNull null],
             @"chatMessageType": @(chatInfo.chatMessageType),
             @"isMyself": @(chatInfo.isMyself),
             @"isPrivate": @(chatInfo.isPrivate),
@@ -1077,13 +1080,13 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
             @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
             @"isComment": @(chatInfo.isComment),
             @"isThread": @(chatInfo.isThread),
-            @"threadID": chatInfo.threadID,
-            
+            @"threadID": chatInfo.threadID ?: [NSNull null],
         };
     }
     [self sendEventWithName:@"MeetingEvent" body: @{
         @"event": @"onChatMessageNotification",
-        @"chatInfo": chatInfoDict
+        // nil whenever the callback arrived without a message.
+        @"chatInfo": chatInfoDict ?: [NSNull null]
     }];
 }
 #pragma mark - Screen share functionality
@@ -1402,16 +1405,24 @@ static NSString *const kZoomEventChannel = @"ZoomUsEvent";
 }
 
 - (void)sendEventWithName:(NSString *)name event:(NSString *)event {
+    // name and event come from SDK callbacks and enum lookups that can miss.
+    // A nil in a dictionary literal raises, and this runs on the SDK's thread
+    // where nothing catches it.
+    if (name.length == 0) return;
     if (hasObservers) {
-        [self sendEventWithName:name body:@{@"event": event}];
+        [self sendEventWithName:name body:@{@"event": event ?: [NSNull null]}];
     }
     // Mirror onto the unified channel so subscribers there see every callback,
     // not just the ones without a legacy emitter.
-    [self emitZoomEvent:event payload:@{@"channel": name}];
+    [self emitZoomEvent:event payload:@{@"channel": name ?: [NSNull null]}];
 }
 - (void)sendEventWithName:(NSString *)name event:(NSString *)event status:(NSString *)status {
+    if (name.length == 0) return;
     if (hasObservers) {
-        [self sendEventWithName:name body:@{@"event": event, @"status": status}];
+        [self sendEventWithName:name body:@{
+            @"event": event ?: [NSNull null],
+            @"status": status ?: [NSNull null],
+        }];
     }
 }
 - (void)sendEventWithName:(NSString *)name params:(NSDictionary *)params {
@@ -1422,8 +1433,8 @@ static NSString *const kZoomEventChannel = @"ZoomUsEvent";
 - (void)sendEventWithName:(NSString *)name event:(NSString *)event userInfo:(MobileRTCMeetingUserInfo *)userInfo {
     if (hasObservers) {
         [self sendEventWithName:name body:@{
-            @"event": event,
-            @"userRole": [self getUserRole:[userInfo userRole]],
+            @"event": event ?: [NSNull null],
+            @"userRole": [self getUserRole:[userInfo userRole]] ?: [NSNull null],
             @"audioType": @([[userInfo audioStatus] audioType]),
             @"isTalking": @([[userInfo audioStatus] isTalking]),
             @"isMutedAudio": @((BOOL)([[userInfo audioStatus] audioType] == 2 ? YES : [[userInfo audioStatus] isMuted])),

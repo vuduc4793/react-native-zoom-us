@@ -17,6 +17,7 @@ import us.zoom.sdk.MeetingError;
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.InMeetingService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -164,11 +165,17 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
 
     List<Long> users = inMeetingService.getInMeetingUserList();
 
-    if (users != null) {
-      users.remove(new Long(inMeetingService.getMyUserID()));
+    if (users == null) {
+      return Collections.emptyList();
     }
 
-    return users;
+    // Copy before removing: that list belongs to the SDK, and it hands back an
+    // unmodifiable view in some versions -- mutating it throws rather than
+    // filtering. Returning a copy also keeps this from ever returning null,
+    // which the name does not suggest and callers would have to guard.
+    List<Long> withoutMe = new ArrayList<>(users);
+    withoutMe.remove(Long.valueOf(inMeetingService.getMyUserID()));
+    return withoutMe;
   }
 
   private long getActiveUser() {

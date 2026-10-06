@@ -297,7 +297,7 @@ CXCallController *callController;
     if (self.onMeetingStateChange) {
         self.onMeetingStateChange(@{
             @"event": @"success",
-            @"status": result
+            @"status": result ?: [NSNull null]
         });
     }
 }
@@ -489,15 +489,16 @@ CXCallController *callController;
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
             NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
+            // Same nullable strings as RNZoomUs.m: a dictionary literal raises
+            // when handed nil, and this runs inside an SDK callback.
             chatInfoDict = @{
-                //                  @"avatar": userInfo.avatarPath,
-                @"chatId": chatInfo.chatId,
-                @"senderId": chatInfo.senderId,
-                @"senderName": chatInfo.senderName,
-                @"receiverId": chatInfo.receiverId,
-                @"receiverName": chatInfo.receiverName,
-                @"content": chatInfo.content,
-                @"date": dateString,
+                @"chatId": chatInfo.chatId ?: [NSNull null],
+                @"senderId": chatInfo.senderId ?: [NSNull null],
+                @"senderName": chatInfo.senderName ?: [NSNull null],
+                @"receiverId": chatInfo.receiverId ?: [NSNull null],
+                @"receiverName": chatInfo.receiverName ?: [NSNull null],
+                @"content": chatInfo.content ?: [NSNull null],
+                @"date": dateString ?: [NSNull null],
                 @"chatMessageType": @(chatInfo.chatMessageType),
                 @"isMyself": @(chatInfo.isMyself),
                 @"isPrivate": @(chatInfo.isPrivate),
@@ -506,13 +507,12 @@ CXCallController *callController;
                 @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
                 @"isComment": @(chatInfo.isComment),
                 @"isThread": @(chatInfo.isThread),
-                @"threadID": chatInfo.threadID,
-                
+                @"threadID": chatInfo.threadID ?: [NSNull null],
             };
         }
         self.onChatMessageNotification(@{
             @"event": @"onChatMessageNotification",
-            @"chatInfo": chatInfoDict
+            @"chatInfo": chatInfoDict ?: [NSNull null]
         });
     }
 }
@@ -526,11 +526,11 @@ CXCallController *callController;
         NSDictionary *chatInfoDict = nil;
         chatInfoDict = @{
             @"deleteBy": @(deleteBy),
-            @"msgID": msgID,
+            @"msgID": msgID ?: [NSNull null],
         };
         self.onChatMsgDeleteNotification(@{
             @"event": @"onChatMsgDeleteNotification",
-            @"msgDelete": chatInfoDict
+            @"msgDelete": chatInfoDict ?: [NSNull null]
         });
     }
 }
@@ -595,7 +595,7 @@ CXCallController *callController;
     if (self.onHasAttendeeRightsNotification) {
         self.onHasAttendeeRightsNotification(@{
             @"event": @"onHasAttendeeRightsNotification",
-            @"boName": boName
+            @"boName": boName ?: [NSNull null]
         });
     }
     NSLog(@"RNZoomUsVideoView Own Attendee");
@@ -673,7 +673,7 @@ CXCallController *callController;
     if (self.onBOStatusChanged) {
         self.onBOStatusChanged(@{
             @"event": @"success",
-            @"status": result
+            @"status": result ?: [NSNull null]
         });
     }
 }

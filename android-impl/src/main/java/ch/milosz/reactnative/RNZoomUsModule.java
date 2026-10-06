@@ -1308,7 +1308,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         updateVideoView();
 
         sendEvent("MeetingEvent", getMeetErrorName(errorCode), meetingStatus);
-        sendEvent("MeetingStatus", meetingStatus.name());
+        sendEvent("MeetingStatus", nameOf(meetingStatus));
 
         if (meetingPromise == null) {
             Log.i(TAG, "onMeetingStatusChanged, does not have meetingPromise");
@@ -1904,15 +1904,13 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onChatMsgDeleteNotification(String msgID, ChatMessageDeleteType deleteBy) {
         if (msgID != null) {
             WritableMap params = Arguments.createMap();
-            params.putString("deleteBy", deleteBy.name());
+            params.putString("deleteBy", nameOf(deleteBy));
             params.putString("msgID", msgID);
 
             WritableMap rootParams = Arguments.createMap();
             rootParams.putString("event", "onChatMsgDeleteNotification");
             rootParams.putMap("msgDelete", params);
-            reactContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("MeetingEvent", rootParams);
+            emitLegacy("MeetingEvent", rootParams);
         }
     }
 
@@ -2217,9 +2215,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         WritableMap params = Arguments.createMap();
         params.putString("event", event);
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
 
         // Mirror onto the unified channel so subscribers there see every
         // callback, not just the ones without a legacy emitter.
@@ -2232,16 +2228,22 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         if (userInfo != null) {
             WritableMap params = Arguments.createMap();
             params.putString("event", event);
-            params.putString("userRole", userInfo.getInMeetingUserRole().name());
-            params.putDouble("audioType", userInfo.getAudioStatus().getAudioType());
+            params.putString("userRole", nameOf(userInfo.getInMeetingUserRole()));
 
-            params.putBoolean("isTalking", userInfo.getAudioStatus().isTalking());
-            params.putBoolean("isMutedAudio", userInfo.getAudioStatus().isMuted());
-            params.putBoolean("isMutedVideo", !userInfo.getVideoStatus().isSending());
+            // getAudioStatus()/getVideoStatus() are null for a participant the
+            // SDK has not finished describing yet, which happens during join.
+            InMeetingUserInfo.AudioStatus audio = userInfo.getAudioStatus();
+            InMeetingUserInfo.VideoStatus video = userInfo.getVideoStatus();
+            if (audio != null) {
+                params.putDouble("audioType", audio.getAudioType());
+                params.putBoolean("isTalking", audio.isTalking());
+                params.putBoolean("isMutedAudio", audio.isMuted());
+            }
+            if (video != null) {
+                params.putBoolean("isMutedVideo", !video.isSending());
+            }
 
-            reactContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit(name, params);
+            emitLegacy(name, params);
         }
     }
 
@@ -2258,7 +2260,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             String formattedDate = sdf.format(new Date(msg.getTime()));
             params.putString("date", formattedDate);
-            params.putInt("chatMessageType", msg.getChatMessageType().hashCode());
+            if (msg.getChatMessageType() != null) {
+                params.putInt("chatMessageType", msg.getChatMessageType().hashCode());
+            }
             params.putBoolean("isChatToAll", msg.isChatToAll());
             params.putBoolean("isChatToWaitingroom", msg.isChatToWaitingroom());
             params.putBoolean("isChatToAllPanelist", msg.isChatToAllPanelist());
@@ -2270,20 +2274,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             rootParams.putString("event", event);
             rootParams.putMap("chatInfo", params);
 
-            reactContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit(name, rootParams);
+            emitLegacy(name, rootParams);
         }
     }
 
     private void sendEvent(String name, String event, MeetingStatus status) {
         WritableMap params = Arguments.createMap();
         params.putString("event", event);
-        params.putString("status", status.name());
+        params.putString("status", nameOf(status));
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
     }
 
     private void sendEvent(String name, String event, String status) {
@@ -2291,9 +2291,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putString("status", status);
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
     }
 
     private void sendEvent(String name, String event, long userId) {
@@ -2301,35 +2299,31 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putDouble("userId", userId);
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
     }
 
     private void sendEvent(String name, String event, List<Long> userList) {
         WritableMap params = Arguments.createMap();
         WritableArray users = Arguments.createArray();
 
-        for (final Long userId : userList) {
-            users.pushString(userId.toString());
+        if (userList != null) {
+            for (final Long userId : userList) {
+                if (userId != null) users.pushString(userId.toString());
+            }
         }
 
         params.putString("event", event);
         params.putArray("userList", users);
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
     }
 
     private void sendEvent(String name, String event, MobileRTCSDKError error) {
         WritableMap params = Arguments.createMap();
         params.putString("event", event);
-        params.putString("error", error.name());
+        params.putString("error", nameOf(error));
 
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(name, params);
+        emitLegacy(name, params);
     }
 
     private String getSharingStatusEventName(final SharingStatus status) {
@@ -2546,7 +2540,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     @Override
     public void onBOStatusChanged(BOStatus boStatus) {
         Log.i(TAG, "onBOStatusChanged status: " + boStatus);
-        sendEvent("MeetingEvent", "onBOStatusChanged", boStatus == BOStatus.STARTED ? "MobileRTCBOStatus_Started" : boStatus.name());
+        sendEvent("MeetingEvent", "onBOStatusChanged", boStatus == BOStatus.STARTED ? "MobileRTCBOStatus_Started" : nameOf(boStatus));
 
     }
 
@@ -2694,6 +2688,34 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     // emit exactly as before; this is an additional stream, not a replacement.
     // ------------------------------------------------------------------
     static final String ZOOM_EVENT_CHANNEL = "ZoomUsEvent";
+
+    /**
+     * Enum name, or null when the SDK hands us nothing.
+     *
+     * These run inside SDK listener callbacks, on the SDK's own thread. An
+     * exception there does not reach any of our try/catch -- it takes the
+     * process down, and native cannot be hot-fixed the way the JS bundle can.
+     * Every nullable value the SDK passes is treated as nullable.
+     */
+    private static String nameOf(Enum<?> value) {
+        return value == null ? null : value.name();
+    }
+
+    /**
+     * Emit on one of the legacy named channels. Never throws.
+     *
+     * getJSModule() fails once the React instance is gone -- a reload, a
+     * backgrounded app being torn down -- and these are called from SDK threads
+     * that keep running after it.
+     */
+    private void emitLegacy(String name, WritableMap params) {
+        try {
+            if (!reactContext.hasActiveReactInstance()) return;
+            emitLegacy(name, params);
+        } catch (Exception ex) {
+            Log.e(TAG, "emit(" + name + ") failed", ex);
+        }
+    }
 
     private void emitZoomEvent(String event, WritableMap payload) {
         try {

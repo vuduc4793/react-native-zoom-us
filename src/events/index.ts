@@ -41,12 +41,22 @@ function ensureSubscribed() {
   subscription = emitter.addListener(ZOOM_EVENT_CHANNEL, (event: ZoomEvent) => {
     if (!event || typeof event.event !== "string") return;
 
+    // One subscriber throwing must not cost the others their event, and must
+    // not escape into the native emitter's callback.
+    const deliver = (listener: (...args: any[]) => void, ...args: any[]) => {
+      try {
+        listener(...args);
+      } catch (error) {
+        console.error(`[react-native-zoom-us] listener for "${event.event}" threw`, error);
+      }
+    };
+
     const listeners = named.get(event.event);
     if (listeners) {
       // Copy before iterating: a listener may unsubscribe itself.
-      for (const listener of Array.from(listeners)) listener(event, event);
+      for (const listener of Array.from(listeners)) deliver(listener, event, event);
     }
-    for (const listener of Array.from(any)) listener(event);
+    for (const listener of Array.from(any)) deliver(listener, event);
   });
 }
 

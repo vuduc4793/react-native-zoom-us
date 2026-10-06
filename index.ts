@@ -1,6 +1,33 @@
 import { Platform } from "react-native";
 import invariant from "invariant";
 import { RNZoomUs } from "./native";
+
+/**
+ * The native module, or a stand-in that rejects every call with a message.
+ *
+ * RNZoomUs is legitimately absent on Android until the on-demand module is
+ * installed -- the normal state of a fresh install -- and without this every
+ * command fails as "Cannot read property 'initialize' of null", which says
+ * nothing about what went wrong or what to do. Rejecting rather than throwing
+ * keeps the failure on the promise these all return, so a caller's .catch()
+ * sees it instead of an exception escaping mid-render.
+ */
+const native: any =
+  RNZoomUs ??
+  new Proxy(
+    {},
+    {
+      get: (_target, key) => () =>
+        Promise.reject(
+          new Error(
+            `[react-native-zoom-us] ZoomUs.${String(key)}() was called but the ` +
+              `Zoom SDK is not loaded in this process. On Android it ships as an ` +
+              `on-demand module: await ZoomModule.isInstalled(), and ` +
+              `ZoomModule.install() if it is not there yet.`
+          )
+        ),
+    }
+  );
 import events from "./src/events";
 
 const DEFAULT_USER_TYPE = 2;
@@ -145,15 +172,15 @@ async function initialize(
     ...params,
   };
 
-  return RNZoomUs.initialize(mappedParams, mappedSettings);
+  return native.initialize(mappedParams, mappedSettings);
 }
 
 function cleanup(): Promise<string> {
-  return RNZoomUs.cleanup();
+  return native.cleanup();
 }
 
 function isInitialized(): Promise<boolean> {
-  return RNZoomUs.isInitialized();
+  return native.isInitialized();
 }
 
 export interface RNZoomUsJoinMeetingParams {
@@ -201,7 +228,7 @@ async function joinMeeting(params: RNZoomUsJoinMeetingParams) {
     meetingNumber = meetingNumber.toString();
 
   // without noAudio, noVideo fields SDK can stack on joining meeting room for release build
-  return RNZoomUs.joinMeeting({
+  return native.joinMeeting({
     ...params,
     meetingNumber,
     noAudio: !!noAudio, // required
@@ -250,107 +277,107 @@ async function startMeeting(params: RNZoomUsStartMeetingParams) {
   if (typeof meetingNumber !== "string")
     meetingNumber = meetingNumber.toString();
 
-  return RNZoomUs.startMeeting({ userType, ...params, meetingNumber });
+  return native.startMeeting({ userType, ...params, meetingNumber });
 }
 
 async function leaveMeeting() {
-  return RNZoomUs.leaveMeeting();
+  return native.leaveMeeting();
 }
 
 async function connectAudio() {
-  return RNZoomUs.connectAudio();
+  return native.connectAudio();
 }
 
 async function isMeetingConnected() {
-  return RNZoomUs.isMeetingConnected();
+  return native.isMeetingConnected();
 }
 
 async function isMeetingHost() {
-  return RNZoomUs.isMeetingHost();
+  return native.isMeetingHost();
 }
 
 async function getInMeetingUserIdList() {
-  return RNZoomUs.getInMeetingUserIdList();
+  return native.getInMeetingUserIdList();
 }
 
 async function rotateMyVideo(rotation: number) {
   if (Platform.OS === "android") {
-    return RNZoomUs.rotateMyVideo(rotation);
+    return native.rotateMyVideo(rotation);
   } else {
     throw new Error("Only support android");
   }
 }
 
 async function muteMyVideo(muted: boolean) {
-  return RNZoomUs.muteMyVideo(muted);
+  return native.muteMyVideo(muted);
 }
 
 async function muteMyAudio(muted: boolean) {
-  return RNZoomUs.muteMyAudio(muted);
+  return native.muteMyAudio(muted);
 }
 
 async function muteAttendee(userId: string, muted: boolean) {
-  return RNZoomUs.muteAttendee(userId, muted);
+  return native.muteAttendee(userId, muted);
 }
 
 async function muteAllAttendee(allowUnmuteSelf: boolean) {
-  return RNZoomUs.muteAllAttendee(allowUnmuteSelf);
+  return native.muteAllAttendee(allowUnmuteSelf);
 }
 
 async function startShareScreen() {
-  return RNZoomUs.startShareScreen();
+  return native.startShareScreen();
 }
 
 async function stopShareScreen() {
-  return RNZoomUs.stopShareScreen();
+  return native.stopShareScreen();
 }
 
 async function switchCamera() {
-  return RNZoomUs.switchCamera();
+  return native.switchCamera();
 }
 
 async function raiseMyHand() {
-  return RNZoomUs.raiseMyHand();
+  return native.raiseMyHand();
 }
 
 async function lowerMyHand() {
-  return RNZoomUs.lowerMyHand();
+  return native.lowerMyHand();
 }
 
 async function joinBO() {
-  return RNZoomUs.joinBO();
+  return native.joinBO();
 }
 
 async function leaveBO() {
-  return RNZoomUs.leaveBO();
+  return native.leaveBO();
 }
 
 async function requestForHelp() {
-  return RNZoomUs.requestForHelp();
+  return native.requestForHelp();
 }
 
 async function isHostInThisBO() {
-  return RNZoomUs.isHostInThisBO();
+  return native.isHostInThisBO();
 }
 
 async function getAllChatMessageID() {
-  return RNZoomUs.getAllChatMessageID();
+  return native.getAllChatMessageID();
 }
 
 async function sendChatMsg(msgData: ZoomChatInfo) {
-  return RNZoomUs.sendChatMsg(msgData);
+  return native.sendChatMsg(msgData);
 }
 
 async function deleteChatMessage(msgId: string)  {
-  return RNZoomUs.deleteChatMessage(msgId);
+  return native.deleteChatMessage(msgId);
 }
 
 async function isHostUser({ userId }: { userId: number }) {
-  return RNZoomUs.isHostUser(userId);
+  return native.isHostUser(userId);
 }
 
 async function getMyselfUserID(): Promise<number> {
-  return RNZoomUs.getMyselfUserID();
+  return native.getMyselfUserID();
 }
 
 
