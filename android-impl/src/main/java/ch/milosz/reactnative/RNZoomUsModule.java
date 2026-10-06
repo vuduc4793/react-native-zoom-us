@@ -21,6 +21,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -174,6 +175,47 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     @Override
     public String getName() {
         return "RNZoomUs";
+    }
+
+    /**
+     * Call any Zoom SDK method by name.
+     *
+     * `path` is the route from ZoomSDK.getInstance() to the object that owns the
+     * method, dot separated and generated into src/commands/, e.g.
+     * "getInMeetingService.getInMeetingWaitingRoomController". JavaScript sends
+     * the route so this side needs no table of its own, and a method the SDK
+     * adds later is reachable without touching native code.
+     *
+     * On the UI thread: most of the SDK asserts it, and the ones that do not do
+     * not mind.
+     */
+    @ReactMethod
+    public void invoke(final String path, final String method, final ReadableArray args,
+                       final Promise promise) {
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Object target = RNZoomUsCommands.resolve(path);
+                    Object result = RNZoomUsCommands.call(target, method, args);
+                    Object marshalled = RNZoomUsCommands.marshal(result, 0);
+                    if (marshalled == null) promise.resolve(null);
+                    else if (marshalled instanceof Boolean) promise.resolve((Boolean) marshalled);
+                    else if (marshalled instanceof Double) promise.resolve((Double) marshalled);
+                    else if (marshalled instanceof String) promise.resolve((String) marshalled);
+                    else if (marshalled instanceof WritableArray) promise.resolve((WritableArray) marshalled);
+                    else if (marshalled instanceof WritableMap) promise.resolve((WritableMap) marshalled);
+                    else promise.resolve(String.valueOf(marshalled));
+                } catch (java.lang.reflect.InvocationTargetException ex) {
+                    // Unwrap, or every SDK failure reads as InvocationTargetException.
+                    Throwable cause = ex.getCause() == null ? ex : ex.getCause();
+                    promise.reject("ERR_ZOOM_INVOKE",
+                            path + "." + method + ": " + cause, cause);
+                } catch (Throwable t) {
+                    promise.reject("ERR_ZOOM_INVOKE", path + "." + method + ": " + t, t);
+                }
+            }
+        });
     }
 
     @ReactMethod

@@ -369,6 +369,8 @@ export * from "./src/hooks";
 
 // Android: the SDK is delivered as an on-demand module. See docs/DYNAMIC-FEATURE.md.
 export { default as ZoomModule } from "./src/module";
+export { zoom } from "./src/commands";
+export type { ZoomNativeApi, ZoomObject } from "./src/commands";
 export type {
   ZoomModuleStatus,
   ZoomModuleProgress,

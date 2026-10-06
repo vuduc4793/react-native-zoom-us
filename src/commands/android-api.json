@@ -1,0 +1,6150 @@
+{
+ "AccountService": {
+  "methods": [
+   {
+    "name": "getAccountName",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getAccountEmail",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getDefaultAudioOption",
+    "params": [],
+    "returns": "us.zoom.sdk.MeetingItem$AudioType"
+   },
+   {
+    "name": "isTelephonySupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isThirdPartyAudioSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDefaultThirdPartyAudioInfo",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isSignedInUserMeetingOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getCanScheduleForUsersList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.AlternativeHost>"
+   },
+   {
+    "name": "isLocalRecordingSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isCloudRecordingSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDefaultAutoRecordType",
+    "params": [],
+    "returns": "us.zoom.sdk.MeetingItem$AutoRecordType"
+   },
+   {
+    "name": "isHostMeetingInChinaFeatureOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSpecifiedDomainsCanJoinFeatureOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDefaultCanJoinUserSpecifiedDomains",
+    "params": [],
+    "returns": "java.util.List<java.lang.String>"
+   },
+   {
+    "name": "isTurnOnHostVideoByDefault",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isTurnOnAttendeeVideoByDefault",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isEnableJoinBeforeHostByDefault",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getAvailableDialInCountry",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCDialInCountry"
+   }
+  ],
+  "path": [
+   "getAccountService"
+  ]
+ },
+ "I3DAvatarSettingContext": {
+  "methods": [
+   {
+    "name": "is3DAvatarSupportedByDevice",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "is3DAvatarEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "get3DAvatarImageList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.I3DAvatarImageInfo>"
+   },
+   {
+    "name": "set3DAvatarImage",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "enable3DAvatarEffectForAllMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "is3DAvatarEffectForAllMeetingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isCustom3DAvatarEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getCustom3DAvatarImageList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.I3DAvatarImageInfo>"
+   },
+   {
+    "name": "isCustom3DAvatarImageModelDataReady",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "downloadCustom3DAvatarImageModelData",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setCustom3DAvatarImage",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isCustom3DAvatarAllElementsModelDataReady",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "downloadCustom3DAvatarAllElementsModelData",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startCreateCustom3DAvatar",
+    "params": [
+     "us.zoom.sdk.MobileRTCVideoView"
+    ],
+    "returns": "us.zoom.sdk.ICustom3DAvatarElementSettingContext"
+   },
+   {
+    "name": "finishCreateCustom3DAvatar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startEditCustom3DAvatar",
+    "params": [
+     "us.zoom.sdk.MobileRTCVideoView",
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.ICustom3DAvatarElementSettingContext"
+   },
+   {
+    "name": "finishEditCustom3DAvatar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "duplicateCustom3DAvatarImage",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "deleteCustom3DAvatarImage",
+    "params": [
+     "us.zoom.sdk.I3DAvatarImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "get3DAvatarSettings"
+  ]
+ },
+ "IBOAdmin": {
+  "methods": [
+   {
+    "name": "startBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "stopBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canStartBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "assignNewUserToRunningBO",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "switchAssignedUserToRunningBO",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IBOAdminEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "joinBOByUserRequest",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "broadcastMessage",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "ignoreUserHelpRequest",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "inviteBOUserReturnToMainSession",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController",
+   "getBOAdminHelper"
+  ]
+ },
+ "IBOAssistant": {
+  "methods": [
+   {
+    "name": "joinBO",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "leaveBO",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController",
+   "getBOAssistantHelper"
+  ]
+ },
+ "IBOAttendee": {
+  "methods": [
+   {
+    "name": "joinBo",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "leaveBo",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getBoName",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IBOAttendeeEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "requestForHelp",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isHostInThisBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isCanReturnMainSession",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController",
+   "getBOAttendeeHelper"
+  ]
+ },
+ "IBOCreator": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IBOCreatorEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "createBO",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "createGroupBO",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "updateBOName",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "removeBO",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "assignUserToBO",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "removeUserFromBO",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "setBOOption",
+    "params": [
+     "us.zoom.sdk.BOOption"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getBOOption",
+    "params": [],
+    "returns": "us.zoom.sdk.BOOption"
+   },
+   {
+    "name": "isWebPreAssignBOEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestAndUseWebPreAssignBOList",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getWebPreAssignBODataStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.PreAssignBODataStatus"
+   },
+   {
+    "name": "createWebinarBo",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "createBreakoutRoom",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAICompanionSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isTranscriptionSupported",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController",
+   "getBOCreatorHelper"
+  ]
+ },
+ "IBOData": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IBODataEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getUnassginedUserList",
+    "params": [],
+    "returns": "java.util.List<java.lang.String>"
+   },
+   {
+    "name": "getBOMeetingIDList",
+    "params": [],
+    "returns": "java.util.List<java.lang.String>"
+   },
+   {
+    "name": "getBOUserName",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getBOMeetingByID",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.IBOMeeting"
+   },
+   {
+    "name": "isBOUserMyself",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getCurrentBoName",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController",
+   "getBODataHelper"
+  ]
+ },
+ "IDirectShareServiceHelper": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IDirectShareServiceHelperEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "canStartDirectShare",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isDirectShareInProgress",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "startDirectShare",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopDirectShare",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getPreMeetingService",
+   "getDirectShareService"
+  ]
+ },
+ "IEmojiReactionController": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IEmojiReactionControllerEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isEmojiReactionEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "sendEmojiReaction",
+    "params": [
+     "us.zoom.sdk.SDKEmojiReactionType"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "sendEmojiFeedback",
+    "params": [
+     "us.zoom.sdk.MobileRTCEmojiFeedbackType"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "cancelEmojiFeedback",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getEmojiReactionController"
+  ]
+ },
+ "INotificationServiceHelper": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.INotificationServiceEvent"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isTransferMeetingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "transferMeeting",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "transferMeeting",
+    "params": [
+     "us.zoom.sdk.TransferMeetingMode",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getPresenceHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IPresenceHelper"
+   },
+   {
+    "name": "isPresenceFeatureEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "queryOfflineNotificationPubKey",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "registerOfflineNotification",
+    "params": [
+     "us.zoom.sdk.ZoomSDKOfflineNotifyParam"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unRegisterOfflineNotification",
+    "params": [
+     "us.zoom.sdk.ZoomSDKOfflineNotifyParam"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "onReceiveOfflineNotification",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getNotificationServiceHelper"
+  ]
+ },
+ "IPresenceHelper": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IPresenceHelperEvent"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestStarContact",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestUserDetailInfo",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "subscribeUserPresence",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unSubscribeUserPresence",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "addStarContact",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unStarContact",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "inviteContact",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "inviteContactList",
+    "params": [
+     "java.util.List<java.lang.String>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getNotificationServiceHelper",
+   "getPresenceHelper"
+  ]
+ },
+ "ISetVideoOrderHelper": {
+  "methods": [
+   {
+    "name": "isSupportFollowHostVideoOrder",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isFollowHostVideoOrderOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getVideoOrderList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "getLocalVideoOrderList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingVideoController",
+   "getSetVideoOrderHelper"
+  ]
+ },
+ "IZoomRetrieveSMSVerificationCodeHandler": {
+  "methods": [
+   {
+    "name": "cancelAndLeaveMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "retrieve",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getSmsService",
+   "getResendSMSVerificationCodeHandler"
+  ]
+ },
+ "IZoomVerifySMSVerificationCodeHandler": {
+  "methods": [
+   {
+    "name": "cancelAndLeaveMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "verify",
+    "params": [
+     "java.lang.String",
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getSmsService",
+   "getReVerifySMSVerificationCodeHandler"
+  ]
+ },
+ "InMeetingAANController": {
+  "methods": [
+   {
+    "name": "showAANPanel",
+    "params": [
+     "androidx.fragment.app.FragmentActivity"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "hideAANPanel",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "showDynamicNoticeForAICompanionPanel",
+    "params": [
+     "androidx.fragment.app.FragmentActivity"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "hideDynamicNoticeForAICompanionPanel",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAANController"
+  ]
+ },
+ "InMeetingAICompanionController": {
+  "methods": [
+   {
+    "name": "getInMeetingSmartSummaryController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingSmartSummaryController"
+   },
+   {
+    "name": "getSmartSummaryHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKAICompanionSmartSummaryHelper"
+   },
+   {
+    "name": "isTurnoffAllAICompanionsSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canTurnOffAllAICompanions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "turnOffAllAICompanions",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isTurnOnAllAICompanionsSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canTurnOnAllAICompanions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "turnOnAllAICompanions",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canRequestTurnoffAllAICompanions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestTurnoffAllAICompanions",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canRequestTurnOnAllAICompanions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestTurnOnAllAICompanions",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getQueryHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKAICompanionQueryHelper"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAICompanionController"
+  ]
+ },
+ "InMeetingAnnotationController": {
+  "methods": [
+   {
+    "name": "startAnnotation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopAnnotation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setToolColor",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setToolWidth",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "clear",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "undo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "redo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isPresenter",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canDisableViewerAnnotation",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isViewerAnnotationDisabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canDoAnnotation",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "disableViewerAnnotation",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAnnotationLegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getAnnotationLegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getAnnotationLegalNoticesExplained",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAnnotationController"
+  ]
+ },
+ "InMeetingAudioController": {
+  "methods": [
+   {
+    "name": "isMyAudioMuted",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canUnmuteMyAudio",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "muteMyAudio",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAudioConnected",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "disconnectAudio",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "connectAudioWithVoIP",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canSwitchAudioOutput",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setLoudSpeakerStatus",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getLoudSpeakerStatus",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "muteAttendeeAudio",
+    "params": [
+     "boolean",
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "muteAllAttendeeAudio",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unmuteAllAttendeeAudio",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setMuteOnEntry",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMuteOnEntryOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "stopIncomingAudio",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isIncomingAudioStopped",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getSupportedMeetingAudioType",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "is3rdPartyTelephonyAudioOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canEnableMuteOnEntry",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableMuteOnEntry",
+    "params": [
+     "boolean",
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMuteOnEntryEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enablePlayMeetingAudio",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCRawDataError"
+   },
+   {
+    "name": "isPlayMeetingAudioEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getMeetingAudioStatisticInfo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCAudioStatisticInfo"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAudioController"
+  ]
+ },
+ "InMeetingBOController": {
+  "methods": [
+   {
+    "name": "getBOCreatorHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IBOCreator"
+   },
+   {
+    "name": "getBOAdminHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IBOAdmin"
+   },
+   {
+    "name": "getBOAssistantHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IBOAssistant"
+   },
+   {
+    "name": "getBOAttendeeHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IBOAttendee"
+   },
+   {
+    "name": "getBODataHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IBOData"
+   },
+   {
+    "name": "isBOStarted",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isBOEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInBOMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getBOStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.BOStatus"
+   },
+   {
+    "name": "isBroadcastVoiceToBOSupport",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isBroadcastingVoiceToBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canBroadcastVoiceToBO",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableBroadcastVoiceToBO",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getJoiningBOName",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingBOController"
+  ]
+ },
+ "InMeetingChatController": {
+  "methods": [
+   {
+    "name": "isChatDisabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isPrivateChatDisabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getChatMessageById",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.InMeetingChatMessage"
+   },
+   {
+    "name": "sendChatMsgTo",
+    "params": [
+     "us.zoom.sdk.InMeetingChatMessage"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getPanelistChatPrivilege",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingChatController$MobileRTCWebinarPanelistChatPrivilege"
+   },
+   {
+    "name": "getWebinarAttendeeChatPrivilege",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingChatController$MobileRTCWebinarChatPrivilege"
+   },
+   {
+    "name": "getMeetingAttendeeChatPrivilege",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingChatController$MobileRTCMeetingChatPrivilege"
+   },
+   {
+    "name": "isMeetingChatLegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getChatLegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getChatLegalNoticesExplained",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "deleteChatMessage",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getAllChatMessageID",
+    "params": [],
+    "returns": "java.util.List<java.lang.String>"
+   },
+   {
+    "name": "isChatMessageCanBeDeleted",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isShareMeetingChatLegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getShareMeetingChatStartedLegalNoticeContent",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getShareMeetingChatStoppedLegalNoticeContent",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isFileTransferEnable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "transferFile",
+    "params": [
+     "java.lang.String",
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "transferFileToAll",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getTransferFileTypeAllowList",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getMaxTransferFileSize",
+    "params": [],
+    "returns": "long"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingChatController"
+  ]
+ },
+ "InMeetingCloudRecordController": {
+  "methods": [
+   {
+    "name": "isCloudRecordEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "startCloudRecord",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopCloudRecord",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "pauseCloudRecord",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "resumeCloudRecord",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isCloudRecordInProgress",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isCloudRecordPaused",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMeetingBeingRecording",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isRecordingMeetingOnCloud",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestStartCloudRecording",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSmartRecordingEnabled",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingCloudRecordController"
+  ]
+ },
+ "InMeetingDocsController": {
+  "methods": [
+   {
+    "name": "showDocsHomeView",
+    "params": [
+     "androidx.fragment.app.FragmentActivity"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSupportDocs",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canStartShareDoc",
+    "params": [],
+    "returns": "us.zoom.sdk.CannotShareReasonType"
+   },
+   {
+    "name": "canSetDocsOption",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDocsShareOption",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingDocsController$SDKDocsShareOption"
+   },
+   {
+    "name": "getDocsCreateOption",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingDocsController$SDKDocsCreateOption"
+   },
+   {
+    "name": "isOtherSharingDocs",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSharingDocsOut",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDocsSharingSourceInfoList",
+    "params": [
+     "long"
+    ],
+    "returns": "java.util.List<us.zoom.sdk.ZoomSDKDocSharingSourceInfo>"
+   },
+   {
+    "name": "getViewableDocsSharingUserList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingDocsController"
+  ]
+ },
+ "InMeetingEncryptionController": {
+  "methods": [
+   {
+    "name": "getEncryptionType",
+    "params": [],
+    "returns": "us.zoom.sdk.EncryptionType"
+   },
+   {
+    "name": "getE2EEMeetingSecurityCode",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getE2EEMeetingSecurityCodePassedSeconds",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "isUnencryptedExceptionDataValid",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getUnencryptedExceptionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getUnencryptedExceptionInfo",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingEncryptionController"
+  ]
+ },
+ "InMeetingInterpretationController": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IMeetingInterpretationControllerEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isInterpretationEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInterpretationStarted",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInterpreter",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInterpretationLanguageByID",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.IInterpretationLanguage"
+   },
+   {
+    "name": "getAllLanguageList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IInterpretationLanguage>"
+   },
+   {
+    "name": "getInterpreterList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IInterpreter>"
+   },
+   {
+    "name": "addInterpreter",
+    "params": [
+     "long",
+     "int",
+     "int"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "removeInterpreter",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "modifyInterpreter",
+    "params": [
+     "long",
+     "int",
+     "int"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "startInterpretation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopInterpretation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getAvailableLanguageList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IInterpretationLanguage>"
+   },
+   {
+    "name": "joinLanguageChannel",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getJoinedLanguageID",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "turnOffMajorAudio",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "turnOnMajorAudio",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMajorAudioTurnOff",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInterpreterLans",
+    "params": [],
+    "returns": "java.util.List<java.lang.Integer>"
+   },
+   {
+    "name": "setInterpreterActiveLan",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getInterpreterActiveLan",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getInterpreterAvailableLanguages",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IInterpretationLanguage>"
+   },
+   {
+    "name": "setInterpreterListenLan",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getInterpreterListenLan",
+    "params": [],
+    "returns": "int"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingInterpretationController"
+  ]
+ },
+ "InMeetingLiveStreamController": {
+  "methods": [
+   {
+    "name": "getLiveStreamChannels",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.InMeetingLiveStreamController$LiveStreamChannel>"
+   },
+   {
+    "name": "getCurrentLiveStreamChannel",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveStreamController$LiveStreamChannel"
+   },
+   {
+    "name": "startLiveStreamWithStreamingURL",
+    "params": [
+     "java.lang.String",
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopLiveStream",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startRawLiveStream",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startRawLiveStreaming",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopRawLiveStream",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isRawLiveStreamSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canStartRawLiveStream",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestRawLiveStream",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestRawLiveStreaming",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "removeRawLiveStreamPrivilege",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getRawLivingInfoList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.RawLiveStreamInfo>"
+   },
+   {
+    "name": "getRawLiveStreamPrivilegeUserList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "isLiveStreamReminderEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canEnableLiveStreamReminder",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableLiveStreamReminder",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingLiveStreamController"
+  ]
+ },
+ "InMeetingLiveTranscriptionController": {
+  "methods": [
+   {
+    "name": "canDisableCaptions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableCaptions",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isCaptionsEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMeetingSupportCC",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canBeAssignedToSendCC",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "assignCCPrivilege",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "withdrawCCPrivilege",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canAssignOthersToSendCC",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isLiveTranscriptionFeatureEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getLiveTranscriptionStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveTranscriptionController$MobileRTCLiveTranscriptionStatus"
+   },
+   {
+    "name": "canStartLiveTranscription",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "startLiveTranscription",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopLiveTranscription",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "enableRequestLiveTranscription",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isRequestToStartLiveTranscriptionEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestToStartLiveTranscription",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getClosedCaptionUrlFor3rdParty",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "enableMeetingManualCaption",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMeetingManualCaptionEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getAvailableMeetingSpokenLanguages",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.InMeetingLiveTranscriptionController$InMeetingLiveTranscriptionLanguage>"
+   },
+   {
+    "name": "setMeetingSpokenLanguage",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setMeetingSpokenLanguage",
+    "params": [
+     "int",
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getMeetingSpokenLanguage",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveTranscriptionController$InMeetingLiveTranscriptionLanguage"
+   },
+   {
+    "name": "getAvailableTranslationLanguages",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.InMeetingLiveTranscriptionController$InMeetingLiveTranscriptionLanguage>"
+   },
+   {
+    "name": "setTranslationLanguage",
+    "params": [
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getTranslationLanguage",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveTranscriptionController$InMeetingLiveTranscriptionLanguage"
+   },
+   {
+    "name": "isMultiLanguageTranscriptionEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isTextLiveTranslationEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableReceiveSpokenLanguageContent",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isReceiveSpokenLanguageContentEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSupportRequestCaptions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSupportTranslationWhenRequestToStartCaptions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestToStartCaptions",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingLiveTranscriptionController"
+  ]
+ },
+ "InMeetingPollingController": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.IMeetingPollingCtrlEvent"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canDoPolling",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canShowAnswerResultList",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getPollingQuestionItemList",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.util.List<us.zoom.sdk.IPollingQuestionItem>"
+   },
+   {
+    "name": "getPollingRightAnswerItemList",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.util.List<us.zoom.sdk.IPollingAnswerItem>"
+   },
+   {
+    "name": "getPollingAnswerResultItemList",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.util.List<us.zoom.sdk.IPollingAnswerResultItem>"
+   },
+   {
+    "name": "getPollingItemByID",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.IPollingItem"
+   },
+   {
+    "name": "canGetRightAnswerItemList",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getPollingQuestionImagePath",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getQuestionCharactersLengthRange",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.SDKQuestionCharactersLength"
+   },
+   {
+    "name": "isQuestionCaseSensitive",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "canAddPolling",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "addPolling",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canEditPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "editPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canDeletePolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "deletePolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canDuplicatePolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "duplicatePolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canViewPollingResultFromBrowser",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "viewPollingResultFromBrowser",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getPollingItemList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IPollingItem>"
+   },
+   {
+    "name": "canStartPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "startPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canRestartPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "restartPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canSharePollingResult",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "startSharePollingResult",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopSharePollingResult",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "enableGetRightAnswerList",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getActivePollingID",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "canDownloadResult",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "downLoadResult",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setAnswerCheck",
+    "params": [
+     "us.zoom.sdk.IPollingAnswerItem",
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setAnswerContent",
+    "params": [
+     "us.zoom.sdk.IPollingAnswerItem",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canSubmitPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "submitPolling",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingPollingController"
+  ]
+ },
+ "InMeetingProductionStudioController": {
+  "methods": [
+   {
+    "name": "isSupportPSMode",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isPSModeStarted",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getPSUserID",
+    "params": [],
+    "returns": "long"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingProductionStudioController"
+  ]
+ },
+ "InMeetingQAController": {
+  "methods": [
+   {
+    "name": "enableMeetingQAFeature",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMeetingQAFeatureOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isQAEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAskQuestionEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableAskQuestion",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getOpenQuestionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getAllQuestionList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IQAItemInfo>"
+   },
+   {
+    "name": "getAllQuestionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getMyQuestionList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IQAItemInfo>"
+   },
+   {
+    "name": "getMyQuestionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getOpenQuestionList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IQAItemInfo>"
+   },
+   {
+    "name": "getDismissedQuestionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getAnsweredQuestionCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getDismissedQuestionList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IQAItemInfo>"
+   },
+   {
+    "name": "getAnsweredQuestionList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IQAItemInfo>"
+   },
+   {
+    "name": "isAskQuestionAnonymouslyEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableAnonymousQuestion",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAttendeeCanViewAllQuestions",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableAttendeeViewAllQuestion",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isQAVoteupEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableQAVoteup",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isQACommentEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableQAComment",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "addQuestion",
+    "params": [
+     "java.lang.String",
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "answerQuestionPrivate",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "answerQuestionPublic",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "dismissQuestion",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "reopenQuestion",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "commentQuestion",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "voteupQuestion",
+    "params": [
+     "java.lang.String",
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "startLiving",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "endLiving",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getQuestion",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.IQAItemInfo"
+   },
+   {
+    "name": "getAnswer",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.IAnswerItem"
+   },
+   {
+    "name": "deleteQuestion",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "deleteAnswer",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isQALegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getQALegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getQALegalNoticesExplained",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingQAController"
+  ]
+ },
+ "InMeetingRawArchivingController": {
+  "methods": [
+   {
+    "name": "startRawArchiving",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopRawArchiving",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getMeetingRawArchivingController"
+  ]
+ },
+ "InMeetingRemoteController": {
+  "methods": [
+   {
+    "name": "hasRemoteControlPrivilege",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "startRemoteControl",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isRemoteController",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "grabRemoteControl",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlSingleTap",
+    "params": [
+     "long",
+     "float",
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlDoubleTap",
+    "params": [
+     "long",
+     "float",
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlLongPress",
+    "params": [
+     "long",
+     "float",
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlDoubleScroll",
+    "params": [
+     "long",
+     "float",
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlSingleMove",
+    "params": [
+     "long",
+     "float",
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "remoteControlCharInput",
+    "params": [
+     "long",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingRemoteController"
+  ]
+ },
+ "InMeetingService": {
+  "methods": [
+   {
+    "name": "getInMeetingAudioController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingAudioController"
+   },
+   {
+    "name": "getInMeetingVideoController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingVideoController"
+   },
+   {
+    "name": "getInMeetingShareController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingShareController"
+   },
+   {
+    "name": "getInMeetingChatController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingChatController"
+   },
+   {
+    "name": "getInMeetingAnnotationController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingAnnotationController"
+   },
+   {
+    "name": "getInMeetingCloudRecordController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingCloudRecordController"
+   },
+   {
+    "name": "getInMeetingQAController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingQAController"
+   },
+   {
+    "name": "getInMeetingWaitingRoomController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingWaitingRoomController"
+   },
+   {
+    "name": "getInMeetingRemoteController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingRemoteController"
+   },
+   {
+    "name": "getInMeetingLiveStreamController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveStreamController"
+   },
+   {
+    "name": "getInMeetingWebinarController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingWebinarController"
+   },
+   {
+    "name": "getInMeetingBOController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingBOController"
+   },
+   {
+    "name": "getInMeetingInterpretationController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingInterpretationController"
+   },
+   {
+    "name": "getInMeetingSignInterpretationController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingSignInterpretationController"
+   },
+   {
+    "name": "getEmojiReactionController",
+    "params": [],
+    "returns": "us.zoom.sdk.IEmojiReactionController"
+   },
+   {
+    "name": "getInMeetingAANController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingAANController"
+   },
+   {
+    "name": "getInMeetingLiveTranscriptionController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingLiveTranscriptionController"
+   },
+   {
+    "name": "getInMeetingVirtualBackgroundController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingVirtualBackgroundController"
+   },
+   {
+    "name": "getMeetingRawArchivingController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingRawArchivingController"
+   },
+   {
+    "name": "getInMeetingSmartSummaryController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingSmartSummaryController"
+   },
+   {
+    "name": "getInMeetingWhiteboardController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingWhiteboardController"
+   },
+   {
+    "name": "getInMeetingEncryptionController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingEncryptionController"
+   },
+   {
+    "name": "getInMeetingPollingController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingPollingController"
+   },
+   {
+    "name": "getInMeetingAICompanionController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingAICompanionController"
+   },
+   {
+    "name": "getInMeetingIndicatorController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingIndicatorController"
+   },
+   {
+    "name": "getInMeetingProductionStudioController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingProductionStudioController"
+   },
+   {
+    "name": "getInMeetingDocsController",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingDocsController"
+   },
+   {
+    "name": "isMeetingConnected",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMeetingLocked",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "lockMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getInMeetingUserCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "changeName",
+    "params": [
+     "java.lang.String",
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getInMeetingUserList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "getMyUserID",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getParticipantId",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getMyUserInfo",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingUserInfo"
+   },
+   {
+    "name": "getUserInfoById",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.InMeetingUserInfo"
+   },
+   {
+    "name": "makeHost",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canReclaimHost",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "reclaimHost",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "assignCohost",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "assignCoHostWithAssetsPrivilege",
+    "params": [
+     "long",
+     "java.util.List<us.zoom.sdk.GrantCoOwnerAssetsInfo>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "makeHostWithAssetsPrivilege",
+    "params": [
+     "long",
+     "java.util.List<us.zoom.sdk.GrantCoOwnerAssetsInfo>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canBeCohost",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "canBeCoOwner",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "revokeCohost",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "removeUser",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setPlayChimeOnOff",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isPlayChimeOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "activeShareUserID",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "isHostUser",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMyself",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "raiseMyHand",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "lowerHand",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "lowerAllHands",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestAvatarForUser",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isMeetingHost",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "leaveCurrentMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getCurrentMeetingID",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getCurrentMeetingNumber",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getCurrentMeetingTopic",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getCurrentMeetingUrl",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getCurrentMeetingInviteEmailSubject",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getCurrentMeetingInviteEmailContent",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isFailoverMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "querySessionNetworkStatus",
+    "params": [
+     "us.zoom.sdk.EnumComponentType",
+     "boolean"
+    ],
+    "returns": "int"
+   },
+   {
+    "name": "claimHostWithHostKey",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isWebinarMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "showZoomParticipantsUI",
+    "params": [
+     "android.app.Activity",
+     "int"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "showZoomChatUI",
+    "params": [
+     "android.app.Activity",
+     "int"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "showZoomQAUI",
+    "params": [
+     "android.app.Activity",
+     "int"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getMeetingPassword",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "setMeetingTopic",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "allowParticipantsToRename",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantsRenameAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowParticipantsToUnmuteSelf",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantsUnmuteSelfAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isLiveTranscriptLegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getLiveTranscriptLegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getLiveTranscriptLegalNoticesExplained",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "updatePermissions",
+    "params": [
+     "java.lang.String[]",
+     "int[]"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "suspendParticipantsActivities",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canSuspendParticipantsActivities",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowParticipantsToStartVideo",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantsStartVideoAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowParticipantsToShareWhiteBoard",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantsShareWhiteBoardAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isParticipantRequestLocalRecordingAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowParticipantsToRequestLocalRecording",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAutoAllowLocalRecordingRequest",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "autoAllowLocalRecordingRequest",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canHideParticipantProfilePictures",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "hideParticipantProfilePictures",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantProfilePicturesHidden",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInMeetingDataCenterInfo",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isFocusModeEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "turnFocusModeOn",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isFocusModeOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getFocusModeShareType",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCFocusModeShareType"
+   },
+   {
+    "name": "setFocusModeShareType",
+    "params": [
+     "us.zoom.sdk.MobileRTCFocusModeShareType"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canEnableParticipantRequestCloudRecording",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isParticipantRequestCloudRecordingAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowParticipantsToRequestCloudRecording",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSelfOriginalHost",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canSetMeetingTopic",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getBotAuthorizedUserInfoByUserID",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.InMeetingUserInfo"
+   },
+   {
+    "name": "getAuthorizedBotListByUserID",
+    "params": [
+     "long"
+    ],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "isSupportVirtualNameTag",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableVirtualNameTag",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "updateVirtualNameTagRosterInfo",
+    "params": [
+     "java.util.List<us.zoom.sdk.ZoomSDKVirtualNameTag>"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getCompanionParentUser",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.InMeetingUserInfo"
+   },
+   {
+    "name": "getCompanionChildList",
+    "params": [
+     "long"
+    ],
+    "returns": "java.util.List<java.lang.Long>"
+   }
+  ],
+  "path": [
+   "getInMeetingService"
+  ]
+ },
+ "InMeetingShareController": {
+  "methods": [
+   {
+    "name": "startShareScreen",
+    "params": [
+     "android.content.Intent"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopShareScreen",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startShareViewContent",
+    "params": [
+     "us.zoom.sdk.MobileRTCShareView"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopShareView",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isShareLocked",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "lockShare",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSharingOut",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSharingScreen",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isOtherSharing",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSenderSupportAnnotation",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getShareBitmap",
+    "params": [],
+    "returns": "android.graphics.Bitmap"
+   },
+   {
+    "name": "isWhiteboardLegalNoticeAvailable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getWhiteboardLegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getWhiteboardLegalNoticesExplained",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "canStartShare",
+    "params": [],
+    "returns": "us.zoom.sdk.CannotShareReasonType"
+   },
+   {
+    "name": "getSharingSourceInfoList",
+    "params": [
+     "long"
+    ],
+    "returns": "java.util.List<us.zoom.sdk.ZoomSDKSharingSourceInfo>"
+   },
+   {
+    "name": "getViewableSharingUserList",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "getMeetingShareStatisticInfo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCASVStatisticInfo"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingShareController"
+  ]
+ },
+ "InMeetingSignInterpretationController": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.InMeetingSignInterpretationControllerEvent"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isSignInterpretationEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getSignInterpretationStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingSignInterpretationController$SignInterpretationStatus"
+   },
+   {
+    "name": "isSignInterpreter",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getSignInterpretationLanguageInfoByID",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.ISignInterpretationLanguageInfo"
+   },
+   {
+    "name": "getAvailableSignLanguageInfoList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.ISignInterpretationLanguageInfo>"
+   },
+   {
+    "name": "getAllSupportedSignLanguageInfoList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.ISignInterpretationLanguageInfo>"
+   },
+   {
+    "name": "getSignInterpreterList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.ISignInterpreter>"
+   },
+   {
+    "name": "addSignInterpreter",
+    "params": [
+     "long",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "removeSignInterpreter",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "modifySignInterpreterLanguage",
+    "params": [
+     "long",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canStartSignInterpretation",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "startSignInterpretation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopSignInterpretation",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestSignLanguageInterpreterToTalk",
+    "params": [
+     "long",
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canSignLanguageInterpreterTalk",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getSignInterpreterAssignedLanID",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "joinSignLanguageChannel",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "leaveSignLanguageChannel",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingSignInterpretationController"
+  ]
+ },
+ "InMeetingSmartSummaryController": {
+  "methods": [
+   {
+    "name": "isSmartSummarySupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSmartSummaryEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canRequestStartSmartSummary",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "requestStartSmartSummary",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canStartSmartSummary",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "startSmartSummary",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "stopSmartSummary",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSmartSummaryStarted",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingSmartSummaryController"
+  ]
+ },
+ "InMeetingUserInfo": {
+  "methods": [
+   {
+    "name": "getUserId",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getCustomerKey",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getUserName",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isRaisedHand",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getAvatarPath",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInMeetingUserRole",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingUserInfo$InMeetingUserRole"
+   },
+   {
+    "name": "getVideoStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingUserInfo$VideoStatus"
+   },
+   {
+    "name": "hasCamera",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getAudioStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingUserInfo$AudioStatus"
+   },
+   {
+    "name": "getWebinarAttendeeStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingUserInfo$WebinarAttendeeStatus"
+   },
+   {
+    "name": "isH323User",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isPureCallInUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getPersistentId",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isRawLiveStreaming",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "hasRawLiveStreamPrivilege",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isHost",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMySelf",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isClosedCaptionSender",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInterpreter",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSignLanguageInterpreter",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInterpreterActiveLanguage",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isProductionStudioUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getProductionStudioParent",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getGrantCoOwnerAssetsInfo",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.GrantCoOwnerAssetsInfo>"
+   },
+   {
+    "name": "getEmojiFeedbackType",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCEmojiFeedbackType"
+   },
+   {
+    "name": "isInWebinarBackstage",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isBotUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getBotAppName",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isVirtualNameTagEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getVirtualNameTagList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.ZoomSDKVirtualNameTag>"
+   },
+   {
+    "name": "isCompanionModeUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAudioOnlyUser",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getMyUserInfo"
+  ]
+ },
+ "InMeetingVideoController": {
+  "methods": [
+   {
+    "name": "activeVideoUserID",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "isMyVideoMuted",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canUnmuteMyVideo",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "muteMyVideo",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setVideoCaptureSurfaceHolder",
+    "params": [
+     "android.view.SurfaceHolder"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "rotateMyVideo",
+    "params": [
+     "int"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "canSwitchCamera",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "switchToNextCamera",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "switchCamera",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getCameraDeviceList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.CameraDevice>"
+   },
+   {
+    "name": "getSelectedCameraId",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isFrontCamera",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isBackCamera",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "stopAttendeeVideo",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "askAttendeeStartVideo",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isUserVideoSpotLighted",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "spotLightVideo",
+    "params": [
+     "boolean",
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unSpotlightAllVideos",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canPinVideo",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.SDKPinResult"
+   },
+   {
+    "name": "getPinnedUser",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "isUserPinned",
+    "params": [
+     "long"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "pinVideo",
+    "params": [
+     "boolean",
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getSetVideoOrderHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.ISetVideoOrderHelper"
+   },
+   {
+    "name": "stopIncomingVideo",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isIncomingVideoStopped",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "showAvatar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isShowAvatar",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isStopIncomingVideoSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableVideoAutoFraming",
+    "params": [
+     "us.zoom.sdk.AutoFramingMode",
+     "us.zoom.sdk.AutoFramingParameter"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isVideoAutoFramingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getVideoAutoFramingMode",
+    "params": [],
+    "returns": "us.zoom.sdk.AutoFramingMode"
+   },
+   {
+    "name": "setVideoAutoFramingMode",
+    "params": [
+     "us.zoom.sdk.AutoFramingMode"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setVideoAutoFramingRatio",
+    "params": [
+     "float"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setFaceRecognitionFailStrategy",
+    "params": [
+     "us.zoom.sdk.FaceRecognitionFailStrategy"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getVideoAutoFramingSetting",
+    "params": [
+     "us.zoom.sdk.AutoFramingMode"
+    ],
+    "returns": "us.zoom.sdk.AutoFramingParameter"
+   },
+   {
+    "name": "disableVideoAutoFraming",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canEnableAlphaChannelMode",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableAlphaChannelMode",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAlphaChannelModeEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getUserVideoSize",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.VideoSize"
+   },
+   {
+    "name": "getCameraController",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.ICameraController"
+   },
+   {
+    "name": "revokeCameraControlPrivilege",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "zoomCamera",
+    "params": [
+     "float"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "setVideoQualityPreference",
+    "params": [
+     "us.zoom.sdk.SDKVideoPreferenceSetting"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getMeetingVideoStatisticInfo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCASVStatisticInfo"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingVideoController"
+  ]
+ },
+ "InMeetingVirtualBackgroundController": {
+  "methods": [
+   {
+    "name": "isSupportVirtualBG",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isDeviceSupportSmartVirtualBG",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getBGImageList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.IVirtualBGImageInfo>"
+   },
+   {
+    "name": "addBGImage",
+    "params": [
+     "android.graphics.Bitmap"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "removeBGImage",
+    "params": [
+     "us.zoom.sdk.IVirtualBGImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "useBGImage",
+    "params": [
+     "us.zoom.sdk.IVirtualBGImageInfo"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "useNoneImage",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAllowToAddNewVBItem",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingVirtualBackgroundController"
+  ]
+ },
+ "InMeetingWaitingRoomController": {
+  "methods": [
+   {
+    "name": "isSupportWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isWaitingRoomOnEntryFlagOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isWaitingRoomOnEntryLocked",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableWaitingRoomOnEntry",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getWaitingRoomUserLst",
+    "params": [],
+    "returns": "java.util.List<java.lang.Long>"
+   },
+   {
+    "name": "getWaitingRoomUserInfoByID",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.InMeetingUserInfo"
+   },
+   {
+    "name": "admitToMeeting",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "putInWaitingRoom",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAudioEnabledInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isVideoEnabledInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "requestCustomWaitingRoomData",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "admitAllToMeeting",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canRenameUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "renameUser",
+    "params": [
+     "long",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canExpelUser",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "expelUser",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "presetAudioInWaitingRoom",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isPresetAudioUnmuteInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "presetVideoInWaitingRoom",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isPresetVideoUnmuteInWaitingRoom",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingWaitingRoomController"
+  ]
+ },
+ "InMeetingWebinarController": {
+  "methods": [
+   {
+    "name": "promptAttendee2Panelist",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "depromptPanelist2Attendee",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSupportAttendeeTalk",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowAttendeeTalk",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "disAllowAttendeeTalk",
+    "params": [
+     "long"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "allowPanelistStartVideo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "disallowPanelistStartVideo",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAllowPanellistStartVideo",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAllowAttendeeChat",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isWebinarEmojiReactionSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowWebinarEmojiReaction",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "disallowWebinarEmojiReaction",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isWebinarEmojiReactionAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowAttendeeRaiseHand",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "disallowAttendeeRaiseHand",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAttendeeRaiseHandAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "allowAttendeeViewTheParticipantCount",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "disallowAttendeeViewTheParticipantCount",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isAttendeeViewTheParticipantCountAllowed",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getParticipantCount",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "setAttendeeViewMode",
+    "params": [
+     "us.zoom.sdk.ZoomSDKAttendeeViewMode"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getAttendeeViewMode",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKAttendeeViewMode"
+   },
+   {
+    "name": "getWebinarRegistrationLegalNoticesPrompt",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getWebinarRegistrationLegalNoticesExplained",
+    "params": [],
+    "returns": "us.zoom.sdk.WebinarRegistLegalNoticeContent"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingWebinarController"
+  ]
+ },
+ "InMeetingWhiteboardController": {
+  "methods": [
+   {
+    "name": "setEvent",
+    "params": [
+     "us.zoom.sdk.InMeetingWhiteboardCtrlEvent"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isSupportWhiteBoard",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "showDashboardView",
+    "params": [
+     "android.app.Activity",
+     "int"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setWhiteboardShareOption",
+    "params": [
+     "us.zoom.sdk.SDKWhiteboardShareOption"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getWhiteboardShareOption",
+    "params": [],
+    "returns": "us.zoom.sdk.SDKWhiteboardShareOption"
+   },
+   {
+    "name": "setWhiteboardCreateOption",
+    "params": [
+     "us.zoom.sdk.SDKWhiteboardCreateOption"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getWhiteboardCreateOption",
+    "params": [],
+    "returns": "us.zoom.sdk.SDKWhiteboardCreateOption"
+   },
+   {
+    "name": "enableParticipantsCreateWithoutHost",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isParticipantsCreateWithoutHostEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canStartShareWhiteboard",
+    "params": [],
+    "returns": "us.zoom.sdk.CannotShareReasonType"
+   },
+   {
+    "name": "canStartShareNewWhiteboard",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "startNewWhiteboardShare",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "canStopWhiteboardShare",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "stopWhiteboardShare",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isOtherSharingWhiteboard",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSharingWhiteboardOut",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingWhiteboardController"
+  ]
+ },
+ "InviteRoomSystemHelper": {
+  "methods": [
+   {
+    "name": "getH323Address",
+    "params": [],
+    "returns": "java.lang.String[]"
+   },
+   {
+    "name": "getH323Password",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getRoomDevices",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.RoomSystemDevice>"
+   },
+   {
+    "name": "sendMeetingPairingCode",
+    "params": [
+     "long",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "callOutRoomSystem",
+    "params": [
+     "us.zoom.sdk.RoomSystemDevice"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "cancelCallOutRoomSystem",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getMeetingService",
+   "getInviteRoomSystemHelper"
+  ]
+ },
+ "MeetingService": {
+  "methods": [
+   {
+    "name": "startMeetingWithParams",
+    "params": [
+     "android.content.Context",
+     "us.zoom.sdk.StartMeetingParams",
+     "us.zoom.sdk.MeetingOptions"
+    ],
+    "returns": "int"
+   },
+   {
+    "name": "startInstantMeeting",
+    "params": [
+     "android.content.Context",
+     "us.zoom.sdk.MeetingOptions"
+    ],
+    "returns": "int"
+   },
+   {
+    "name": "joinMeetingWithParams",
+    "params": [
+     "android.content.Context",
+     "us.zoom.sdk.JoinMeetingParams",
+     "us.zoom.sdk.JoinMeetingOptions"
+    ],
+    "returns": "int"
+   },
+   {
+    "name": "handZoomWebUrl",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getMeetingStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.MeetingStatus"
+   },
+   {
+    "name": "leaveCurrentMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "pauseCurrentMeeting",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "resumeCurrentMeeting",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "returnToMeeting",
+    "params": [
+     "android.content.Context"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getCurrentRtcMeetingID",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getCurrentRtcMeetingNumber",
+    "params": [],
+    "returns": "long"
+   },
+   {
+    "name": "getCurrentMeetingUrl",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isCurrentMeetingLocked",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isCurrentMeetingHost",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInviteRoomSystemSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getInviteRoomSystemHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.InviteRoomSystemHelper"
+   },
+   {
+    "name": "getPhoneHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.PhoneHelper"
+   },
+   {
+    "name": "tryRetrieveMicrophone",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "removeMeetingNotification",
+    "params": [
+     "android.content.Context"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "configDSCP",
+    "params": [
+     "int",
+     "int",
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "notifyVideoConfInstanceDestroyed",
+    "params": [],
+    "returns": "void"
+   }
+  ],
+  "path": [
+   "getMeetingService"
+  ]
+ },
+ "MeetingSettingsHelper": {
+  "methods": [
+   {
+    "name": "setAutoConnectVoIPWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isAutoConnectVoIPWhenJoinMeetingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setMuteMyMicrophoneWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isMuteMyMicrophoneWhenJoinMeetingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setTurnOffMyVideoWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isTurnOffMyVideoWhenJoinMeetingEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isHideNoVideoUsersEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setHideNoVideoUsersEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isSwitchVideoLayoutAccordingToUserCountEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setSwitchVideoLayoutAccordingToUserCountEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getSwitchVideoLayoutUserCountThreshold",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "setSwitchVideoLayoutUserCountThreshold",
+    "params": [
+     "int"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setGalleryVideoViewDisabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isGalleryVideoViewDisabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isAlwaysShowMeetingToolbarEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setAlwaysShowMeetingToolbarEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isNoVideoTileOnShareScreenEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setNoVideoTileOnShareScreenEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isNoLeaveMeetingButtonForHostEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setNoLeaveMeetingButtonForHostEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isNoUserJoinOrLeaveTipEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setNoUserJoinOrLeaveTipEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isCustomizedMeetingUIEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setCustomizedMeetingUIEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setConfNotificationChannelId",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setClaimHostWithHostKeyActionEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setNoInviteH323RoomCallOutEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setNoInviteH323RoomCallInEnabled",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setClosedCaptionHidden",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideClosedCaption",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableForceAutoStartMyVideoWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableForceAutoStopMyVideoWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disableAutoShowSelectJoinAudioDlgWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disableShowMeetingNotification",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enable720p",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "is720PEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enable1080p",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "is1080pEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "disableChatUI",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideAnnotationInScreenShareToolbar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideAnnotationInScreenShareToolbar",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "hideStopShareInScreenShareToolbar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideStopShareInScreenShareToolbar",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setConfNotificationPriority",
+    "params": [
+     "int"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hiddenQA",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hiddenPoll",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableShowMyMeetingElapseTime",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isShowMyMeetingElapseTimeEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setCustomizedNotificationData",
+    "params": [
+     "us.zoom.sdk.CustomizedNotificationData",
+     "us.zoom.sdk.InMeetingNotificationHandle"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disableShowVideoPreviewWhenJoinMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isDisableShowVideoPreviewWhenJoinMeeting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "disableLeaveMeetingWhenTaskRemoved",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableMicOriginalInput",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableEchoCancellation",
+    "params": [
+     "boolean"
+    ],
+    "returns": "int"
+   },
+   {
+    "name": "isEchoCancellationOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isSupportEchoCancellation",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isMicOriginalInputEnable",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "disableConfidentialWatermark",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "disableCopyMeetingUrl",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setReactionSkinTone",
+    "params": [
+     "us.zoom.sdk.ReactionSkinToneType"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getReactionSkinTone",
+    "params": [],
+    "returns": "us.zoom.sdk.ReactionSkinToneType"
+   },
+   {
+    "name": "setVideoAspectRatio",
+    "params": [
+     "us.zoom.sdk.VideoAspectRatioType"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getVideoAspectRatio",
+    "params": [],
+    "returns": "us.zoom.sdk.VideoAspectRatioType"
+   },
+   {
+    "name": "isMirrorEffectEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableMirrorEffect",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disableClearWebKitCache",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isDisabledClearWebKitCache",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableCloudWhiteboard",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setAnnotationSnapshotPathInAlbum",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableGreenBorderForShareScreen",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isGreenBorderEnableForShareScreen",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setAudioFocusType",
+    "params": [
+     "us.zoom.sdk.AudioFocusGainType"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableAutoAdjustMicVolume",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isAutoAdjustMicVolumeOn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableUseConnectionService",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setConfNotificationCategory",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setHideShareButtonInMeetingToolbar",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setActivityForShowDisclaimer",
+    "params": [
+     "android.app.Activity"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableGrabShareWithoutReminder",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideCloudWhiteboardHelperCenterButton",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideCloudWhiteboardOpenInBrowserButton",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setDisclaimerBannerUIConfig",
+    "params": [
+     "us.zoom.sdk.DisclaimerBannerConfig"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enable5GHighBandWidth",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setDimensionConfig",
+    "params": [
+     "us.zoom.sdk.DimensionType",
+     "us.zoom.sdk.DimensionValue"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "forceDisableCamera",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isCameraForceDisabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableWhiteboardVideoView",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isWhiteboardVideoViewEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setPresetVBImage",
+    "params": [
+     "int",
+     "java.lang.String",
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setPreferredAudioOutputDevice",
+    "params": [
+     "android.media.AudioDeviceInfo"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "setPreferredAudioInputDevice",
+    "params": [
+     "android.media.AudioDeviceInfo"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableZoomDocsInCustomUI",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isZoomDocsEnabledInCustomUI",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setHideEmojiDownloadNotification",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "enableShareContentFlashDetection",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isShareContentFlashDetectionEnabled",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getMeetingSettingsHelper"
+  ]
+ },
+ "MobileRTCASVStatisticInfo": {
+  "methods": [
+   {
+    "name": "getSendBandwidth",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendFps",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendRTT",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendJitter",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendPacketLossAvg",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getSendPacketLossMax",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getRecvBandwidth",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvFps",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvRTT",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvJitter",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvPacketLossAvg",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getRecvPacketLossMax",
+    "params": [],
+    "returns": "float"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingVideoController",
+   "getMeetingVideoStatisticInfo"
+  ]
+ },
+ "MobileRTCAudioStatisticInfo": {
+  "methods": [
+   {
+    "name": "getSendFrequency",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendBandwidth",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendRTT",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendJitter",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getSendPacketLossAvg",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getSendPacketLossMax",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getRecvFrequency",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvBandwidth",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvRTT",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvJitter",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "getRecvPacketLossAvg",
+    "params": [],
+    "returns": "float"
+   },
+   {
+    "name": "getRecvPacketLossMax",
+    "params": [],
+    "returns": "float"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAudioController",
+   "getMeetingAudioStatisticInfo"
+  ]
+ },
+ "MobileRTCDialInCountry": {
+  "methods": [
+   {
+    "name": "getHash",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "setHash",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isIncludedTollFree",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setIncludedTollFree",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getSelectedCountries",
+    "params": [],
+    "returns": "java.util.ArrayList<java.lang.String>"
+   },
+   {
+    "name": "setSelectedCountries",
+    "params": [
+     "java.util.ArrayList<java.lang.String>"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getAllCountries",
+    "params": [],
+    "returns": "java.util.ArrayList<java.lang.String>"
+   },
+   {
+    "name": "setAllCountries",
+    "params": [
+     "java.util.ArrayList<java.lang.String>"
+    ],
+    "returns": "void"
+   }
+  ],
+  "path": [
+   "getAccountService",
+   "getAvailableDialInCountry"
+  ]
+ },
+ "MyNotesController": {
+  "methods": [
+   {
+    "name": "isMyNotesEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "canStartMyNotes",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "showMyNotesView",
+    "params": [
+     "android.app.Activity"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getPreMeetingService",
+   "getMyNotesController"
+  ]
+ },
+ "PhoneHelper": {
+  "methods": [
+   {
+    "name": "isSupportPhoneFeature",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isDialOutSupported",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getSupportCountryInfo",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.PhoneHelper$PhoneSupportCountryInfo>"
+   },
+   {
+    "name": "inviteCallOutUser",
+    "params": [
+     "java.lang.String",
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "cancelCallOutUser",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getInviteCallOutUserStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.PhoneHelper$PhoneStatus"
+   },
+   {
+    "name": "callMe",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "hangUp",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "getCallMeStatus",
+    "params": [],
+    "returns": "us.zoom.sdk.PhoneHelper$PhoneStatus"
+   },
+   {
+    "name": "getCurrentMeetingCallInNumber",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.PhoneHelper$CallInPhoneNumberInfo>"
+   },
+   {
+    "name": "getCurrentMeetingCallInParticipantID",
+    "params": [],
+    "returns": "long"
+   }
+  ],
+  "path": [
+   "getMeetingService",
+   "getPhoneHelper"
+  ]
+ },
+ "PreMeetingService": {
+  "methods": [
+   {
+    "name": "getDirectShareService",
+    "params": [],
+    "returns": "us.zoom.sdk.IDirectShareServiceHelper"
+   },
+   {
+    "name": "getMyNotesController",
+    "params": [],
+    "returns": "us.zoom.sdk.MyNotesController"
+   }
+  ],
+  "path": [
+   "getPreMeetingService"
+  ]
+ },
+ "SmsService": {
+  "methods": [
+   {
+    "name": "enableZoomAuthRealNameMeetingUIShown",
+    "params": [
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "setDefaultCellPhoneInfo",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getResendSMSVerificationCodeHandler",
+    "params": [],
+    "returns": "us.zoom.sdk.IZoomRetrieveSMSVerificationCodeHandler"
+   },
+   {
+    "name": "getReVerifySMSVerificationCodeHandler",
+    "params": [],
+    "returns": "us.zoom.sdk.IZoomVerifySMSVerificationCodeHandler"
+   },
+   {
+    "name": "getSupportPhoneNumberCountryList",
+    "params": [],
+    "returns": "java.util.List<us.zoom.sdk.ZoomSDKCountryCode>"
+   },
+   {
+    "name": "getRealNameAuthPrivacyURL",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getSmsService"
+  ]
+ },
+ "WebinarRegistLegalNoticeContent": {
+  "methods": [
+   {
+    "name": "getFormattedHtmlContent",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getAccountOwnerUrl",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getTermsUrl",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "getPrivacyPolicyUrl",
+    "params": [],
+    "returns": "java.lang.String"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingWebinarController",
+   "getWebinarRegistrationLegalNoticesExplained"
+  ]
+ },
+ "ZoomSDK": {
+  "methods": [
+   {
+    "name": "getInstance",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDK"
+   },
+   {
+    "name": "hasRawDataLicense",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "getVideoSourceHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKVideoSourceHelper"
+   },
+   {
+    "name": "getShareSourceHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKShareSourceHelper"
+   },
+   {
+    "name": "uninitialize",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchDomain",
+    "params": [
+     "java.lang.String",
+     "boolean"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getVersion",
+    "params": [
+     "android.content.Context"
+    ],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "isDeviceSupported",
+    "params": [
+     "android.content.Context"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "isInitialized",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "generateSSOLoginURL",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "handleSSOLoginURIProtocol",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "logoutZoom",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "isLoggedIn",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "tryAutoLoginZoom",
+    "params": [],
+    "returns": "int"
+   },
+   {
+    "name": "setDomain",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "boolean"
+   },
+   {
+    "name": "getDomain",
+    "params": [],
+    "returns": "java.lang.String"
+   },
+   {
+    "name": "setSdkLocale",
+    "params": [
+     "android.content.Context",
+     "java.util.Locale"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getSdkLocale",
+    "params": [
+     "android.content.Context"
+    ],
+    "returns": "java.util.Locale"
+   },
+   {
+    "name": "setShowProxyServerDialogImmediatelyIfNeeded",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "getMeetingService",
+    "params": [],
+    "returns": "us.zoom.sdk.MeetingService"
+   },
+   {
+    "name": "getSmsService",
+    "params": [],
+    "returns": "us.zoom.sdk.SmsService"
+   },
+   {
+    "name": "getAccountService",
+    "params": [],
+    "returns": "us.zoom.sdk.AccountService"
+   },
+   {
+    "name": "getPreMeetingService",
+    "params": [],
+    "returns": "us.zoom.sdk.PreMeetingService"
+   },
+   {
+    "name": "getInMeetingService",
+    "params": [],
+    "returns": "us.zoom.sdk.InMeetingService"
+   },
+   {
+    "name": "getZoomUIService",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomUIService"
+   },
+   {
+    "name": "getMeetingSettingsHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.MeetingSettingsHelper"
+   },
+   {
+    "name": "get3DAvatarSettings",
+    "params": [],
+    "returns": "us.zoom.sdk.I3DAvatarSettingContext"
+   },
+   {
+    "name": "getReminderHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.IReminderHelper"
+   },
+   {
+    "name": "getNotificationServiceHelper",
+    "params": [],
+    "returns": "us.zoom.sdk.INotificationServiceHelper"
+   },
+   {
+    "name": "enableAutoRegisterNotificationServiceForLogin",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "registerNotificationService",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "unregisterNotificationService",
+    "params": [],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": []
+ },
+ "ZoomSDKAICompanionQueryHelper": {
+  "methods": [
+   {
+    "name": "getSelectedQuerySetting",
+    "params": [],
+    "returns": "us.zoom.sdk.ZoomSDKAICompanionQuerySettingOptions"
+   },
+   {
+    "name": "canChangeQuerySetting",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "changeQuerySettings",
+    "params": [
+     "us.zoom.sdk.ZoomSDKAICompanionQuerySettingOptions"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getInMeetingService",
+   "getInMeetingAICompanionController",
+   "getQueryHelper"
+  ]
+ },
+ "ZoomSDKShareSourceHelper": {
+  "methods": [
+   {
+    "name": "setExternalShareSource",
+    "params": [
+     "us.zoom.sdk.ZoomSDKShareSource",
+     "us.zoom.sdk.ZoomSDKShareAudioSource"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCRawDataError"
+   }
+  ],
+  "path": [
+   "getShareSourceHelper"
+  ]
+ },
+ "ZoomSDKVideoSourceHelper": {
+  "methods": [
+   {
+    "name": "setPreProcessor",
+    "params": [
+     "us.zoom.sdk.ZoomSDKPreProcessor"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setExternalVideoSource",
+    "params": [
+     "us.zoom.sdk.ZoomSDKVideoSource",
+     "us.zoom.sdk.ExternalSourceDataFormat"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   }
+  ],
+  "path": [
+   "getVideoSourceHelper"
+  ]
+ },
+ "ZoomUIService": {
+  "methods": [
+   {
+    "name": "switchToNextPage",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchToPreviousPage",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchToActiveSpeaker",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchToDriveScene",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchToVideoWall",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "switchToSignLanguageView",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "setHideMeetingInputUserInfoWindow",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideMeetingInputUserInfoWindow",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "prePopulateWebinarRegistrationInfo",
+    "params": [
+     "java.lang.String",
+     "java.lang.String"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setHideRegisterWebinarInfoWindow",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideRegisterWebinarInfoWindow",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setZoomUIDelegate",
+    "params": [
+     "us.zoom.sdk.ZoomUIDelegate"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideReactionsOnMeetingUI",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideDisconnectAudio",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hiddenPromoToPanelist",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hiddenChangeToAttendee",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "showMiniMeetingWindow",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "hideMiniMeetingWindow",
+    "params": [],
+    "returns": "void"
+   },
+   {
+    "name": "setMiniMeetingViewSize",
+    "params": [
+     "us.zoom.sdk.CustomizedMiniMeetingViewSize"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableMinimizeMeeting",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disablePIPMode",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "disableFreeMeetingNeedAdminUpgradeTips",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "enableJavaScriptForShareWebView",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideMeetingInviteUrl",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setCustomizedInvitationDomain",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setCustomizedPollingUrl",
+    "params": [
+     "java.lang.String",
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "setHideShareOptions",
+    "params": [
+     "java.util.List<java.lang.Integer>"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setCustomShareOptions",
+    "params": [
+     "java.util.List<us.zoom.sdk.ICustomShareOptionItem>"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideCloudWhiteboardFeedbackButton",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setCloudWhiteboardFeedbackUrl",
+    "params": [
+     "java.lang.String"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "hideCloudWhiteboardShareButton",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideCloudWhiteboardAboutButton",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setNewMeetingUI",
+    "params": [
+     "java.lang.Class<? extends us.zoom.sdk.NewMeetingActivity>"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isTabletDevice",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "enableHideSelfView",
+    "params": [
+     "boolean"
+    ],
+    "returns": "us.zoom.sdk.MobileRTCSDKError"
+   },
+   {
+    "name": "isHideSelfViewEnabled",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "hideRequestRecordPrivilegeDialog",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "hideJoinMeetingNamePasswordDialog",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "setHideWebinarNameInputWindow",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideWebinarNameInputWindow",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setHideConfirmStartArchiveDialog",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideConfirmStartArchiveDialog",
+    "params": [],
+    "returns": "boolean"
+   },
+   {
+    "name": "setHideRecoverMeetingDialog",
+    "params": [
+     "boolean"
+    ],
+    "returns": "void"
+   },
+   {
+    "name": "isHideRecoverMeetingDialog",
+    "params": [],
+    "returns": "boolean"
+   }
+  ],
+  "path": [
+   "getZoomUIService"
+  ]
+ }
+}
