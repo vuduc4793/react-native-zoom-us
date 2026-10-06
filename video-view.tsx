@@ -24,6 +24,14 @@ export interface Props {
   onChatMsgDeleteNotification?: (event: any) => void;
 }
 
+/**
+ * @deprecated Use `ZoomVideoView` from the package root instead.
+ *
+ * Both are exported and both work; they just take different props, which is one
+ * API too many for the same native view. `ZoomVideoView` is the one that gets
+ * new work -- it carries the layout helpers, aspect modes and the zOrder prop
+ * that lets the view sit anywhere in the tree rather than only at the root.
+ */
 const ZoomUsVideoView: React.FC<Props> = (props) => {
   const {
     layout = [],

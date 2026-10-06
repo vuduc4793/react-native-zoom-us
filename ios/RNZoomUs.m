@@ -21,6 +21,14 @@
     BOOL closeCaptionHidden;
     BOOL disableCloudWhiteboard;
     BOOL meetingMoreHidden;
+    BOOL meetingTitleHidden;
+    BOOL meetingPasswordHidden;
+    BOOL meetingInviteHidden;
+    BOOL meetingInviteUrlHidden;
+    BOOL meetingChatHidden;
+    BOOL disableCopyMeetingUrl;
+    BOOL disableDriveMode;
+    BOOL autoConnectInternetAudio;
     
     RCTPromiseResolveBlock initializePromiseResolve;
     RCTPromiseRejectBlock initializePromiseReject;
@@ -107,6 +115,20 @@ RCT_EXPORT_METHOD(
     callController = [[CXCallController alloc] init];
     
     @try {
+        // These used to be hardcoded in setMeetingSettings. They are settings
+        // now, and the defaults are exactly what was hardcoded -- an app that
+        // passes nothing behaves as it always did.
+        meetingTitleHidden = YES;
+        meetingPasswordHidden = YES;
+        meetingInviteHidden = YES;
+        meetingInviteUrlHidden = YES;
+        disableCopyMeetingUrl = YES;
+        disableDriveMode = YES;
+        autoConnectInternetAudio = YES;
+        // The one exception: setMeetingChatHidden was commented out, so chat has
+        // always been visible. Keeping that, now as something you can change.
+        meetingChatHidden = NO;
+
         initializePromiseResolve = resolve;
         initializePromiseReject = reject;
         
@@ -160,6 +182,38 @@ RCT_EXPORT_METHOD(
         
         if (settings[@"meetingMoreHidden"]) {
             meetingMoreHidden = [[settings objectForKey:@"meetingMoreHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingTitleHidden"]) {
+            meetingTitleHidden = [[settings objectForKey:@"meetingTitleHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingPasswordHidden"]) {
+            meetingPasswordHidden = [[settings objectForKey:@"meetingPasswordHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingInviteHidden"]) {
+            meetingInviteHidden = [[settings objectForKey:@"meetingInviteHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingInviteUrlHidden"]) {
+            meetingInviteUrlHidden = [[settings objectForKey:@"meetingInviteUrlHidden"] boolValue];
+        }
+        
+        if (settings[@"meetingChatHidden"]) {
+            meetingChatHidden = [[settings objectForKey:@"meetingChatHidden"] boolValue];
+        }
+        
+        if (settings[@"disableCopyMeetingUrl"]) {
+            disableCopyMeetingUrl = [[settings objectForKey:@"disableCopyMeetingUrl"] boolValue];
+        }
+        
+        if (settings[@"disableDriveMode"]) {
+            disableDriveMode = [[settings objectForKey:@"disableDriveMode"] boolValue];
+        }
+        
+        if (settings[@"autoConnectInternetAudio"]) {
+            autoConnectInternetAudio = [[settings objectForKey:@"autoConnectInternetAudio"] boolValue];
         }
         
         [[MobileRTC sharedRTC] setLanguage:settings[@"language"]];
@@ -222,10 +276,10 @@ RCT_EXPORT_METHOD(
         // -videoCallPictureInPictureEnabled remains. The old setter was
         // documented as "only works in ZoomUI", so it was already a no-op
         // whenever enableCustomizedMeetingUI is on.
-        //        [zoomSettings setMeetingChatHidden:YES];
-        [zoomSettings setAutoConnectInternetAudio:YES];
-        [zoomSettings disableDriveMode:YES];
-        [zoomSettings disableCopyMeetingUrl:YES];
+        [zoomSettings setMeetingChatHidden:meetingChatHidden];
+        [zoomSettings setAutoConnectInternetAudio:autoConnectInternetAudio];
+        [zoomSettings disableDriveMode:disableDriveMode];
+        [zoomSettings disableCopyMeetingUrl:disableCopyMeetingUrl];
         
         [zoomSettings disableShowVideoPreviewWhenJoinMeeting:disableShowVideoPreviewWhenJoinMeeting];
         [zoomSettings disableMinimizeMeeting:disableMinimizeMeeting];
@@ -238,10 +292,10 @@ RCT_EXPORT_METHOD(
         [zoomSettings disableCloudWhiteboard:disableCloudWhiteboard];
         [zoomSettings setMeetingMoreHidden:meetingMoreHidden];
         
-        [zoomSettings setMeetingInviteUrlHidden:YES];
-        [zoomSettings setMeetingPasswordHidden:YES];
-        [zoomSettings setMeetingInviteHidden:YES];
-        [zoomSettings setMeetingTitleHidden:YES];
+        [zoomSettings setMeetingInviteUrlHidden:meetingInviteUrlHidden];
+        [zoomSettings setMeetingPasswordHidden:meetingPasswordHidden];
+        [zoomSettings setMeetingInviteHidden:meetingInviteHidden];
+        [zoomSettings setMeetingTitleHidden:meetingTitleHidden];
     }
 }
 

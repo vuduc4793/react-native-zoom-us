@@ -52,6 +52,31 @@ type InitializeSettings = {
   closeCaptionHidden?: boolean;
   disableCloudWhiteboard?: boolean;
   meetingMoreHidden?: boolean;
+
+  /**
+   * iOS only. Android hides the same things through joinMeeting/startMeeting
+   * params instead -- noTextMeetingId, noTextPassword, noInvite, noTitlebar --
+   * because its SDK has no equivalent on the settings object.
+   *
+   * These four were hardcoded on iOS before 14.0.0; the defaults below keep
+   * that behaviour, so passing nothing changes nothing.
+   */
+  /** Hide the meeting title, which is what reveals the meeting id. @default true */
+  meetingTitleHidden?: boolean;
+  /** @default true */
+  meetingPasswordHidden?: boolean;
+  /** @default true */
+  meetingInviteHidden?: boolean;
+  /** @default true */
+  meetingInviteUrlHidden?: boolean;
+  /** @default true */
+  disableCopyMeetingUrl?: boolean;
+  /** @default true */
+  disableDriveMode?: boolean;
+  /** @default true */
+  autoConnectInternetAudio?: boolean;
+  /** Chat has always been visible on iOS; this is the knob for it. @default false */
+  meetingChatHidden?: boolean;
 };
 
 export interface ZoomChatInfo {

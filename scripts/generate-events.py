@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MODULE = ROOT / "android/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java"
+MODULE = ROOT / "android-impl/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java"
 OUT = ROOT / "src/events/generated.ts"
 IOS_MANIFEST = ROOT / "src/events/ios-events.json"
 
@@ -91,7 +91,7 @@ def main():
 
     out = [
         "// AUTO-GENERATED from the native emitters on both platforms:",
-        "//   android/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java",
+        "//   android-impl/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java",
         "//   src/events/ios-events.json (written by scripts/generate-ios-delegates.py)",
         "// Regenerate with scripts/generate-events.py. Do not edit by hand.",
         f"// {len(android_only)} Android-only, {len(ios_only)} iOS-only, {len(both)} on both.",
@@ -109,8 +109,17 @@ def main():
         "/** Every event the native side can emit, with its payload. */",
         "export interface ZoomEventPayloads {",
     ]
+    # Which platform actually emits each one. The two SDKs do not have the same
+    # listener surface -- most of the iOS delegate has no Android counterpart --
+    # so the honest thing is to say so per event rather than pretend parity.
+    def platform(name):
+        if name in both:
+            return "android + ios"
+        return "android only" if name in android_only else "ios only"
+
     for name in sorted(entries):
         fields = entries[name]
+        out.append(f"  /** {platform(name)} */")
         if not fields:
             out.append(f"  {name}: Record<string, never>;")
         else:

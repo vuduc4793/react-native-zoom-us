@@ -2,7 +2,6 @@ import {
   NativeModules,
   HostComponent,
   requireNativeComponent,
-  Platform,
   StyleProp,
   ViewStyle,
 } from "react-native";
@@ -60,11 +59,12 @@ export interface NativeVideoProps {
   onChatMsgDeleteNotification?: (event: any) => void;
 }
 
-// TODO: implement for iOS -> https://github.com/mieszko4/react-native-zoom-us/issues/113
-export const RNZoomUsVideoView = (
-  Platform.OS === "android"
-    ? requireNativeComponent("RNZoomUsVideoView")
-    : requireNativeComponent("RNZoomUsVideoView")
+// Both platforms register this view: RNZoomUsVideoViewManager on Android,
+// ios/RNZoomUsVideoViewManager.m on iOS. The old "iOS not implemented" note was
+// left over from before ios/RNZoomUsVideoView.m existed, and the branch it
+// guarded had the same call on both sides anyway.
+export const RNZoomUsVideoView = requireNativeComponent(
+  "RNZoomUsVideoView"
 ) as HostComponent<NativeVideoProps> | null;
 
 export const RNZoomUs = NativeModules.RNZoomUs;
