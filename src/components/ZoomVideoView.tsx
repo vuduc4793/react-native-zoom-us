@@ -132,8 +132,13 @@ function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children }: ZoomVid
   React.useEffect(() => {
     if (!RNZoomUs || !nativeRef.current) return;
 
-    // The native module keeps a registry of live video views so it can refresh
-    // them when the participant list changes.
+    // Android keeps a registry of live video views in the native module so it
+    // can refresh them when the participant list changes. iOS tracks its views
+    // inside RNZoomUsVideoView itself and exports no such methods -- and calling
+    // one that does not exist throws synchronously, before there is a promise
+    // for .catch() to attach to, which took the whole component down on iOS.
+    if (typeof RNZoomUs.addVideoView !== "function") return;
+
     // Resolve the handle once: by cleanup time the ref may already be cleared,
     // and removeVideoView needs the same tag that was registered.
     const handle = findNodeHandleSafe(nativeRef.current);
@@ -144,6 +149,7 @@ function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children }: ZoomVid
     });
 
     return () => {
+      if (typeof RNZoomUs.removeVideoView !== "function") return;
       void RNZoomUs.removeVideoView(handle).catch(() => {
         // ignored, see above
       });
