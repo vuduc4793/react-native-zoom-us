@@ -1548,14 +1548,6 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     }
 
     @Override
-    public void onCameraControlRequestResult(long l, boolean b) {
-        WritableMap __p = Arguments.createMap();
-        __p.putDouble("l", (double) l);
-        __p.putBoolean("b", b);
-        emitZoomEvent("onCameraControlRequestResult", __p);
-    }
-
-    @Override
     public void onCameraControlRequestResult(long l, CameraControlRequestResult cameraControlRequestResult) {
         WritableMap __p = Arguments.createMap();
         __p.putDouble("l", (double) l);
@@ -1820,12 +1812,6 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         emitZoomEvent("onMeetingFail", __p);
     }
 
-    @Override
-    public void onMeetingUserUpdated(long userId) {
-        WritableMap __p = Arguments.createMap();
-        __p.putDouble("userId", (double) userId);
-        emitZoomEvent("onMeetingUserUpdated", __p);
-    }
 
     @Override
     public void onActiveVideoUserChanged(long userId) {
@@ -1865,13 +1851,6 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     ;
 
-    @Override
-    public void onSinkMeetingVideoQualityChanged(VideoQuality videoQuality, long userId) {
-        WritableMap __p = Arguments.createMap();
-        __p.putString("videoQuality", videoQuality == null ? null : videoQuality.name());
-        __p.putDouble("userId", (double) userId);
-        emitZoomEvent("onSinkMeetingVideoQualityChanged", __p);
-    }
 
     @Override
     public void onMicrophoneStatusError(InMeetingAudioController.MobileRTCMicrophoneError error) {
@@ -2760,5 +2739,14 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         map.putString("meetingHost", parameter.meeting_host);
         return map;
     }
+
+
+    // Removed in 7.2.1: InMeetingServiceListener no longer declares
+    // onMeetingUserUpdated(long), onSinkMeetingVideoQualityChanged(VideoQuality, long),
+    // or the boolean form of onCameraControlRequestResult -- that one widened to
+    // an enum, which Approve / Decline / Revoke could not be told apart under.
+    // All three already have cover here: onMeetingUserJoin and onMeetingUserLeave,
+    // onUserVideoStatusChanged with onUserNetworkStatusChanged, and the generated
+    // enum overload of onCameraControlRequestResult.
 
 }
