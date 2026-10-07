@@ -140,7 +140,12 @@ def implemented_selectors(source):
     the names that are actually in scope.
     """
     found = {}
-    for m in re.finditer(r"^-\s*\(\s*void\s*\)\s*([^{;]+)\{", source, re.M):
+    # `;?` is not cosmetic: five methods in these files are written
+    # `- (void)foo:(T)x;` and only then `{`, which is legal and compiles. Without
+    # it they read as unimplemented and get generated a second time -- and a
+    # category method replaces the class's own, so the richer hand-written body
+    # was being shadowed by a stub that reported only `{fooPresent: true}`.
+    for m in re.finditer(r"^-\s*\(\s*void\s*\)\s*([^{;]+);?\s*\{", source, re.M):
         decl = " ".join(m.group(1).split())
         parts = re.findall(r"(\w+)\s*:\s*\(([^)]*)\)\s*(\w+)", decl)
         params = [(CLEAN.sub("", t).strip(), n) for _, t, n in parts]

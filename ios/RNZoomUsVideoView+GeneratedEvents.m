@@ -25,9 +25,6 @@
     RNZoomUsEmit(@"onMeetingTopicChanged", @{@"meetingTopic": meetingTopic ?: [NSNull null]});
 }
 
-- (void)onChatMessageNotification:(MobileRTCMeetingChat *)chatInfo {
-    RNZoomUsEmit(@"onChatMessageNotification", @{@"chatInfoPresent": @(chatInfo != nil)});
-}
 
 - (void)onChatMessageEditNotification:(MobileRTCMeetingChat *)chatInfo {
     RNZoomUsEmit(@"onChatMessageEditNotification", @{@"chatInfoPresent": @(chatInfo != nil)});
@@ -109,13 +106,7 @@
     RNZoomUsEmit(@"on3DAvatarItemDataDownloaded", @{@"success": @(success), @"index": @(index)});
 }
 
-- (void)onLostAdminRightsNotification {
-    RNZoomUsEmit(@"onLostAdminRightsNotification", nil);
-}
 
-- (void)onBOInfoUpdated:(NSString *)boId {
-    RNZoomUsEmit(@"onBOInfoUpdated", @{@"boId": boId ?: [NSNull null]});
-}
 
 - (void)onStartBOResponse:(BOOL)success {
     RNZoomUsEmit(@"onStartBOResponse", @{@"success": @(success)});

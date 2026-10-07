@@ -93,9 +93,6 @@
     RNZoomUsEmit(@"onCallRoomDeviceStateChanged", @{@"state": @(state)});
 }
 
-- (void)onChatMessageNotification:(MobileRTCMeetingChat *)chatInfo {
-    RNZoomUsEmit(@"onChatMessageNotification", @{@"chatInfoPresent": @(chatInfo != nil)});
-}
 
 - (void)onChatMsgDeleteNotification:(NSString *)msgID deleteBy:(MobileRTCChatMessageDeleteType)deleteBy {
     RNZoomUsEmit(@"onChatMsgDeleteNotification", @{@"msgID": msgID ?: [NSNull null], @"deleteBy": @(deleteBy)});
@@ -308,9 +305,6 @@
     RNZoomUsEmit(@"onActiveSpeakerVideoUserChanged", @{@"userID": @(userID)});
 }
 
-- (void)onHostVideoOrderUpdated:(NSArray <NSNumber *>*)orderArr {
-    RNZoomUsEmit(@"onHostVideoOrderUpdated", @{@"orderArr": orderArr ?: @[]});
-}
 
 - (void)onWhiteboardStatusChanged:(MobileRTCWhiteboardStatus)status {
     RNZoomUsEmit(@"onWhiteboardStatusChanged", @{@"status": @(status)});
