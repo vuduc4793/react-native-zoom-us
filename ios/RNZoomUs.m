@@ -1203,7 +1203,12 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     NSLog(@"RNZoomUs onSinkMeetingActiveVideo =>%@", @(userID));
 }
 
-- (void)onSinkMeetingVideoQualityChanged:(MobileRTCNetworkQuality)qality userID:(NSUInteger)userID {
+// MobileRTCVideoQuality, not MobileRTCNetworkQuality: the SDK declares the
+// former and the two are numbered differently -- Unknown is 0 in one and -1 in
+// the other, so 0 reads as "unknown" or as "very bad" depending on which you
+// believe. The value on the wire does not change; what it means does.
+// ("qality" keeps the SDK's own spelling, which JavaScript already subscribes to.)
+- (void)onSinkMeetingVideoQualityChanged:(MobileRTCVideoQuality)qality userID:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingVideoQualityChanged", @{@"qality": @(qality), @"userID": @(userID)});
     NSLog(@"RNZoomUs onSinkMeetingVideoQualityChanged: %zd userID:%zd",qality,userID);
 }
