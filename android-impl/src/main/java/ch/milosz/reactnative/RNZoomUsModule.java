@@ -2690,7 +2690,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     private void emitLegacy(String name, WritableMap params) {
         try {
             if (!reactContext.hasActiveReactInstance()) return;
-            emitLegacy(name, params);
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(name, params);
         } catch (Exception ex) {
             Log.e(TAG, "emit(" + name + ") failed", ex);
         }
