@@ -1889,7 +1889,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             WritableMap rootParams = Arguments.createMap();
             rootParams.putString("event", "onChatMsgDeleteNotification");
             rootParams.putMap("msgDelete", params);
-            emitLegacy("MeetingEvent", rootParams);
+            sendBoth("MeetingEvent", "onChatMsgDeleteNotification", rootParams);
         }
     }
 
@@ -2194,13 +2194,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         WritableMap params = Arguments.createMap();
         params.putString("event", event);
 
-        emitLegacy(name, params);
-
-        // Mirror onto the unified channel so subscribers there see every
-        // callback, not just the ones without a legacy emitter.
-        WritableMap mirrored = Arguments.createMap();
-        mirrored.putString("channel", name);
-        emitZoomEvent(event, mirrored);
+        sendBoth(name, event, params);
     }
 
     private void sendEvent(String name, String event, InMeetingUserInfo userInfo) {
@@ -2222,7 +2216,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 params.putBoolean("isMutedVideo", !video.isSending());
             }
 
-            emitLegacy(name, params);
+            sendBoth(name, event, params);
         }
     }
 
@@ -2253,7 +2247,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             rootParams.putString("event", event);
             rootParams.putMap("chatInfo", params);
 
-            emitLegacy(name, rootParams);
+            sendBoth(name, event, rootParams);
         }
     }
 
@@ -2262,7 +2256,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putString("status", nameOf(status));
 
-        emitLegacy(name, params);
+        sendBoth(name, event, params);
     }
 
     private void sendEvent(String name, String event, String status) {
@@ -2270,7 +2264,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putString("status", status);
 
-        emitLegacy(name, params);
+        sendBoth(name, event, params);
     }
 
     private void sendEvent(String name, String event, long userId) {
@@ -2278,7 +2272,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putDouble("userId", userId);
 
-        emitLegacy(name, params);
+        sendBoth(name, event, params);
     }
 
     private void sendEvent(String name, String event, List<Long> userList) {
@@ -2294,7 +2288,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putArray("userList", users);
 
-        emitLegacy(name, params);
+        sendBoth(name, event, params);
     }
 
     private void sendEvent(String name, String event, MobileRTCSDKError error) {
@@ -2302,7 +2296,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         params.putString("event", event);
         params.putString("error", nameOf(error));
 
-        emitLegacy(name, params);
+        sendBoth(name, event, params);
     }
 
     private String getSharingStatusEventName(final SharingStatus status) {
@@ -2687,6 +2681,27 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
      * backgrounded app being torn down -- and these are called from SDK threads
      * that keep running after it.
      */
+    /**
+     * Emit on a legacy named channel AND mirror onto the unified one.
+     *
+     * Only the no-payload emitter used to mirror, so every event that carried
+     * data -- the meeting status, join/leave lists, user counts, chat messages --
+     * reached "MeetingEvent" and nothing else. addZoomListener() subscribes to
+     * the unified channel, so for those twelve call sites it never fired on
+     * Android, although that channel is documented as sufficient on its own.
+     *
+     * The mirror is a copy rather than the same map: emitting hands the map to
+     * the bridge, and reusing it for a second emit is not safe.
+     */
+    private void sendBoth(String name, String event, WritableMap params) {
+        WritableMap mirrored = Arguments.createMap();
+        mirrored.merge(params);
+        mirrored.putString("channel", name);
+
+        emitLegacy(name, params);
+        emitZoomEvent(event, mirrored);
+    }
+
     private void emitLegacy(String name, WritableMap params) {
         try {
             if (!reactContext.hasActiveReactInstance()) return;
