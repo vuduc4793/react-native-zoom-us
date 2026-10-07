@@ -189,4 +189,24 @@
     RNZoomUsEmit(@"onUserNetworkStatusChanged", @{@"type": @(type), @"level": @(level), @"userID": @(userID), @"uplink": @(uplink)});
 }
 
+
+// Added in 7.2.1. Only these three of the protocol's newcomers belong to
+// MobileRTCMeetingServiceDelegate; the rest of what 7.2.1 declares in this
+// header belongs to the raw-data, SMS, settings and customized-UI protocols,
+// which these classes do not conform to -- implementing those here would be
+// dead code at best, and for the source delegates would tell the SDK to expect
+// frames we never send.
+- (void)onAllowPanelistStartVideoNotification {
+    RNZoomUsEmit(@"onAllowPanelistStartVideoNotification", @{});
+}
+
+- (void)onDisallowPanelistStartVideoNotification {
+    RNZoomUsEmit(@"onDisallowPanelistStartVideoNotification", @{});
+}
+
+- (void)onAttendeeAudioStatusNotification:(NSUInteger)userid canTalk:(BOOL)can_talk isMuted:(BOOL)is_muted {
+    RNZoomUsEmit(@"onAttendeeAudioStatusNotification",
+                 @{@"userId": @(userid), @"canTalk": @(can_talk), @"isMuted": @(is_muted)});
+}
+
 @end

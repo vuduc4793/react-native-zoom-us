@@ -78,6 +78,7 @@
    "boolean"
   ]
  ],
+ "onAllowPanelistStartVideoNotification": [],
  "onAllowParticipantsRenameNotification": [
   [
    "allow",
@@ -127,6 +128,20 @@
    "boolean"
   ]
  ],
+ "onAttendeeAudioStatusNotification": [
+  [
+   "userId",
+   "number"
+  ],
+  [
+   "canTalk",
+   "boolean"
+  ],
+  [
+   "isMuted",
+   "boolean"
+  ]
+ ],
  "onAudioOutputChange": [],
  "onAvailableLanguageListUpdated": [
   [
@@ -138,12 +153,6 @@
   [
    "availableSignLanguageListPresent",
    "boolean"
-  ]
- ],
- "onBOCreateSuccess": [
-  [
-   "BOID",
-   "string | null"
   ]
  ],
  "onBOEndTimerUpdated": [
@@ -312,6 +321,7 @@
    "number"
   ]
  ],
+ "onDisallowPanelistStartVideoNotification": [],
  "onDocsPermissionChangedCreateOption": [
   [
    "createOption",
@@ -494,7 +504,6 @@
    "number"
   ]
  ],
- "onInMeetingUserUpdated": [],
  "onIndicatorItemReceived": [
   [
    "inMeetingIndicatorHandlerPresent",
@@ -704,7 +713,6 @@
   ]
  ],
  "onMyAudioStateChange": [],
- "onMyHandStateChange": [],
  "onMyVideoStateChange": [],
  "onNewBroadcastMessageReceived": [
   [
@@ -963,12 +971,6 @@
    "number"
   ]
  ],
- "onSinkMeetingActiveVideoForDeck": [
-  [
-   "userID",
-   "number"
-  ]
- ],
  "onSinkMeetingAudioRequestUnmuteByHost": [],
  "onSinkMeetingAudioStatusChange": [
   [
@@ -1200,32 +1202,6 @@
   [
    "registerURL",
    "string | null"
-  ]
- ],
- "onSmartSummaryPrivilegeRequested": [
-  [
-   "userId",
-   "number"
-  ],
-  [
-   "handlerPresent",
-   "boolean"
-  ]
- ],
- "onSmartSummaryStartReqResponse": [
-  [
-   "timeout",
-   "boolean"
-  ],
-  [
-   "isDecline",
-   "boolean"
-  ]
- ],
- "onSmartSummaryStatusChange": [
-  [
-   "isStarted",
-   "boolean"
   ]
  ],
  "onSpokenLanguageChanged": [

@@ -700,9 +700,6 @@
     RNZoomUsEmit(@"onHostLeaveThisBOMeeting", nil);
 }
 
-- (void)onBOCreateSuccess:(NSString *)BOID {
-    RNZoomUsEmit(@"onBOCreateSuccess", @{@"BOID": BOID ?: [NSNull null]});
-}
 
 - (void)onCreateBOResponse:(BOOL)success BOID:(NSString *)BOID {
     RNZoomUsEmit(@"onCreateBOResponse", @{@"success": @(success), @"BOID": BOID ?: [NSNull null]});
@@ -836,4 +833,32 @@
 // Smart Summary callbacks, and MobileRTCSmartSummaryPrivilegeHandler is gone
 // with them. Smart Summary itself moved to MobileRTCAICSmartSummaryHelper and
 // the AICompanion category, which report through their own delegates.
+
+// Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares
+// onBOCreateSuccess, onInMeetingUserUpdated, onMeetingReturn,
+// onMyHandStateChange, onSinkLiveTranscriptionMsgReceived,
+// onSinkMeetingActiveShare, onSinkMeetingActiveVideoForDeck or
+// onVideoOrderUpdated. Implementing them compiled, but the SDK never called
+// them -- so anything subscribed to those events waited forever with nothing to
+// show it never would.
+
+// Added in 7.2.1. Only these three of the protocol's newcomers belong to
+// MobileRTCMeetingServiceDelegate; the rest of what 7.2.1 declares in this
+// header belongs to the raw-data, SMS, settings and customized-UI protocols,
+// which these classes do not conform to -- implementing those here would be
+// dead code at best, and for the source delegates would tell the SDK to expect
+// frames we never send.
+- (void)onAllowPanelistStartVideoNotification {
+    RNZoomUsEmit(@"onAllowPanelistStartVideoNotification", @{});
+}
+
+- (void)onDisallowPanelistStartVideoNotification {
+    RNZoomUsEmit(@"onDisallowPanelistStartVideoNotification", @{});
+}
+
+- (void)onAttendeeAudioStatusNotification:(NSUInteger)userid canTalk:(BOOL)can_talk isMuted:(BOOL)is_muted {
+    RNZoomUsEmit(@"onAttendeeAudioStatusNotification",
+                 @{@"userId": @(userid), @"canTalk": @(can_talk), @"isMuted": @(is_muted)});
+}
+
 @end

@@ -379,14 +379,6 @@ CXCallController *callController;
     }
 }
 
-- (void)onSinkMeetingActiveVideoForDeck:(NSUInteger)userID {
-    RNZoomUsEmit(@"onSinkMeetingActiveVideoForDeck", @{@"userID": @(userID)});
-    NSLog(@"RNZoomUsVideoView onSinkMeetingActiveVideoForDeck =>%@", @(userID));
-    if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingActiveVideo:)])
-    {
-        [_rnZoomUsVideoViewController onSinkMeetingActiveVideo:userID];
-    }
-}
 
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingUserLeft", @{@"userID": @(userID)});
@@ -447,14 +439,6 @@ CXCallController *callController;
 }
 
 #pragma mark - In meeting users' state updated
-- (void)onInMeetingUserUpdated
-{
-    RNZoomUsEmit(@"onInMeetingUserUpdated", nil);
-    //    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-    //    NSArray *users = [ms getInMeetingUserList];
-    //    NSLog(@"RNZoomUsVideoView onInMeetingUserUpdated:%@", users);
-    [self countInMeetingUser];
-}
 
 - (void)getCurrentActiveId {
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
@@ -758,10 +742,6 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView admin bo %lu seconds left, isTimesUpNotice: %@", remaining, isTimesUpNotice ? @"Y" : @"N");
 }
 
-- (void)onBOCreateSuccess:(NSString *_Nullable)BOID {
-    RNZoomUsEmit(@"onBOCreateSuccess", @{@"BOID": BOID ?: [NSNull null]});
-    NSLog(@"RNZoomUsVideoView creator create success ret bo_id: %@", BOID);
-}
 
 - (void)onWebPreAssignBODataDownloadStatusChanged:(MobileRTCBOPreAssignBODataStatus)status {
     RNZoomUsEmit(@"onWebPreAssignBODataDownloadStatusChanged", @{@"status": @(status)});
@@ -1105,10 +1085,6 @@ CXCallController *callController;
     RNZoomUsEmit(@"onMicrophoneNoPrivilege", nil);
     NSLog(@"RNZoomUsVideoView onMicrophoneNoPrivilege");
 }
-- (void)onMyHandStateChange{
-    RNZoomUsEmit(@"onMyHandStateChange", nil);
-    NSLog(@"RNZoomUsVideoView onMyHandStateChange");
-}
 - (void)onMeetingLockStatus:(BOOL)isLock {
     RNZoomUsEmit(@"onMeetingLockStatus", @{@"isLock": @(isLock)});
     NSLog(@"RNZoomUsVideoView onMeetingLockStatus");
@@ -1431,9 +1407,6 @@ CXCallController *callController;
     RNZoomUsEmit(@"onShareFromMainSession", @{@"sharingID": @(sharingID), @"status": @(status), @"shareActionPresent": @(shareAction != nil)});
     NSLog(@"RNZoomUsVideoView onShareFromMainSession");
 }
-- (void)onSinkLiveTranscriptionMsgReceived:(NSString *)msg speakerId:(NSUInteger)speakerId type:(MobileRTCLiveTranscriptionOperationType)type{
-    NSLog(@"RNZoomUsVideoView onSinkLiveTranscriptionMsgReceived");
-}
 - (void)onSinkJoinWebinarNeedUserNameAndEmailWithCompletion:(BOOL (^)(NSString * _Nonnull, NSString * _Nonnull, BOOL))completion{
     RNZoomUsEmit(@"onSinkJoinWebinarNeedUserNameAndEmailWithCompletion", nil);
     NSLog(@"RNZoomUsVideoView onSinkJoinWebinarNeedUserNameAndEmailWithCompletion");
@@ -1546,4 +1519,12 @@ CXCallController *callController;
 // Smart Summary callbacks, and MobileRTCSmartSummaryPrivilegeHandler is gone
 // with them. Smart Summary itself moved to MobileRTCAICSmartSummaryHelper and
 // the AICompanion category, which report through their own delegates.
+
+// Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares
+// onBOCreateSuccess, onInMeetingUserUpdated, onMeetingReturn,
+// onMyHandStateChange, onSinkLiveTranscriptionMsgReceived,
+// onSinkMeetingActiveShare, onSinkMeetingActiveVideoForDeck or
+// onVideoOrderUpdated. Implementing them compiled, but the SDK never called
+// them -- so anything subscribed to those events waited forever with nothing to
+// show it never would.
 @end

@@ -2,7 +2,7 @@
 //   android-impl/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java
 //   src/events/ios-events.json (written by scripts/generate-ios-delegates.py)
 // Regenerate with scripts/generate-events.py. Do not edit by hand.
-// 42 Android-only, 187 iOS-only, 56 on both.
+// 42 Android-only, 183 iOS-only, 56 on both.
 
 export interface ZoomMeetingParameter {
   meetingType: string | null;
@@ -113,6 +113,8 @@ export interface ZoomEventPayloads {
   onAllowAttendeeViewTheParticipantCountStatusChanged: {
     canViewParticipantCount: boolean;
   };
+  /** ios only */
+  onAllowPanelistStartVideoNotification: Record<string, never>;
   /** android + ios */
   onAllowParticipantsRenameNotification: {
     allow: boolean;
@@ -150,6 +152,12 @@ export interface ZoomEventPayloads {
     handlerPresent: boolean;
   };
   /** ios only */
+  onAttendeeAudioStatusNotification: {
+    userId: number;
+    canTalk: boolean;
+    isMuted: boolean;
+  };
+  /** ios only */
   onAudioOutputChange: Record<string, never>;
   /** ios only */
   onAvailableLanguageListUpdated: {
@@ -158,10 +166,6 @@ export interface ZoomEventPayloads {
   /** ios only */
   onAvailableSignLanguageListUpdated: {
     availableSignLanguageListPresent: boolean;
-  };
-  /** ios only */
-  onBOCreateSuccess: {
-    BOID: string | null;
   };
   /** android + ios */
   onBOEndTimerUpdated: {
@@ -290,6 +294,8 @@ export interface ZoomEventPayloads {
   onDialOutStatusChanged: {
     status: number;
   };
+  /** ios only */
+  onDisallowPanelistStartVideoNotification: Record<string, never>;
   /** ios only */
   onDocsPermissionChangedCreateOption: {
     createOption: number;
@@ -427,8 +433,6 @@ export interface ZoomEventPayloads {
     userId: number;
     userID: number;
   };
-  /** ios only */
-  onInMeetingUserUpdated: Record<string, never>;
   /** ios only */
   onIndicatorItemReceived: {
     inMeetingIndicatorHandlerPresent: boolean;
@@ -624,8 +628,6 @@ export interface ZoomEventPayloads {
   /** ios only */
   onMyAudioStateChange: Record<string, never>;
   /** ios only */
-  onMyHandStateChange: Record<string, never>;
-  /** ios only */
   onMyVideoStateChange: Record<string, never>;
   /** ios only */
   onNewBroadcastMessageReceived: {
@@ -819,10 +821,6 @@ export interface ZoomEventPayloads {
     userID: number;
   };
   /** ios only */
-  onSinkMeetingActiveVideoForDeck: {
-    userID: number;
-  };
-  /** ios only */
   onSinkMeetingAudioRequestUnmuteByHost: Record<string, never>;
   /** ios only */
   onSinkMeetingAudioStatusChange: {
@@ -976,20 +974,6 @@ export interface ZoomEventPayloads {
   /** ios only */
   onSinkWebinarNeedRegister: {
     registerURL: string | null;
-  };
-  /** ios only */
-  onSmartSummaryPrivilegeRequested: {
-    userId: number;
-    handlerPresent: boolean;
-  };
-  /** ios only */
-  onSmartSummaryStartReqResponse: {
-    timeout: boolean;
-    isDecline: boolean;
-  };
-  /** ios only */
-  onSmartSummaryStatusChange: {
-    isStarted: boolean;
   };
   /** ios only */
   onSpokenLanguageChanged: {
