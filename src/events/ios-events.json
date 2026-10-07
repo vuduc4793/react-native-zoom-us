@@ -1,11 +1,11 @@
 {
  "on3DAvatarItemDataDownloaded": [
   [
-   "success",
+   "index",
    "number"
   ],
   [
-   "index",
+   "success",
    "number"
   ]
  ],
@@ -30,11 +30,11 @@
  ],
  "onAICompanionFeatureSwitchRequestResponse": [
   [
-   "timeout",
+   "agree",
    "boolean"
   ],
   [
-   "agree",
+   "timeout",
    "boolean"
   ],
   [
@@ -52,6 +52,12 @@
   [
    "handlerPresent",
    "boolean"
+  ]
+ ],
+ "onActionBeforeDestroyed": [
+  [
+   "sharingID",
+   "number"
   ]
  ],
  "onActiveSpeakerVideoUserChanged": [
@@ -121,6 +127,26 @@
    "boolean"
   ]
  ],
+ "onAnnotationService": [
+  [
+   "servicePresent",
+   "boolean"
+  ],
+  [
+   "shareSourceID",
+   "number"
+  ],
+  [
+   "support",
+   "boolean"
+  ]
+ ],
+ "onAnnotationToolChanged": [
+  [
+   "tool",
+   "number"
+  ]
+ ],
  "onAppShareSplash": [],
  "onAppSignalPanelUpdated": [
   [
@@ -130,16 +156,16 @@
  ],
  "onAttendeeAudioStatusNotification": [
   [
-   "userId",
-   "number"
-  ],
-  [
    "canTalk",
    "boolean"
   ],
   [
    "isMuted",
    "boolean"
+  ],
+  [
+   "userId",
+   "number"
   ]
  ],
  "onAudioOutputChange": [],
@@ -157,12 +183,12 @@
  ],
  "onBOEndTimerUpdated": [
   [
-   "remaining",
-   "number"
-  ],
-  [
    "isTimesUpNotice",
    "boolean"
+  ],
+  [
+   "remaining",
+   "number"
   ]
  ],
  "onBOInfoUpdated": [
@@ -192,11 +218,11 @@
  ],
  "onBOSwitchRequestReceived": [
   [
-   "newBOName",
+   "newBOID",
    "string | null"
   ],
   [
-   "newBOID",
+   "newBOName",
    "string | null"
   ]
  ],
@@ -231,20 +257,14 @@
    "boolean"
   ]
  ],
- "onChatMessageNotification": [
-  [
-   "chatInfoPresent",
-   "boolean"
-  ]
- ],
  "onChatMsgDeleteNotification": [
-  [
-   "msgID",
-   "string | null"
-  ],
   [
    "deleteBy",
    "number"
+  ],
+  [
+   "msgID",
+   "string | null"
   ]
  ],
  "onCheckCMRPrivilege": [
@@ -267,11 +287,11 @@
  ],
  "onClickedDialOut": [
   [
-   "parentVCPresent",
+   "me",
    "boolean"
   ],
   [
-   "me",
+   "parentVCPresent",
    "boolean"
   ]
  ],
@@ -281,12 +301,12 @@
    "string | null"
   ],
   [
-   "speakerID",
-   "number"
-  ],
-  [
    "msgTimePresent",
    "boolean"
+  ],
+  [
+   "speakerID",
+   "number"
   ]
  ],
  "onCloudRecordingStorageFull": [
@@ -297,22 +317,28 @@
  ],
  "onCompanionRelationChangedParentUserID": [
   [
-   "parentUserID",
+   "childUserID",
    "number"
   ],
   [
-   "childUserID",
+   "parentUserID",
    "number"
   ]
  ],
  "onCreateBOResponse": [
   [
-   "success",
-   "boolean"
-  ],
-  [
    "BOID",
    "string | null"
+  ],
+  [
+   "success",
+   "boolean"
+  ]
+ ],
+ "onCustomWaitingRoomDataUpdated": [
+  [
+   "dataPresent",
+   "boolean"
   ]
  ],
  "onDialOutStatusChanged": [
@@ -347,17 +373,17 @@
  ],
  "onEmojiFeedbackReceived": [
   [
-   "userId",
+   "type",
    "number"
   ],
   [
-   "type",
+   "userId",
    "number"
   ]
  ],
  "onEmojiReactionReceived": [
   [
-   "userId",
+   "skinTone",
    "number"
   ],
   [
@@ -365,7 +391,7 @@
    "number"
   ],
   [
-   "skinTone",
+   "userId",
    "number"
   ]
  ],
@@ -414,12 +440,12 @@
  ],
  "onFreeMeetingNeedToUpgrade": [
   [
-   "type",
-   "number"
-  ],
-  [
    "giftURL",
    "string | null"
+  ],
+  [
+   "type",
+   "number"
   ]
  ],
  "onFreeMeetingUpgradeToGiftFreeTrialStart": [],
@@ -520,11 +546,11 @@
  "onInterpretationStop": [],
  "onInterpreterActiveLanguageChanged": [
   [
-   "userID",
+   "activeLanID",
    "number"
   ],
   [
-   "activeLanID",
+   "userID",
    "number"
   ]
  ],
@@ -547,12 +573,12 @@
  "onInterpreterListChanged": [],
  "onInterpreterRoleChanged": [
   [
-   "userID",
-   "number"
-  ],
-  [
    "isInterpreter",
    "boolean"
+  ],
+  [
+   "userID",
+   "number"
   ]
  ],
  "onJBHWaitingWithCmd": [
@@ -605,11 +631,11 @@
  ],
  "onLocalRecordingStatus": [
   [
-   "userId",
+   "status",
    "number"
   ],
   [
-   "status",
+   "userId",
    "number"
   ]
  ],
@@ -632,12 +658,12 @@
  ],
  "onMeetingCoHostChange": [
   [
-   "userID",
-   "number"
-  ],
-  [
    "isCoHost",
    "boolean"
+  ],
+  [
+   "userID",
+   "number"
   ]
  ],
  "onMeetingEndedReason": [
@@ -649,6 +675,10 @@
  "onMeetingError": [
   [
    "error",
+   "number"
+  ],
+  [
+   "errorCode",
    "number"
   ],
   [
@@ -706,6 +736,25 @@
    "number"
   ]
  ],
+ "onMobileRTCAuthExpired": [],
+ "onMobileRTCAuthReturn": [
+  [
+   "returnValue",
+   "number"
+  ]
+ ],
+ "onMobileRTCLoginResult": [
+  [
+   "resultValue",
+   "number"
+  ]
+ ],
+ "onMobileRTCLogoutReturn": [
+  [
+   "returnValue",
+   "number"
+  ]
+ ],
  "onMuteOnEntryStatusChange": [
   [
    "bEnabled",
@@ -734,6 +783,16 @@
    "number"
   ]
  ],
+ "onNotificationServiceStatus": [
+  [
+   "error",
+   "number"
+  ],
+  [
+   "status",
+   "number"
+  ]
+ ],
  "onOngoingShareStopped": [],
  "onOptimizingShareForVideoClipStatusChanged": [
   [
@@ -749,12 +808,12 @@
  ],
  "onPSUserStatusChanged": [
   [
-   "userId",
-   "number"
-  ],
-  [
    "isStart",
    "boolean"
+  ],
+  [
+   "userId",
+   "number"
   ]
  ],
  "onParticipantProfilePictureStatusChange": [
@@ -769,15 +828,15 @@
    "number"
   ],
   [
-   "pollingID",
-   "string | null"
-  ],
-  [
    "bSuccess",
    "boolean"
   ],
   [
    "errorMsg",
+   "string | null"
+  ],
+  [
+   "pollingID",
    "string | null"
   ]
  ],
@@ -795,11 +854,11 @@
  "onPollingListUpdated": [],
  "onPollingQuestionImageDownloaded": [
   [
-   "questionID",
+   "path",
    "string | null"
   ],
   [
-   "path",
+   "questionID",
    "string | null"
   ]
  ],
@@ -840,12 +899,12 @@
  ],
  "onRemoveBOResponse": [
   [
-   "success",
-   "boolean"
-  ],
-  [
    "BOID",
    "string | null"
+  ],
+  [
+   "success",
+   "boolean"
   ]
  ],
  "onRemoveCompanionRelation": [
@@ -875,11 +934,11 @@
  "onRequestSignInterpreterToTalk": [],
  "onSendPairingCodeStateChanged": [
   [
-   "state",
+   "meetingNumber",
    "number"
   ],
   [
-   "meetingNumber",
+   "state",
    "number"
   ]
  ],
@@ -891,18 +950,19 @@
  ],
  "onShareFromMainSession": [
   [
+   "shareActionPresent",
+   "boolean"
+  ],
+  [
    "sharingID",
    "number"
   ],
   [
    "status",
    "number"
-  ],
-  [
-   "shareActionPresent",
-   "boolean"
   ]
  ],
+ "onSharingContentStartReceiving": [],
  "onSignInterpretationStatusChange": [
   [
    "status",
@@ -974,6 +1034,10 @@
  "onSinkMeetingAudioRequestUnmuteByHost": [],
  "onSinkMeetingAudioStatusChange": [
   [
+   "audioStatus",
+   "number"
+  ],
+  [
    "userID",
    "number"
   ]
@@ -1026,6 +1090,7 @@
    "number"
   ]
  ],
+ "onSinkMeetingVideoRequestUnmuteByHost": [],
  "onSinkMeetingVideoStatusChange": [
   [
    "userID",
@@ -1132,22 +1197,22 @@
  ],
  "onSinkRequestForLiveTranscriptReceived": [
   [
-   "requesterUserId",
-   "number"
-  ],
-  [
    "bAnonymous",
    "boolean"
+  ],
+  [
+   "requesterUserId",
+   "number"
   ]
  ],
  "onSinkRevokeVoteupQuestion": [
   [
-   "questionID",
-   "string | null"
-  ],
-  [
    "orderChanged",
    "boolean"
+  ],
+  [
+   "questionID",
+   "string | null"
   ]
  ],
  "onSinkSelfAllowTalkNotification": [],
@@ -1190,12 +1255,12 @@
  ],
  "onSinkVoteupQuestion": [
   [
-   "questionID",
-   "string | null"
-  ],
-  [
    "orderChanged",
    "boolean"
+  ],
+  [
+   "questionID",
+   "string | null"
   ]
  ],
  "onSinkWebinarNeedRegister": [
@@ -1283,12 +1348,12 @@
  "onUnAssignedUserUpdated": [],
  "onUpdateBONameResponse": [
   [
-   "success",
-   "boolean"
-  ],
-  [
    "BOID",
    "string | null"
+  ],
+  [
+   "success",
+   "boolean"
   ]
  ],
  "onUpgradeFreeMeetingResult": [
@@ -1311,29 +1376,29 @@
  ],
  "onUserNetworkStatusChanged": [
   [
-   "type",
-   "number"
-  ],
-  [
    "level",
    "number"
   ],
   [
-   "userID",
+   "type",
    "number"
   ],
   [
    "uplink",
    "boolean"
+  ],
+  [
+   "userID",
+   "number"
   ]
  ],
  "onUserRawLiveStreamPrivilegeChanged": [
   [
-   "userId",
+   "hasPrivilege",
    "number"
   ],
   [
-   "hasPrivilege",
+   "userId",
    "number"
   ]
  ],
@@ -1377,10 +1442,44 @@
    "boolean"
   ]
  ],
+ "onWaitingRoomPresetAudioStatusChanged": [
+  [
+   "audioCanTurnOn",
+   "boolean"
+  ]
+ ],
+ "onWaitingRoomPresetVideoStatusChanged": [
+  [
+   "videoCanTurnOn",
+   "boolean"
+  ]
+ ],
  "onWaitingRoomStatusChange": [
   [
    "needWaiting",
    "boolean"
+  ]
+ ],
+ "onWaitingRoomUserJoin": [
+  [
+   "userId",
+   "number"
+  ]
+ ],
+ "onWaitingRoomUserLeft": [
+  [
+   "userId",
+   "number"
+  ]
+ ],
+ "onWaitingRoomUserNameChanged": [
+  [
+   "userID",
+   "number"
+  ],
+  [
+   "userName",
+   "string | null"
   ]
  ],
  "onWebPreAssignBODataDownloadStatusChanged": [
@@ -1397,16 +1496,16 @@
  ],
  "onWhiteboardSettingsChanged": [
   [
-   "shareOption",
-   "number"
-  ],
-  [
    "createOption",
    "number"
   ],
   [
    "enable",
    "boolean"
+  ],
+  [
+   "shareOption",
+   "number"
   ]
  ],
  "onWhiteboardStatusChanged": [

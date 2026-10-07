@@ -2,7 +2,7 @@
 //   android-impl/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java
 //   src/events/ios-events.json (written by scripts/generate-ios-delegates.py)
 // Regenerate with scripts/generate-events.py. Do not edit by hand.
-// 42 Android-only, 183 iOS-only, 56 on both.
+// 42 Android-only, 200 iOS-only, 54 on both.
 
 export interface ZoomMeetingParameter {
   meetingType: string | null;
@@ -58,8 +58,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   on3DAvatarItemDataDownloaded: {
-    success: number;
     index: number;
+    success: number;
   };
   /** ios only */
   on3DAvatarItemDataDownloading: {
@@ -78,8 +78,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onAICompanionFeatureSwitchRequestResponse: {
-    timeout: boolean;
     agree: boolean;
+    timeout: boolean;
     turnOn: boolean;
   };
   /** ios only */
@@ -89,6 +89,10 @@ export interface ZoomEventPayloads {
   /** ios only */
   onAICompanionFeatureTurnOffByParticipant: {
     handlerPresent: boolean;
+  };
+  /** ios only */
+  onActionBeforeDestroyed: {
+    sharingID: number;
   };
   /** android + ios */
   onActiveSpeakerVideoUserChanged: {
@@ -145,6 +149,16 @@ export interface ZoomEventPayloads {
     canReaction: boolean;
   };
   /** ios only */
+  onAnnotationService: {
+    servicePresent: boolean;
+    shareSourceID: number;
+    support: boolean;
+  };
+  /** ios only */
+  onAnnotationToolChanged: {
+    tool: number;
+  };
+  /** ios only */
   onAppShareSplash: Record<string, never>;
   /** android + ios */
   onAppSignalPanelUpdated: {
@@ -153,9 +167,9 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onAttendeeAudioStatusNotification: {
-    userId: number;
     canTalk: boolean;
     isMuted: boolean;
+    userId: number;
   };
   /** ios only */
   onAudioOutputChange: Record<string, never>;
@@ -192,8 +206,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onBOSwitchRequestReceived: {
-    newBOName: string | null;
     newBOID: string | null;
+    newBOName: string | null;
   };
   /** android + ios */
   onBotAuthorizerRelationChanged: {
@@ -230,7 +244,7 @@ export interface ZoomEventPayloads {
     inMeetingChatMessagePresent: boolean;
     chatInfoPresent: boolean;
   };
-  /** android + ios */
+  /** android only */
   onChatMessageNotification: {
     chatId: string;
     senderId: string;
@@ -239,12 +253,11 @@ export interface ZoomEventPayloads {
     receiverName: string;
     content: string;
     date: string;
-    chatInfoPresent: boolean;
   };
   /** ios only */
   onChatMsgDeleteNotification: {
-    msgID: string | null;
     deleteBy: number;
+    msgID: string | null;
   };
   /** ios only */
   onCheckCMRPrivilege: {
@@ -260,15 +273,15 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onClickedDialOut: {
-    parentVCPresent: boolean;
     me: boolean;
+    parentVCPresent: boolean;
   };
   /** android + ios */
   onClosedCaptionReceived: {
     message: string | string | null;
     senderId: number;
-    speakerID: number;
     msgTimePresent: boolean;
+    speakerID: number;
   };
   /** android + ios */
   onCloudRecordingStorageFull: {
@@ -277,18 +290,22 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onCompanionRelationChangedParentUserID: {
-    parentUserID: number;
     childUserID: number;
+    parentUserID: number;
   };
   /** ios only */
   onCreateBOResponse: {
-    success: boolean;
     BOID: string | null;
+    success: boolean;
   };
   /** android only */
   onCreateCompanionRelation: {
     l: number;
     l1: number;
+  };
+  /** ios only */
+  onCustomWaitingRoomDataUpdated: {
+    dataPresent: boolean;
   };
   /** ios only */
   onDialOutStatusChanged: {
@@ -313,14 +330,14 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onEmojiFeedbackReceived: {
-    userId: number;
     type: number;
+    userId: number;
   };
   /** ios only */
   onEmojiReactionReceived: {
-    userId: number;
-    type: number;
     skinTone: number;
+    type: number;
+    userId: number;
   };
   /** ios only */
   onEmojiReactionReceivedInWebinar: {
@@ -447,8 +464,8 @@ export interface ZoomEventPayloads {
   onInterpretationStop: Record<string, never>;
   /** ios only */
   onInterpreterActiveLanguageChanged: {
-    userID: number;
     activeLanID: number;
+    userID: number;
   };
   /** ios only */
   onInterpreterLanguageChanged: {
@@ -463,8 +480,8 @@ export interface ZoomEventPayloads {
   onInterpreterListChanged: Record<string, never>;
   /** ios only */
   onInterpreterRoleChanged: {
-    userID: number;
     isInterpreter: boolean;
+    userID: number;
   };
   /** android only */
   onInvalidReclaimHostkey: Record<string, never>;
@@ -546,8 +563,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onMeetingCoHostChange: {
-    userID: number;
     isCoHost: boolean;
+    userID: number;
   };
   /** ios only */
   onMeetingEndedReason: {
@@ -556,6 +573,7 @@ export interface ZoomEventPayloads {
   /** ios only */
   onMeetingError: {
     error: number;
+    errorCode: number;
     message: string | null;
   };
   /** android only */
@@ -610,15 +628,25 @@ export interface ZoomEventPayloads {
     s: string;
     meetingTopic: string | null;
   };
-  /** android only */
-  onMeetingUserUpdated: {
-    userId: number;
-  };
   /** ios only */
   onMicrophoneNoPrivilege: Record<string, never>;
   /** android + ios */
   onMicrophoneStatusError: {
     error: number | string | null;
+  };
+  /** ios only */
+  onMobileRTCAuthExpired: Record<string, never>;
+  /** ios only */
+  onMobileRTCAuthReturn: {
+    returnValue: number;
+  };
+  /** ios only */
+  onMobileRTCLoginResult: {
+    resultValue: number;
+  };
+  /** ios only */
+  onMobileRTCLogoutReturn: {
+    returnValue: number;
   };
   /** android + ios */
   onMuteOnEntryStatusChange: {
@@ -640,6 +668,11 @@ export interface ZoomEventPayloads {
     minutes: number;
   };
   /** ios only */
+  onNotificationServiceStatus: {
+    error: number;
+    status: number;
+  };
+  /** ios only */
   onOngoingShareStopped: Record<string, never>;
   /** ios only */
   onOptimizingShareForVideoClipStatusChanged: {
@@ -651,8 +684,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onPSUserStatusChanged: {
-    userId: number;
     isStart: boolean;
+    userId: number;
   };
   /** android + ios */
   onParticipantProfilePictureStatusChange: {
@@ -666,9 +699,9 @@ export interface ZoomEventPayloads {
   /** ios only */
   onPollingActionResult: {
     actionType: number;
-    pollingID: string | null;
     bSuccess: boolean;
     errorMsg: string | null;
+    pollingID: string | null;
   };
   /** ios only */
   onPollingElapsedTime: {
@@ -681,8 +714,8 @@ export interface ZoomEventPayloads {
   onPollingListUpdated: Record<string, never>;
   /** ios only */
   onPollingQuestionImageDownloaded: {
-    questionID: string | null;
     path: string | null;
+    questionID: string | null;
   };
   /** ios only */
   onPollingResultUpdated: {
@@ -709,8 +742,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onRemoveBOResponse: {
-    success: boolean;
     BOID: string | null;
+    success: boolean;
   };
   /** android + ios */
   onRemoveCompanionRelation: {
@@ -733,8 +766,8 @@ export interface ZoomEventPayloads {
   onRequestSignInterpreterToTalk: Record<string, never>;
   /** ios only */
   onSendPairingCodeStateChanged: {
-    state: number;
     meetingNumber: number;
+    state: number;
   };
   /** ios only */
   onShareContentChanged: {
@@ -745,9 +778,9 @@ export interface ZoomEventPayloads {
     l: number;
     sharingStatus: string | null;
     iShareActionPresent: boolean;
+    shareActionPresent: boolean;
     sharingID: number;
     status: number;
-    shareActionPresent: boolean;
   };
   /** android only */
   onShareMeetingChatStatusChanged: {
@@ -761,6 +794,8 @@ export interface ZoomEventPayloads {
   onShareUserReceivingStatus: {
     userId: number;
   };
+  /** ios only */
+  onSharingContentStartReceiving: Record<string, never>;
   /** ios only */
   onSignInterpretationStatusChange: {
     status: number;
@@ -824,6 +859,7 @@ export interface ZoomEventPayloads {
   onSinkMeetingAudioRequestUnmuteByHost: Record<string, never>;
   /** ios only */
   onSinkMeetingAudioStatusChange: {
+    audioStatus: number;
     userID: number;
   };
   /** ios only */
@@ -854,13 +890,13 @@ export interface ZoomEventPayloads {
   onSinkMeetingUserRaiseHand: {
     userID: number;
   };
-  /** android + ios */
+  /** ios only */
   onSinkMeetingVideoQualityChanged: {
-    videoQuality: string | null;
-    userId: number;
     qality: number;
     userID: number;
   };
+  /** ios only */
+  onSinkMeetingVideoRequestUnmuteByHost: Record<string, never>;
   /** ios only */
   onSinkMeetingVideoStatusChange: {
     userID: number;
@@ -930,13 +966,13 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onSinkRequestForLiveTranscriptReceived: {
-    requesterUserId: number;
     bAnonymous: boolean;
+    requesterUserId: number;
   };
   /** ios only */
   onSinkRevokeVoteupQuestion: {
-    questionID: string | null;
     orderChanged: boolean;
+    questionID: string | null;
   };
   /** ios only */
   onSinkSelfAllowTalkNotification: Record<string, never>;
@@ -968,8 +1004,8 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onSinkVoteupQuestion: {
-    questionID: string | null;
     orderChanged: boolean;
+    questionID: string | null;
   };
   /** ios only */
   onSinkWebinarNeedRegister: {
@@ -1036,8 +1072,8 @@ export interface ZoomEventPayloads {
   onUnAssignedUserUpdated: Record<string, never>;
   /** ios only */
   onUpdateBONameResponse: {
-    success: boolean;
     BOID: string | null;
+    success: boolean;
   };
   /** ios only */
   onUpgradeFreeMeetingResult: {
@@ -1067,15 +1103,15 @@ export interface ZoomEventPayloads {
     quality: string | null;
     userId: number;
     isMyself: boolean;
-    type: number;
     level: number;
-    userID: number;
+    type: number;
     uplink: boolean;
+    userID: number;
   };
   /** ios only */
   onUserRawLiveStreamPrivilegeChanged: {
-    userId: number;
     hasPrivilege: number;
+    userId: number;
   };
   /** ios only */
   onUserRawLiveStreamingStatusChanged: {
@@ -1107,8 +1143,29 @@ export interface ZoomEventPayloads {
     enabled: boolean;
   };
   /** ios only */
+  onWaitingRoomPresetAudioStatusChanged: {
+    audioCanTurnOn: boolean;
+  };
+  /** ios only */
+  onWaitingRoomPresetVideoStatusChanged: {
+    videoCanTurnOn: boolean;
+  };
+  /** ios only */
   onWaitingRoomStatusChange: {
     needWaiting: boolean;
+  };
+  /** ios only */
+  onWaitingRoomUserJoin: {
+    userId: number;
+  };
+  /** ios only */
+  onWaitingRoomUserLeft: {
+    userId: number;
+  };
+  /** ios only */
+  onWaitingRoomUserNameChanged: {
+    userID: number;
+    userName: string | null;
   };
   /** ios only */
   onWebPreAssignBODataDownloadStatusChanged: {
@@ -1125,9 +1182,9 @@ export interface ZoomEventPayloads {
   };
   /** ios only */
   onWhiteboardSettingsChanged: {
-    shareOption: number;
     createOption: number;
     enable: boolean;
+    shareOption: number;
   };
   /** ios only */
   onWhiteboardStatusChanged: {
