@@ -130,12 +130,6 @@
     [self.remoteShareVC.shareView changeShareScaleWithShareSourceID:userID];
 }
 
-- (void)onSinkMeetingShareReceiving:(NSUInteger)userID
-{
-    [[GlobalData sharedInstance] setGlobalActiveShareID:userID];
-    [self.remoteShareVC.shareView changeShareScaleWithShareSourceID:userID];
-}
-
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting
 {
     if (needWaiting)

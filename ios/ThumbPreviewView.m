@@ -11,7 +11,7 @@
 
 @interface ThumbPreviewView ()
 @property (strong, nonatomic) MobileRTCVideoView *videoView;
-@property (strong, nonatomic) MobileRTCVideoView *preVideoView;
+@property (strong, nonatomic) MobileRTCPreviewVideoView *preVideoView;
 @end
 
 @implementation ThumbPreviewView

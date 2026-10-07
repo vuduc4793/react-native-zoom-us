@@ -26,11 +26,7 @@
 
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID;
 
-- (void)onSinkMeetingActiveShare:(MobileRTCSharingStatus)status userID:(NSUInteger)userID;
-
 - (void)onSinkShareSizeChange:(NSUInteger)userID;
-
-- (void)onSinkMeetingShareReceiving:(NSUInteger)userID;
 
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting;
 

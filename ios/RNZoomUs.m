@@ -1202,6 +1202,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)onHostVideoOrderUpdated:(NSArray <NSNumber *>* _Nullable)orderArr;
 {
+    RNZoomUsEmit(@"onHostVideoOrderUpdated", @{@"orderArr": orderArr ?: @[]});
     NSLog(@"[Video Order] callback onHostVideoOrderUpdated: %@", orderArr);
 }
 
@@ -1489,6 +1490,113 @@ static NSString *const kZoomEventChannel = @"ZoomUsEvent";
     }
 }
 
+
+// MobileRTCAnnotationServiceDelegate declares onAnnotationToolChanged:
+// *before* its @optional marker, so it is a required method and the SDK is
+// entitled to call it without checking respondsToSelector: -- which, with no
+// implementation, is an unrecognized selector. Native cannot be fixed over the
+// air, so it is implemented here even though nothing consumes it yet.
+- (void)onAnnotationToolChanged:(MobileRTCAnnoTool)tool {
+    RNZoomUsEmit(@"onAnnotationToolChanged", @{@"tool": @(tool)});
+    NSLog(@"%s onAnnotationToolChanged: %ld", __func__, (long)tool);
+}
+
+// Mirrored from RNZoomUsVideoView: the module was 18 delegate callbacks behind
+// the view (auth 0/4, waiting room 0/6, plus host/co-host change and raise-hand),
+// so an app on Zoom's default UI -- which talks to the module, not the view --
+// simply never heard about any of them. Same payloads, every parameter carried.
+
+- (void)onAnnotationService:(MobileRTCAnnotationService *_Nullable)service supportStatusChanged:(BOOL)support shareSouceID:(NSUInteger)shareSourceID {
+    RNZoomUsEmit(@"onAnnotationService", @{@"support": @(support), @"shareSourceID": @(shareSourceID), @"servicePresent": @(service != nil)});
+    NSLog(@"RNZoomUs onAnnotationService support=%d shareSourceID=%@", support, @(shareSourceID));
+}
+
+- (void)onClaimHostResult:(MobileRTCClaimHostError)error
+{
+    RNZoomUsEmit(@"onClaimHostResult", @{@"error": @(error)});
+    NSLog(@"RNZoomUs onClaimHostResult==%@", @(error));
+}
+
+- (void)onCustomWaitingRoomDataUpdated:(MobileRTCCustomWaitingRoomData *)data {
+    RNZoomUsEmit(@"onCustomWaitingRoomDataUpdated", @{@"dataPresent": @(data != nil)});
+    NSLog(@"RNZoomUs onCustomWaitingRoomDataUpdated");
+}
+
+- (void)onFollowHostVideoOrderChanged:(BOOL)follow {
+    RNZoomUsEmit(@"onFollowHostVideoOrderChanged", @{@"follow": @(follow)});
+    NSLog(@"RNZoomUs onFollowHostVideoOrderChanged");
+}
+
+- (void)onMeetingCoHostChange:(NSUInteger)userID isCoHost:(BOOL)isCoHost {
+    RNZoomUsEmit(@"onMeetingCoHostChange", @{@"userID": @(userID), @"isCoHost": @(isCoHost)});
+    NSLog(@"RNZoomUs onMeetingCoHostChange==%@ isCoHost===%@", @(userID), @(isCoHost));
+}
+
+- (void)onMeetingHostChange:(NSUInteger)hostId {
+    RNZoomUsEmit(@"onMeetingHostChange", @{@"hostId": @(hostId)});
+    NSLog(@"RNZoomUs onMeetingHostChange==%@", @(hostId));
+}
+
+- (void)onMobileRTCAuthExpired{
+    RNZoomUsEmit(@"onMobileRTCAuthExpired", nil);
+    NSLog(@"RNZoomUs onMobileRTCAuthExpired");
+}
+
+- (void)onMobileRTCLoginResult:(MobileRTCLoginFailReason)resultValue{
+    RNZoomUsEmit(@"onMobileRTCLoginResult", @{@"resultValue": @(resultValue)});
+    NSLog(@"RNZoomUs onMobileRTCLoginResult");
+}
+
+- (void)onMobileRTCLogoutReturn:(NSInteger)returnValue{
+    RNZoomUsEmit(@"onMobileRTCLogoutReturn", @{@"returnValue": @(returnValue)});
+    NSLog(@"RNZoomUs onMobileRTCLogoutReturn");
+}
+
+- (void)onNotificationServiceStatus:(MobileRTCNotificationServiceStatus)status error:(MobileRTCNotificationServiceError)error{
+    RNZoomUsEmit(@"onNotificationServiceStatus", @{@"status": @(status), @"error": @(error)});
+    NSLog(@"RNZoomUs onNotificationServiceStatus");
+}
+
+- (void)onSinkMeetingUserLowerHand:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserLowerHand", @{@"userID": @(userID)});
+    NSLog(@"RNZoomUs onSinkMeetingUserLowerHand==%@", @(userID));
+}
+
+- (void)onSinkMeetingUserRaiseHand:(NSUInteger)userID {
+    RNZoomUsEmit(@"onSinkMeetingUserRaiseHand", @{@"userID": @(userID)});
+    NSLog(@"RNZoomUs onSinkMeetingUserRaiseHand==%@", @(userID));
+}
+
+- (void)onSinkUserNameChanged:(NSArray <NSNumber *>* _Nullable)userNameChangedArr
+{
+    RNZoomUsEmit(@"onSinkUserNameChanged", @{@"userNameChangedArr": userNameChangedArr ?: @[]});
+    NSLog(@"onSinkUserNameChanged:%@", userNameChangedArr);
+}
+
+- (void)onWaitingRoomPresetAudioStatusChanged:(BOOL)audioCanTurnOn{
+    RNZoomUsEmit(@"onWaitingRoomPresetAudioStatusChanged", @{@"audioCanTurnOn": @(audioCanTurnOn)});
+    NSLog(@"RNZoomUs onWaitingRoomPresetAudioStatusChanged");
+}
+
+- (void)onWaitingRoomPresetVideoStatusChanged:(BOOL)videoCanTurnOn{
+    RNZoomUsEmit(@"onWaitingRoomPresetVideoStatusChanged", @{@"videoCanTurnOn": @(videoCanTurnOn)});
+    NSLog(@"RNZoomUs onWaitingRoomPresetVideoStatusChanged");
+}
+
+- (void)onWaitingRoomUserJoin:(NSUInteger)userId{
+    RNZoomUsEmit(@"onWaitingRoomUserJoin", @{@"userId": @(userId)});
+    NSLog(@"RNZoomUs onWaitingRoomUserJoin");
+}
+
+- (void)onWaitingRoomUserLeft:(NSUInteger)userId{
+    RNZoomUsEmit(@"onWaitingRoomUserLeft", @{@"userId": @(userId)});
+    NSLog(@"RNZoomUs onWaitingRoomUserLeft");
+}
+
+- (void)onWaitingRoomUserNameChanged:(NSInteger)userID userName:(NSString *)userName{
+    RNZoomUsEmit(@"onWaitingRoomUserNameChanged", @{@"userID": @(userID), @"userName": userName ?: [NSNull null]});
+    NSLog(@"RNZoomUs onWaitingRoomUserNameChanged");
+}
 
 // Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares
 // onBOCreateSuccess, onInMeetingUserUpdated, onMeetingReturn,

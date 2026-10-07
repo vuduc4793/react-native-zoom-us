@@ -421,6 +421,15 @@ CXCallController *callController;
             @"status": @(YES)
         });
     }
+    // JS is told, but its answer can never reach the SDK: this block is
+    // one-shot and nothing stores it. Left uncalled, the host's request is
+    // stranded forever. Answer it the way the module path already does
+    // (RNZoomUs.m) so both paths behave alike; a per-request responder that
+    // lets JS decide is the proper fix and is not built yet.
+    if (completion) {
+        MobileRTCSDKError err = completion(YES);
+        NSLog(@"RNZoomUsVideoView unmute accept %@", @(err));
+    }
 }
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingAudioStatusChange", @{@"userID": @(userID)});
@@ -605,6 +614,7 @@ CXCallController *callController;
 
 - (void)onLostAdminRightsNotification;
 {
+    RNZoomUsEmit(@"onLostAdminRightsNotification", nil);
     NSLog(@"RNZoomUsVideoView Lost Admin");
 }
 
@@ -618,10 +628,6 @@ CXCallController *callController;
 {
     RNZoomUsEmit(@"onLostAttendeeRightsNotification", nil);
     NSLog(@"RNZoomUsVideoView Lost Attendee");
-}
-
-- (void)onNewBroadcastMessageReceived:(NSString *_Nullable)broadcastMsg senderID:(NSUInteger)senderID {
-    NSLog(@"RNZoomUsVideoView Broadcast Message Received:%@ senderID:%@", broadcastMsg, @(senderID));
 }
 
 - (void)onBOStopCountDown:(NSUInteger)seconds
@@ -717,6 +723,7 @@ CXCallController *callController;
 
 - (void)onBOInfoUpdated:(NSString *_Nullable)boId;
 {
+    RNZoomUsEmit(@"onBOInfoUpdated", @{@"boId": boId ?: [NSNull null]});
     NSLog(@"RNZoomUsVideoView BO info updated");
 }
 
@@ -751,6 +758,7 @@ CXCallController *callController;
 #pragma mark - SHARING
 
 - (void)onSharingContentStartReceiving {
+    RNZoomUsEmit(@"onSharingContentStartReceiving", nil);
     NSLog(@"RNZoomUsVideoView onSharingContentStartReceiving");
 }
 
@@ -798,6 +806,7 @@ CXCallController *callController;
 }
 
 - (void)onActionBeforeDestroyed:(NSUInteger)sharingID {
+    RNZoomUsEmit(@"onActionBeforeDestroyed", @{@"sharingID": @(sharingID)});
     NSLog(@"RNZoomUsVideoView onActionBeforeDestroyed==%@",@(sharingID));
 }
 
@@ -806,10 +815,16 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onAllowAskQuestionStatus==%@",@(bEnabled));
 }
 
-- (void)onAskToEndOtherMeeting:(void (^)(BOOL))completion {
-    RNZoomUsEmit(@"onAskToEndOtherMeeting", nil);
-    NSLog(@"RNZoomUsVideoView onAskToEndOtherMeeting");
-}
+// Not implemented on purpose: onAskToEndOtherMeeting:, onJoinMeetingInfo:completion:,
+// onProxyAuth:port:completion: and onSinkJoinWebinarNeedUserNameAndEmailWithCompletion:.
+// Each hands over a one-shot block the SDK then waits on, and the block cannot
+// outlive the call because nothing stores it. Implementing one makes
+// respondsToSelector: answer YES, so the SDK stops running its own prompt and
+// waits on a block nobody will ever call -- the flow hangs with no error. Having
+// no implementation is strictly better: Zoom falls back to its own UI. Answering
+// them from JS needs a per-request responder (store the block, emit a requestId,
+// expose a reply method); until that exists these stay out. Nothing in JS
+// consumed the three events they used to emit.
 
 - (void)onAvailableLanguageListUpdated:(NSArray<MobileRTCInterpretationLanguage *> *)availableLanguageList {
     RNZoomUsEmit(@"onAvailableLanguageListUpdated", @{@"availableLanguageListPresent": @(availableLanguageList != nil)});
@@ -864,8 +879,9 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onAllowAttendeeRaiseHandStatusChanged");
 }
 
-- (void)onAnnotationService:(MobileRTCAnnotationService *)service supportStatusChanged:(BOOL)support {
-    NSLog(@"RNZoomUsVideoView onAnnotationService");
+- (void)onAnnotationService:(MobileRTCAnnotationService *_Nullable)service supportStatusChanged:(BOOL)support shareSouceID:(NSUInteger)shareSourceID {
+    RNZoomUsEmit(@"onAnnotationService", @{@"support": @(support), @"shareSourceID": @(shareSourceID), @"servicePresent": @(service != nil)});
+    NSLog(@"RNZoomUsVideoView onAnnotationService support=%d shareSourceID=%@", support, @(shareSourceID));
 }
 
 - (void)onAllowParticipantsShareWhiteBoardNotification:(BOOL)allow {
@@ -927,6 +943,7 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onCallRoomDeviceStateChanged");
 }
 - (void)onCustomWaitingRoomDataUpdated:(MobileRTCCustomWaitingRoomData *)data {
+    RNZoomUsEmit(@"onCustomWaitingRoomDataUpdated", @{@"dataPresent": @(data != nil)});
     NSLog(@"RNZoomUsVideoView onCustomWaitingRoomDataUpdated");
 }
 
@@ -1053,10 +1070,6 @@ CXCallController *callController;
     RNZoomUsEmit(@"onJoinMeetingNeedUserInfo", @{@"handlerPresent": @(handler != nil)});
     NSLog(@"RNZoomUsVideoView onJoinMeetingNeedUserInfo");
 }
-- (void)onJoinMeetingInfo:(MobileRTCJoinMeetingInfo)info completion:(void (^)(NSString * _Nonnull, NSString * _Nonnull, BOOL))completion{
-    RNZoomUsEmit(@"onJoinMeetingInfo", nil);
-    NSLog(@"RNZoomUsVideoView onJoinMeetingInfo");
-}
 - (void)onLiveStreamStatusChange:(MobileRTCLiveStreamStatus)liveStreamStatus{
     RNZoomUsEmit(@"onLiveStreamStatusChange", @{@"liveStreamStatus": @(liveStreamStatus)});
     NSLog(@"RNZoomUsVideoView onLiveStreamStatusChange");
@@ -1099,6 +1112,7 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onMeetingEndedReason");
 }
 - (void)onMobileRTCAuthExpired{
+    RNZoomUsEmit(@"onMobileRTCAuthExpired", nil);
     NSLog(@"RNZoomUsVideoView onMobileRTCAuthExpired");
 }
 - (void)onMicrophoneStatusError:(MobileRTCMicrophoneError)error{
@@ -1106,6 +1120,7 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onMicrophoneStatusError");
 }
 - (void)onMobileRTCAuthReturn:(MobileRTCAuthError)returnValue{
+    RNZoomUsEmit(@"onMobileRTCAuthReturn", @{@"returnValue": @(returnValue)});
     NSLog(@"RNZoomUsVideoView onMobileRTCAuthReturn");
 }
 - (void)onMeetingParameterNotification:(MobileRTCMeetingParameter *)meetingParam{
@@ -1116,9 +1131,11 @@ CXCallController *callController;
 //    NSLog(@"RNZoomUsVideoView onMeetingError");
 //}
 - (void)onMobileRTCLoginResult:(MobileRTCLoginFailReason)resultValue{
+    RNZoomUsEmit(@"onMobileRTCLoginResult", @{@"resultValue": @(resultValue)});
     NSLog(@"RNZoomUsVideoView onMobileRTCLoginResult");
 }
 - (void)onMobileRTCLogoutReturn:(NSInteger)returnValue{
+    RNZoomUsEmit(@"onMobileRTCLogoutReturn", @{@"returnValue": @(returnValue)});
     NSLog(@"RNZoomUsVideoView onMobileRTCLogoutReturn");
 }
 - (void)onMeetingQAStatusChanged:(BOOL)isMeetingQAFeatureOn{
@@ -1130,6 +1147,7 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onNoHostMeetingWillTerminate");
 }
 - (void)onNotificationServiceStatus:(MobileRTCNotificationServiceStatus)status error:(MobileRTCNotificationServiceError)error{
+    RNZoomUsEmit(@"onNotificationServiceStatus", @{@"status": @(status), @"error": @(error)});
     NSLog(@"RNZoomUsVideoView onNotificationServiceStatus");
 }
 - (void)onNewBroadcastMessageReceived:(NSString *)broadcastMsg senderID:(NSUInteger)senderID senderName:(NSString *)senderName {
@@ -1160,10 +1178,6 @@ CXCallController *callController;
 - (void)onPollingStatusChanged:(NSString *)pollingID status:(MobileRTCPollingStatus)status {
     RNZoomUsEmit(@"onPollingStatusChanged", @{@"pollingID": pollingID ?: [NSNull null], @"status": @(status)});
     NSLog(@"RNZoomUsVideoView onPollingStatusChanged");
-}
-- (void)onProxyAuth:(NSString *)host port:(NSUInteger)port completion:(void (^)(NSString * _Nonnull, NSUInteger, NSString * _Nonnull, NSString * _Nonnull, BOOL))completion {
-    RNZoomUsEmit(@"onProxyAuth", nil);
-    NSLog(@"RNZoomUsVideoView onProxyAuth");
 }
 - (void)onParticipantProfilePictureStatusChange:(BOOL)hidden {
     RNZoomUsEmit(@"onParticipantProfilePictureStatusChange", @{@"hidden": @(hidden)});
@@ -1407,10 +1421,6 @@ CXCallController *callController;
     RNZoomUsEmit(@"onShareFromMainSession", @{@"sharingID": @(sharingID), @"status": @(status), @"shareActionPresent": @(shareAction != nil)});
     NSLog(@"RNZoomUsVideoView onShareFromMainSession");
 }
-- (void)onSinkJoinWebinarNeedUserNameAndEmailWithCompletion:(BOOL (^)(NSString * _Nonnull, NSString * _Nonnull, BOOL))completion{
-    RNZoomUsEmit(@"onSinkJoinWebinarNeedUserNameAndEmailWithCompletion", nil);
-    NSLog(@"RNZoomUsVideoView onSinkJoinWebinarNeedUserNameAndEmailWithCompletion");
-}
 - (void)onTalkPrivilegeChanged:(BOOL)hasPrivilege{
     RNZoomUsEmit(@"onTalkPrivilegeChanged", @{@"hasPrivilege": @(hasPrivilege)});
     NSLog(@"RNZoomUsVideoView onTalkPrivilegeChanged");
@@ -1441,9 +1451,11 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onWhiteboardStatusChanged");
 }
 - (void)onWaitingRoomUserJoin:(NSUInteger)userId{
+    RNZoomUsEmit(@"onWaitingRoomUserJoin", @{@"userId": @(userId)});
     NSLog(@"RNZoomUsVideoView onWaitingRoomUserJoin");
 }
 - (void)onWaitingRoomUserLeft:(NSUInteger)userId{
+    RNZoomUsEmit(@"onWaitingRoomUserLeft", @{@"userId": @(userId)});
     NSLog(@"RNZoomUsVideoView onWaitingRoomUserLeft");
 }
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting{
@@ -1459,12 +1471,15 @@ CXCallController *callController;
     NSLog(@"RNZoomUsVideoView onWebinarNeedInputScreenName");
 }
 - (void)onWaitingRoomPresetAudioStatusChanged:(BOOL)audioCanTurnOn{
+    RNZoomUsEmit(@"onWaitingRoomPresetAudioStatusChanged", @{@"audioCanTurnOn": @(audioCanTurnOn)});
     NSLog(@"RNZoomUsVideoView onWaitingRoomPresetAudioStatusChanged");
 }
 - (void)onWaitingRoomPresetVideoStatusChanged:(BOOL)videoCanTurnOn{
+    RNZoomUsEmit(@"onWaitingRoomPresetVideoStatusChanged", @{@"videoCanTurnOn": @(videoCanTurnOn)});
     NSLog(@"RNZoomUsVideoView onWaitingRoomPresetVideoStatusChanged");
 }
 - (void)onWaitingRoomUserNameChanged:(NSInteger)userID userName:(NSString *)userName{
+    RNZoomUsEmit(@"onWaitingRoomUserNameChanged", @{@"userID": @(userID), @"userName": userName ?: [NSNull null]});
     NSLog(@"RNZoomUsVideoView onWaitingRoomUserNameChanged");
 }
 - (void)onWhiteboardSettingsChanged:(MobileRTCWhiteboardShareOption)shareOption createOption:(MobileRTCWhiteboardCreateOption)createOption enable:(BOOL)enable{
@@ -1519,6 +1534,16 @@ CXCallController *callController;
 // Smart Summary callbacks, and MobileRTCSmartSummaryPrivilegeHandler is gone
 // with them. Smart Summary itself moved to MobileRTCAICSmartSummaryHelper and
 // the AICompanion category, which report through their own delegates.
+
+// MobileRTCAnnotationServiceDelegate declares onAnnotationToolChanged:
+// *before* its @optional marker, so it is a required method and the SDK is
+// entitled to call it without checking respondsToSelector: -- which, with no
+// implementation, is an unrecognized selector. Native cannot be fixed over the
+// air, so it is implemented here even though nothing consumes it yet.
+- (void)onAnnotationToolChanged:(MobileRTCAnnoTool)tool {
+    RNZoomUsEmit(@"onAnnotationToolChanged", @{@"tool": @(tool)});
+    NSLog(@"%s onAnnotationToolChanged: %ld", __func__, (long)tool);
+}
 
 // Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares
 // onBOCreateSuccess, onInMeetingUserUpdated, onMeetingReturn,
