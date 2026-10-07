@@ -2,7 +2,6 @@
 
 /** Route from ZoomSDK.getInstance() to each callable object. */
 export const ZOOM_ROUTES: Record<string, string> = {
-  AccountService: "getAccountService",
   I3DAvatarSettingContext: "get3DAvatarSettings",
   IBOAdmin: "getInMeetingService.getInMeetingBOController.getBOAdminHelper",
   IBOAssistant: "getInMeetingService.getInMeetingBOController.getBOAssistantHelper",
@@ -21,6 +20,7 @@ export const ZOOM_ROUTES: Record<string, string> = {
   InMeetingAnnotationController: "getInMeetingService.getInMeetingAnnotationController",
   InMeetingAudioController: "getInMeetingService.getInMeetingAudioController",
   InMeetingBOController: "getInMeetingService.getInMeetingBOController",
+  InMeetingBackstageController: "getInMeetingService.getInMeetingBackstageController",
   InMeetingChatController: "getInMeetingService.getInMeetingChatController",
   InMeetingCloudRecordController: "getInMeetingService.getInMeetingCloudRecordController",
   InMeetingDocsController: "getInMeetingService.getInMeetingDocsController",
@@ -36,7 +36,6 @@ export const ZOOM_ROUTES: Record<string, string> = {
   InMeetingService: "getInMeetingService",
   InMeetingShareController: "getInMeetingService.getInMeetingShareController",
   InMeetingSignInterpretationController: "getInMeetingService.getInMeetingSignInterpretationController",
-  InMeetingSmartSummaryController: "getInMeetingService.getInMeetingSmartSummaryController",
   InMeetingUserInfo: "getInMeetingService.getMyUserInfo",
   InMeetingVideoController: "getInMeetingService.getInMeetingVideoController",
   InMeetingVirtualBackgroundController: "getInMeetingService.getInMeetingVirtualBackgroundController",
@@ -48,7 +47,6 @@ export const ZOOM_ROUTES: Record<string, string> = {
   MeetingSettingsHelper: "getMeetingSettingsHelper",
   MobileRTCASVStatisticInfo: "getInMeetingService.getInMeetingVideoController.getMeetingVideoStatisticInfo",
   MobileRTCAudioStatisticInfo: "getInMeetingService.getInMeetingAudioController.getMeetingAudioStatisticInfo",
-  MobileRTCDialInCountry: "getAccountService.getAvailableDialInCountry",
   MyNotesController: "getPreMeetingService.getMyNotesController",
   PhoneHelper: "getMeetingService.getPhoneHelper",
   PreMeetingService: "getPreMeetingService",
@@ -56,6 +54,7 @@ export const ZOOM_ROUTES: Record<string, string> = {
   WebinarRegistLegalNoticeContent: "getInMeetingService.getInMeetingWebinarController.getWebinarRegistrationLegalNoticesExplained",
   ZoomSDK: "",
   ZoomSDKAICompanionQueryHelper: "getInMeetingService.getInMeetingAICompanionController.getQueryHelper",
+  ZoomSDKAccountInfo: "getAccountInfo",
   ZoomSDKShareSourceHelper: "getShareSourceHelper",
   ZoomSDKVideoSourceHelper: "getVideoSourceHelper",
   ZoomUIService: "getZoomUIService",

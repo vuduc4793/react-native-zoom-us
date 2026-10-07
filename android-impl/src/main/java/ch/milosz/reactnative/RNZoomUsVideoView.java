@@ -16,6 +16,7 @@ import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.MeetingError;
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.InMeetingService;
+import us.zoom.sdk.InMeetingShareController;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -191,7 +192,22 @@ class RNZoomUsVideoView extends MobileRTCVideoView {
       return -1;
     }
 
-    return inMeetingService.activeShareUserID();
+    // 7.2.1 removed InMeetingService.activeShareUserID(). The replacement reports
+    // everyone whose share can be viewed rather than one active sharer, so the
+    // first entry is the closest equivalent -- and an empty list now means
+    // "nobody is sharing", which the old call expressed as a sentinel id.
+    InMeetingShareController shareController = inMeetingService.getInMeetingShareController();
+    if (shareController == null) {
+      return -1;
+    }
+
+    List<Long> sharing = shareController.getViewableSharingUserList();
+    if (sharing == null || sharing.isEmpty()) {
+      return -1;
+    }
+
+    Long first = sharing.get(0);
+    return first == null ? -1 : first;
   }
 
   /**

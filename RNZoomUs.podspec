@@ -3,16 +3,16 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 # Zoom Meeting SDK for iOS.
 #
-# Zoom publishes this pod themselves -- ZoomMeetingSDK, owned by zoom.us, built
-# from github.com/zoom/meetingsdk-ios releases -- so there is nothing to mirror.
-# It carries the same MobileRTC, zoomcml and MobileRTCScreenShare xcframeworks
-# the hand-built RNZoomSDK pod repackaged.
+# RNZoomSDK -- github.com/vuduc4793/zoom-sdk-pods -- rather than Zoom's own
+# ZoomMeetingSDK pod, which exists and carries the identical xcframeworks. The
+# mirror is kept for one reason: Zoom versions their pod in three parts, so a
+# rebuilt 7.2.1 would reinstall under the same name, while this one pins the
+# build (39202) in the version itself and can be cut the day a build lands
+# rather than when Zoom gets around to publishing.
 #
-# 7.1.5 rather than the newer 7.2.1: it is the closest the iOS line comes to
-# Android's 7.1.6.41900, and the two platforms are kept on the same minor
-# version. Zoom numbers its builds separately per platform, so 7.1.6 does not
-# exist for iOS at all -- 7.1.x is 7.1.0 and 7.1.5.
-ZOOM_SDK_VERSION = "7.1.5"
+# Matched to Android's 7.2.1.43944. Zoom numbers builds separately per platform,
+# so the build suffixes differ while the SDK version does not.
+ZOOM_SDK_VERSION = "7.2.1.39202"
 
 Pod::Spec.new do |s|
   s.name         = "RNZoomUs"
@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.dependency "React-Core"
-  s.dependency "ZoomMeetingSDK", ZOOM_SDK_VERSION
+  s.dependency "RNZoomSDK", ZOOM_SDK_VERSION
 
   # MobileRTC.xcframework ships ios-arm64 and ios-arm64-simulator only -- no
   # x86_64 simulator slice -- so this pod and the consuming app have to agree to

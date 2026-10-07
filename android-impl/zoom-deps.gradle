@@ -14,9 +14,20 @@
 // against. It also restores what the base already shipped before Zoom moved out:
 // with Zoom in the base, Gradle resolved this whole graph together.
 //
-// The JitPack artifact's POM has no dependencies, so the list is mirrored by hand
-// from the SDK's mobilertc/build.gradle + versions.gradle. Keep it in sync on
-// upgrade -- mismatches surface as NoSuchMethodError at runtime.
+// The JitPack artifact's POM has no dependencies, so nothing but this file
+// forces a version: the list is mirrored from the SDK's mobilertc/build.gradle +
+// versions.gradle. Keep it in sync on upgrade -- pinning below what mobilertc
+// was compiled against surfaces as NoSuchMethodError at runtime, and there is no
+// other declaration to catch it.
+//
+// Mirrored from 7.2.1.43944. Where this file already asked for something newer
+// than the SDK does -- recyclerview, material3, viewbinding -- the higher one
+// stays, because Gradle would resolve to it anyway and the app needs it.
+// flexbox and eventbus were dropped: 7.2.1 no longer pulls them in.
+//
+// Re-check with scripts/, or by hand:
+//   diff <(grep -oE "[a-z.]+:[a-z-]+:[0-9][^']*" zoom-deps.gradle | sort) ...
+//     against mobilertc-android-studio/mobilertc/versions.gradle
 
 dependencies {
     implementation platform('androidx.compose:compose-bom:2025.10.01')
@@ -46,29 +57,29 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
-    implementation 'androidx.core:core:1.13.0'
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.1'
-    implementation 'androidx.lifecycle:lifecycle-service:2.9.1'
+    implementation 'androidx.core:core:1.16.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.11.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-service:2.11.0-alpha03'
     implementation 'androidx.work:work-runtime:2.9.0'
 
-    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'androidx.core:core-splashscreen:1.0.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.11.0-alpha03'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
 
     implementation 'androidx.compose.material3:material3:1.5.0-alpha07'
     implementation 'androidx.compose.material3:material3-window-size-class:1.5.0-alpha07'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.9.4'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout-compose:1.1.1'
     implementation 'androidx.activity:activity-compose:1.11.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.9.4'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4'
-    implementation 'androidx.navigation:navigation-compose:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.11.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0-alpha03'
+    implementation 'androidx.navigation:navigation-compose:2.9.4'
     implementation 'androidx.profileinstaller:profileinstaller:1.4.0'
-    implementation 'io.coil-kt:coil-compose:2.3.0'
+    implementation 'io.coil-kt:coil-compose:2.7.0'
     implementation 'io.coil-kt:coil-gif:2.7.0'
 
     implementation 'androidx.webkit:webkit:1.9.0'
@@ -84,7 +95,5 @@ dependencies {
     implementation 'com.google.mlkit:text-recognition:16.0.1'
     implementation 'com.blueparrott:blueparrottsdk:4.8.2'
 
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'androidx.databinding:viewbinding:8.10.0'
 }

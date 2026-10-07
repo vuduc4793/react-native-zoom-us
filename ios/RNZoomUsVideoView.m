@@ -461,7 +461,13 @@ CXCallController *callController;
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
     if(isViewingShare) {
-        [[GlobalData sharedInstance] setGlobalActiveShareID:[ms activeShareUserID]];
+        // 7.2.1 removed -activeShareUserID. getViewableSharingUserList returns
+        // everyone whose share can be viewed; the first entry is the closest
+        // equivalent, and an empty list means nobody is sharing.
+        NSArray<NSNumber *> *sharing = [ms getViewableSharingUserList];
+        if (sharing.count > 0) {
+            [[GlobalData sharedInstance] setGlobalActiveShareID:sharing.firstObject.unsignedIntegerValue];
+        }
     } else {
         [[GlobalData sharedInstance] setUserID:[ms activeUserID]];
     }
@@ -1295,10 +1301,6 @@ CXCallController *callController;
     RNZoomUsEmit(@"onSinkWebinarNeedRegister", @{@"registerURL": registerURL ?: [NSNull null]});
     NSLog(@"RNZoomUsVideoView onSinkWebinarNeedRegister");
 }
-- (void)onSmartSummaryStatusChange:(BOOL)isStarted {
-    RNZoomUsEmit(@"onSmartSummaryStatusChange", @{@"isStarted": @(isStarted)});
-    NSLog(@"RNZoomUsVideoView onSmartSummaryStatusChange");
-}
 - (void)onSpotlightVideoUserChange:(NSArray<NSNumber *> *)spotlightedUserList{
     RNZoomUsEmit(@"onSpotlightVideoUserChange", @{@"spotlightedUserList": spotlightedUserList ?: @[]});
     NSLog(@"RNZoomUsVideoView onSpotlightVideoUserChange");
@@ -1380,17 +1382,9 @@ CXCallController *callController;
     RNZoomUsEmit(@"onSinkDePromptPanelist2AttendeeResult", @{@"errorCode": @(errorCode)});
     NSLog(@"RNZoomUsVideoView onSinkDePromptPanelist2AttendeeResult");
 }
-- (void)onSmartSummaryPrivilegeRequested:(NSInteger)userId handler:(MobileRTCSmartSummaryPrivilegeHandler *)handler{
-    RNZoomUsEmit(@"onSmartSummaryPrivilegeRequested", @{@"userId": @(userId), @"handlerPresent": @(handler != nil)});
-    NSLog(@"RNZoomUsVideoView onSmartSummaryPrivilegeRequested");
-}
 - (void)onSubscribeUserFail:(MobileRTCSubscribeFailReason)errorCode size:(NSInteger)size userId:(NSUInteger)userId {
     RNZoomUsEmit(@"onSubscribeUserFail", @{@"errorCode": @(errorCode), @"size": @(size), @"userId": @(userId)});
     NSLog(@"RNZoomUsVideoView onSubscribeUserFail");
-}
-- (void)onSmartSummaryStartReqResponse:(BOOL)timeout decline:(BOOL)isDecline{
-    RNZoomUsEmit(@"onSmartSummaryStartReqResponse", @{@"timeout": @(timeout), @"isDecline": @(isDecline)});
-    NSLog(@"RNZoomUsVideoView onSmartSummaryStartReqResponse");
 }
 - (void)onSinkRevokeVoteupQuestion:(NSString *)questionID orderChanged:(BOOL)orderChanged{
     RNZoomUsEmit(@"onSinkRevokeVoteupQuestion", @{@"questionID": questionID ?: [NSNull null], @"orderChanged": @(orderChanged)});
@@ -1548,4 +1542,8 @@ CXCallController *callController;
 //- (BOOL)onCheckIfMeetingVoIPCallRunning{
 //    return [providerDelegate isInCall];
 //}
+// Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares the
+// Smart Summary callbacks, and MobileRTCSmartSummaryPrivilegeHandler is gone
+// with them. Smart Summary itself moved to MobileRTCAICSmartSummaryHelper and
+// the AICompanion category, which report through their own delegates.
 @end

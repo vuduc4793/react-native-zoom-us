@@ -249,17 +249,8 @@
     RNZoomUsEmit(@"onAllowParticipantsRequestCloudRecording", @{@"allow": @(allow)});
 }
 
-- (void)onSmartSummaryStatusChange:(BOOL)isStarted {
-    RNZoomUsEmit(@"onSmartSummaryStatusChange", @{@"isStarted": @(isStarted)});
-}
 
-- (void)onSmartSummaryPrivilegeRequested:(NSInteger)userId handler:(MobileRTCSmartSummaryPrivilegeHandler *)handler {
-    RNZoomUsEmit(@"onSmartSummaryPrivilegeRequested", @{@"userId": @(userId), @"handlerPresent": @(handler != nil)});
-}
 
-- (void)onSmartSummaryStartReqResponse:(BOOL)timeout decline:(BOOL)isDecline {
-    RNZoomUsEmit(@"onSmartSummaryStartReqResponse", @{@"timeout": @(timeout), @"isDecline": @(isDecline)});
-}
 
 - (void)onAICompanionActiveChangeNotice:(BOOL)isActive {
     RNZoomUsEmit(@"onAICompanionActiveChangeNotice", @{@"isActive": @(isActive)});
@@ -841,4 +832,8 @@
     RNZoomUsEmit(@"onUserNetworkStatusChanged", @{@"type": @(type), @"level": @(level), @"userID": @(userID), @"uplink": @(uplink)});
 }
 
+// Removed in 7.2.1: MobileRTCMeetingServiceDelegate no longer declares the
+// Smart Summary callbacks, and MobileRTCSmartSummaryPrivilegeHandler is gone
+// with them. Smart Summary itself moved to MobileRTCAICSmartSummaryHelper and
+// the AICompanion category, which report through their own delegates.
 @end

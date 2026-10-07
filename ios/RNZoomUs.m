@@ -289,7 +289,14 @@ RCT_EXPORT_METHOD(
         [zoomSettings setMeetingVideoHidden:meetingVideoHidden];
         [zoomSettings setMeetingAudioHidden:meetingAudioHidden];
         [zoomSettings setCloseCaptionHidden:closeCaptionHidden];
-        [zoomSettings disableCloudWhiteboard:disableCloudWhiteboard];
+        // 7.2.1 moved this off MobileRTCMeetingSettings onto the meeting
+        // service (MobileRTCMeetingService+Whiteboard). The service is nil
+        // before initialize() finishes, so the setting is applied where it can
+        // be rather than assumed.
+        MobileRTCMeetingService *whiteboardService = [[MobileRTC sharedRTC] getMeetingService];
+        if (whiteboardService) {
+            [whiteboardService disableCloudWhiteboard:disableCloudWhiteboard];
+        }
         [zoomSettings setMeetingMoreHidden:meetingMoreHidden];
         
         [zoomSettings setMeetingInviteUrlHidden:meetingInviteUrlHidden];
@@ -959,7 +966,13 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     BOOL isWebinarMeeting = [ms isWebinarMeeting];
     BOOL isViewingShare = [ms isViewingShare];
     if(isViewingShare) {
-        [[GlobalData sharedInstance] setGlobalActiveShareID:[ms activeShareUserID]];
+        // 7.2.1 removed -activeShareUserID. getViewableSharingUserList returns
+        // everyone whose share can be viewed; the first entry is the closest
+        // equivalent, and an empty list means nobody is sharing.
+        NSArray<NSNumber *> *sharing = [ms getViewableSharingUserList];
+        if (sharing.count > 0) {
+            [[GlobalData sharedInstance] setGlobalActiveShareID:sharing.firstObject.unsignedIntegerValue];
+        }
     } else {
         [[GlobalData sharedInstance] setUserID:[ms activeUserID]];
     }

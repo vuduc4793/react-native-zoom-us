@@ -8,6 +8,7 @@ reachable from JavaScript with autocomplete instead of stringly-typed guesses.
 Run from the repository root:  python3 scripts/generate-commands.py
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -15,8 +16,8 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_JSON = ROOT / "src/commands/android-api.json"
-OUT_TS = ROOT / "src/commands/generated.ts"
+OUT_JSON = Path(os.environ.get("ZOOM_API_JSON", ROOT / "src/commands/android-api.json"))
+OUT_TS = Path(os.environ.get("ZOOM_API_TS", ROOT / "src/commands/generated.ts"))
 
 # Methods taking a listener cannot cross the bridge: there is no object on the
 # JavaScript side to hand to the SDK. Events already come through the emitter.
@@ -36,6 +37,14 @@ PRIMITIVES = {
 
 
 def find_classes_jar():
+    # An explicit path wins: an upgrade has to be diffable before the new AAR is
+    # published anywhere Gradle can resolve it.
+    if len(sys.argv) > 1:
+        aar = Path(sys.argv[1])
+        if not aar.exists():
+            sys.exit(f"no such AAR: {aar}")
+        return aar
+
     gradle = Path.home() / ".gradle/caches/modules-2/files-2.1"
     version = re.search(r"ZOOM_SDK_VERSION\s*=\s*'([^']+)'",
                         (ROOT / "android-impl/build.gradle").read_text())
@@ -189,8 +198,8 @@ def main():
         routes.append(f'  {cls}: "{".".join(api[cls]["path"])}",')
     routes += ["};", ""]
     (ROOT / "src/commands/routes.ts").write_text("\n".join(routes))
-    print(f"{OUT_JSON.relative_to(ROOT)}: {len(api)} controllers, {total} methods")
-    print(f"{OUT_TS.relative_to(ROOT)}: written ({skipped} listener methods skipped)")
+    print(f"{OUT_JSON}: {len(api)} controllers, {total} methods")
+    print(f"{OUT_TS}: written ({skipped} listener methods skipped)")
 
 
 if __name__ == "__main__":
