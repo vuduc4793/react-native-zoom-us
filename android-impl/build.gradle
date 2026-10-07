@@ -14,8 +14,12 @@ apply plugin: 'com.android.library'
 // See docs/DYNAMIC-FEATURE.md.
 
 // Zoom Meeting SDK for Android
-//   SDK version : 7.2.1.43944
+//   SDK version : 7.2.1.43944  (version.txt in Zoom's download: v7.2.1.43944)
 //   Artifact    : https://jitpack.io/#vuduc4793/jitpack-zoom-us
+//
+// The JitPack artifact is Zoom's own mobilertc.aar unaltered -- checked rather
+// than assumed: it is byte-identical to the one inside Zoom's zip,
+//   sha256 2495ad24a4dd29a8702aaeb224fa268058233674ad8c590d6ccfac7c075f08b9
 //
 // NOTE: the JitPack artifact is published from a bare .aar via
 // `mvn install:install-file -DgeneratePom=true`, so its POM carries no
@@ -34,8 +38,9 @@ android {
     buildToolsVersion '36.0.0'
 
     defaultConfig {
-        // Zoom Meeting SDK 7.1.x declares minSdkVersion 28 in mobilertc.aar.
-        // Anything lower fails manifest merging in the consuming app.
+        // mobilertc.aar's own AndroidManifest.xml declares minSdkVersion 28 --
+        // read from 7.2.1.43944, not carried over from an older line. Anything
+        // lower fails manifest merging in the consuming app.
         minSdkVersion 28
         targetSdkVersion 36
         versionCode 1
