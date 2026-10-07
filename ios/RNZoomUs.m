@@ -1,6 +1,7 @@
 #import <ReplayKit/ReplayKit.h>
 #import "RNZoomUs.h"
 #import "RNZoomUsEvents.h"
+#import "RNZoomUsCommands.h"
 #import <React/RCTViewManager.h>
 #import "ProviderDelegate.h"
 #import "GlobalData.h"
@@ -88,6 +89,44 @@
 # pragma mark - UI Native Component
 
 RCT_EXPORT_MODULE()
+
+// The generic SDK bridge: any Zoom method, by route and selector, with no
+// wrapper per call. This is what makes the surface tunable from JavaScript --
+// a screen that needs one more SDK call ships as an OTA update instead of a
+// native rebuild and a pod republish. The Android side has had this since the
+// start (RNZoomUsCommands.java, one reflective invoke); src/commands/index.ts
+// already routes both platforms through it and only falls back to rejecting
+// when this method is missing.
+//
+// Runs on the main queue: almost every MobileRTC call has to, and a background
+// call is the kind of fault that shows up as a hang or a crash on a user's
+// device rather than here.
+RCT_EXPORT_METHOD(invoke: (NSString *)route
+                  method:(NSString *)method
+                    args:(NSArray *)args
+                resolver:(RCTPromiseResolveBlock)resolve
+                rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSError *error = nil;
+        id target = [RNZoomUsCommands resolve:route error:&error];
+        if (target == nil) {
+            reject(@"ERR_ZOOM_INVOKE",
+                   [NSString stringWithFormat:@"%@.%@: %@", route ?: @"", method,
+                    error.localizedDescription ?: @"could not resolve the route"],
+                   error);
+            return;
+        }
+        id result = [RNZoomUsCommands call:target selector:method args:args error:&error];
+        if (error != nil) {
+            reject(@"ERR_ZOOM_INVOKE",
+                   [NSString stringWithFormat:@"%@.%@: %@", route ?: @"", method,
+                    error.localizedDescription ?: @"call failed"],
+                   error);
+            return;
+        }
+        resolve(result);
+    });
+}
 
 RCT_EXPORT_METHOD(isInitialized: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     @try {

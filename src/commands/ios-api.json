@@ -1,0 +1,5188 @@
+{
+ "AnnotationService": {
+  "class": "MobileRTCAnnotationService",
+  "methods": {
+   "canDisableViewerAnnotation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canDisableViewerAnnotation"
+   },
+   "clear": {
+    "params": [
+     {
+      "name": "type",
+      "type": "MobileRTCAnnoClearType"
+     }
+    ],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "clear:"
+   },
+   "disableViewerAnnotation": {
+    "params": [
+     {
+      "name": "isDisable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "disableViewerAnnotation:"
+   },
+   "getAnnotationLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getAnnotationLegalNoticesExplained"
+   },
+   "getAnnotationLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getAnnotationLegalNoticesPrompt"
+   },
+   "getToolColor": {
+    "params": [],
+    "returns": "UIColor *",
+    "selector": "getToolColor"
+   },
+   "getToolType": {
+    "params": [],
+    "returns": "MobileRTCAnnoTool",
+    "selector": "getToolType"
+   },
+   "getToolWidth": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "getToolWidth"
+   },
+   "isAnnotationLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAnnotationLegalNoticeAvailable"
+   },
+   "isPresenter": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPresenter"
+   },
+   "isViewerAnnotationDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isViewerAnnotationDisabled"
+   },
+   "redo": {
+    "params": [],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "redo"
+   },
+   "setToolColor": {
+    "params": [
+     {
+      "name": "toolColor",
+      "type": "UIColor *"
+     }
+    ],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "setToolColor:"
+   },
+   "setToolType": {
+    "params": [
+     {
+      "name": "type",
+      "type": "MobileRTCAnnoTool"
+     }
+    ],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "setToolType:"
+   },
+   "setToolWidth": {
+    "params": [
+     {
+      "name": "width",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "setToolWidth:"
+   },
+   "stopAnnotation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopAnnotation"
+   },
+   "undo": {
+    "params": [],
+    "returns": "MobileRTCAnnotationError",
+    "selector": "undo"
+   }
+  },
+  "route": "getAnnotationService"
+ },
+ "AuthService": {
+  "class": "MobileRTCAuthService",
+  "methods": {
+   "enableAutoRegisterNotificationServiceForLogin": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableAutoRegisterNotificationServiceForLogin:"
+   },
+   "generateSSOLoginWebURL": {
+    "params": [
+     {
+      "name": "vanityUrl",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "NSString *",
+    "selector": "generateSSOLoginWebURL:"
+   },
+   "getAccountInfo": {
+    "params": [],
+    "returns": "MobileRTCAccountInfo*",
+    "selector": "getAccountInfo"
+   },
+   "getNotificationServiceHelper": {
+    "params": [],
+    "returns": "MobileRTCNotificationServiceHelper*",
+    "selector": "getNotificationServiceHelper"
+   },
+   "getUserType": {
+    "params": [],
+    "returns": "MobileRTCUserType",
+    "selector": "getUserType"
+   },
+   "isLoggedIn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isLoggedIn"
+   },
+   "logoutRTC": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "logoutRTC"
+   },
+   "registerNotificationService": {
+    "params": [
+     {
+      "name": "accessToken",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "registerNotificationService:"
+   },
+   "sdkAuth": {
+    "params": [],
+    "returns": "void",
+    "selector": "sdkAuth"
+   },
+   "ssoLoginWithWebUriProtocol": {
+    "params": [
+     {
+      "name": "uriProtocol",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "MobileRTCLoginFailReason",
+    "selector": "ssoLoginWithWebUriProtocol:"
+   },
+   "unregisterNotificationService": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "unregisterNotificationService"
+   }
+  },
+  "route": "getAuthService"
+ },
+ "DirectShareService": {
+  "class": "MobileRTCDirectShareService",
+  "methods": {
+   "canStartDirectShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStartDirectShare"
+   },
+   "isDirectShareInProgress": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDirectShareInProgress"
+   },
+   "startDirectShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "startDirectShare"
+   },
+   "stopDirectShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopDirectShare"
+   }
+  },
+  "route": "getDirectShareService"
+ },
+ "MeetingService": {
+  "class": "MobileRTCMeetingService",
+  "methods": {
+   "activeUserID": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "activeUserID"
+   },
+   "addInterpreter:lan1:andLan2:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "lanID1",
+      "type": "NSInteger"
+     },
+     {
+      "name": "lanID2",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "addInterpreter:lan1:andLan2:"
+   },
+   "addPolling": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "addPolling"
+   },
+   "addQuestion:anonymous:": {
+    "params": [
+     {
+      "name": "content",
+      "type": "NSString *"
+     },
+     {
+      "name": "anonymous",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "addQuestion:anonymous:"
+   },
+   "addSignInterpreter:signLanId:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "signLanID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "addSignInterpreter:signLanId:"
+   },
+   "allowAskQuestionAnonymously": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowAskQuestionAnonymously:"
+   },
+   "allowAttenddeTalk:allow:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowAttenddeTalk:allow:"
+   },
+   "allowAttendeeChat": {
+    "params": [
+     {
+      "name": "privilegeType",
+      "type": "MobileRTCChatAllowAttendeeChat"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowAttendeeChat:"
+   },
+   "allowAttendeeRaiseHand": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowAttendeeRaiseHand"
+   },
+   "allowAttendeeUpVoteQuestion": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowAttendeeUpVoteQuestion:"
+   },
+   "allowAttendeeViewAllQuestion": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowAttendeeViewAllQuestion:"
+   },
+   "allowAttendeeViewTheParticipantCount": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowAttendeeViewTheParticipantCount"
+   },
+   "allowCommentQuestion": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowCommentQuestion:"
+   },
+   "allowPanelistStartVideo": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "allowPanelistStartVideo:"
+   },
+   "allowParticipantsToRename": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "allowParticipantsToRename:"
+   },
+   "allowParticipantsToRequestCloudRecording": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowParticipantsToRequestCloudRecording:"
+   },
+   "allowParticipantsToRequestLocalRecording": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowParticipantsToRequestLocalRecording:"
+   },
+   "allowParticipantsToShareWhiteBoard": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowParticipantsToShareWhiteBoard:"
+   },
+   "allowParticipantsToStartVideo": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowParticipantsToStartVideo:"
+   },
+   "allowParticipantsToUnmuteSelf": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "allowParticipantsToUnmuteSelf:"
+   },
+   "allowWebinarEmojiReaction": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "allowWebinarEmojiReaction"
+   },
+   "answerQuestionPrivate:answerContent:": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     },
+     {
+      "name": "answerContent",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "answerQuestionPrivate:answerContent:"
+   },
+   "answerQuestionPublic:answerContent:": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     },
+     {
+      "name": "answerContent",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "answerQuestionPublic:answerContent:"
+   },
+   "appShareWithView": {
+    "params": [
+     {
+      "name": "view",
+      "type": "id"
+     }
+    ],
+    "returns": "void",
+    "selector": "appShareWithView:"
+   },
+   "askAllToUnmute": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "askAllToUnmute"
+   },
+   "askUserStartVideo": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "askUserStartVideo:"
+   },
+   "assignCCPrivilege": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "assignCCPrivilege:"
+   },
+   "assignCohost": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "assignCohost:"
+   },
+   "assignCohost:withAssetsPrivilege:": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "infoList",
+      "type": "NSArray <MobileRTCGrantCoOwnerAssetsInfo*> *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "assignCohost:withAssetsPrivilege:"
+   },
+   "attendeeInfoByID": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCMeetingWebinarAttendeeInfo*",
+    "selector": "attendeeInfoByID:"
+   },
+   "autoAllowLocalRecordingRequest": {
+    "params": [
+     {
+      "name": "allow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "autoAllowLocalRecordingRequest:"
+   },
+   "backZoomUIMeetingFromMinimizeMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "backZoomUIMeetingFromMinimizeMeeting"
+   },
+   "callRoomDevice": {
+    "params": [
+     {
+      "name": "device",
+      "type": "MobileRTCRoomDevice*"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "callRoomDevice:"
+   },
+   "canAddPolling": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canAddPolling"
+   },
+   "canAssignOthersToSendCC": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canAssignOthersToSendCC"
+   },
+   "canBeAssignedToSendCC": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canBeAssignedToSendCC:"
+   },
+   "canBeCoHost": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canBeCoHost:"
+   },
+   "canBeCoOwner": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canBeCoOwner:"
+   },
+   "canClaimhost": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canClaimhost"
+   },
+   "canDeletePolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canDeletePolling:"
+   },
+   "canDisableCaptions": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canDisableCaptions"
+   },
+   "canDoPolling": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canDoPolling"
+   },
+   "canDownloadResult": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canDownloadResult"
+   },
+   "canDuplicatePolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canDuplicatePolling:"
+   },
+   "canEditPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canEditPolling:"
+   },
+   "canEnableAlphaChannelMode": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canEnableAlphaChannelMode"
+   },
+   "canEnableLiveStreamReminder": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canEnableLiveStreamReminder"
+   },
+   "canEnableMuteOnEntry": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canEnableMuteOnEntry"
+   },
+   "canEnableParticipantRequestCloudRecording": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canEnableParticipantRequestCloudRecording"
+   },
+   "canGetRightAnswerItemList": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canGetRightAnswerItemList:"
+   },
+   "canHideParticipantProfilePictures": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "canHideParticipantProfilePictures"
+   },
+   "canJoinBackstage": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canJoinBackstage"
+   },
+   "canLeaveBackstage": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canLeaveBackstage"
+   },
+   "canMoveUserToBackstage": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canMoveUserToBackstage:"
+   },
+   "canMoveUserToMainSession": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canMoveUserToMainSession:"
+   },
+   "canPinVideo": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCPinResult",
+    "selector": "canPinVideo:"
+   },
+   "canRequestTurnOnAllAICompanion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canRequestTurnOnAllAICompanion"
+   },
+   "canRequestTurnoffAllAICompanion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canRequestTurnoffAllAICompanion"
+   },
+   "canRestartPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canRestartPolling:"
+   },
+   "canSetDocsOption": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canSetDocsOption"
+   },
+   "canSetMeetingTopic": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canSetMeetingTopic"
+   },
+   "canSharePollingResult": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canSharePollingResult:"
+   },
+   "canShowAnswerResultList": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canShowAnswerResultList:"
+   },
+   "canStartLiveTranscription": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStartLiveTranscription"
+   },
+   "canStartPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canStartPolling:"
+   },
+   "canStartRawLiveStream": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "canStartRawLiveStream"
+   },
+   "canStartShare": {
+    "params": [],
+    "returns": "MobileRTCCannotShareReasonType",
+    "selector": "canStartShare"
+   },
+   "canStartShareDoc": {
+    "params": [],
+    "returns": "MobileRTCCannotShareReasonType",
+    "selector": "canStartShareDoc"
+   },
+   "canStartShareNewWhiteboard": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStartShareNewWhiteboard"
+   },
+   "canStartShareWhiteboard": {
+    "params": [],
+    "returns": "MobileRTCCannotShareReasonType",
+    "selector": "canStartShareWhiteboard"
+   },
+   "canStartSignInterpretation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStartSignInterpretation"
+   },
+   "canStartWebinar": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStartWebinar"
+   },
+   "canStopWhiteboardShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canStopWhiteboardShare"
+   },
+   "canSubmitPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canSubmitPolling:"
+   },
+   "canSuspendParticipantsActivities": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canSuspendParticipantsActivities"
+   },
+   "canTurnOffAllAICompanions": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canTurnOffAllAICompanions"
+   },
+   "canTurnOnAllAICompanion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canTurnOnAllAICompanion"
+   },
+   "canUnMuteMainSessionAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canUnMuteMainSessionAudio"
+   },
+   "canUnmuteMyAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canUnmuteMyAudio"
+   },
+   "canUnmuteMyVideo": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canUnmuteMyVideo"
+   },
+   "canViewPollingResultFromBrowser": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "canViewPollingResultFromBrowser:"
+   },
+   "cancelCallRoomDevice": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "cancelCallRoomDevice"
+   },
+   "cancelDialOut": {
+    "params": [
+     {
+      "name": "isCallMe",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "cancelDialOut:"
+   },
+   "cancelEmojiFeedback": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "cancelEmojiFeedback"
+   },
+   "changeAttendeeChatPriviledge": {
+    "params": [
+     {
+      "name": "privilege",
+      "type": "MobileRTCMeetingChatPriviledgeType"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "changeAttendeeChatPriviledge:"
+   },
+   "changeName:withUserID:": {
+    "params": [
+     {
+      "name": "inputName",
+      "type": "NSString*"
+     },
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "changeName:withUserID:"
+   },
+   "changePanelistChatPrivilege": {
+    "params": [
+     {
+      "name": "privilege",
+      "type": "MobileRTCPanelistChatPrivilegeType"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "changePanelistChatPrivilege:"
+   },
+   "claimHostWithHostKey": {
+    "params": [
+     {
+      "name": "hostKey",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "claimHostWithHostKey:"
+   },
+   "commentQuestion:commentContent:": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     },
+     {
+      "name": "commentContent",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "commentQuestion:commentContent:"
+   },
+   "configDSCPWithAudioValue:VideoValue:": {
+    "params": [
+     {
+      "name": "audioValue",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "videoValue",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "configDSCPWithAudioValue:VideoValue:"
+   },
+   "connectMyAudio": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "connectMyAudio:"
+   },
+   "customizeMeetingTitle": {
+    "params": [
+     {
+      "name": "title",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "customizeMeetingTitle:"
+   },
+   "dePromptPanelist2Attendee": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "dePromptPanelist2Attendee:"
+   },
+   "deleteAnswer": {
+    "params": [
+     {
+      "name": "answerID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "deleteAnswer:"
+   },
+   "deleteChatMessage": {
+    "params": [
+     {
+      "name": "msgId",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "deleteChatMessage:"
+   },
+   "deletePolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "deletePolling:"
+   },
+   "deleteQuestion": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "deleteQuestion:"
+   },
+   "dialInCall": {
+    "params": [
+     {
+      "name": "countryNumber",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "dialInCall:"
+   },
+   "dialOut:isCallMe:withName:": {
+    "params": [
+     {
+      "name": "phone",
+      "type": "NSString*"
+     },
+     {
+      "name": "me",
+      "type": "BOOL"
+     },
+     {
+      "name": "username",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "dialOut:isCallMe:withName:"
+   },
+   "disableCloudWhiteboard": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableCloudWhiteboard:"
+   },
+   "disableVideoAutoFraming": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "disableVideoAutoFraming"
+   },
+   "disallowAttendeeRaiseHand": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "disallowAttendeeRaiseHand"
+   },
+   "disallowAttendeeViewTheParticipantCount": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "disallowAttendeeViewTheParticipantCount"
+   },
+   "disallowWebinarEmojiReaction": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "disallowWebinarEmojiReaction"
+   },
+   "dismissDocOrDashboardView": {
+    "params": [],
+    "returns": "void",
+    "selector": "dismissDocOrDashboardView"
+   },
+   "dismissQuestion": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "dismissQuestion:"
+   },
+   "dismissWhiteboardOrDashboard": {
+    "params": [],
+    "returns": "void",
+    "selector": "dismissWhiteboardOrDashboard"
+   },
+   "downLoadResult": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "downLoadResult"
+   },
+   "duplicatePolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "duplicatePolling:"
+   },
+   "editPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "editPolling:"
+   },
+   "enable3DAvatarEffectForAllMeeting": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enable3DAvatarEffectForAllMeeting:"
+   },
+   "enableAlphaChannelMode": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableAlphaChannelMode:"
+   },
+   "enableAskQuestion": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableAskQuestion:"
+   },
+   "enableCaptions": {
+    "params": [
+     {
+      "name": "bEnable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableCaptions:"
+   },
+   "enableGetRightAnswerList": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableGetRightAnswerList:"
+   },
+   "enableGreenVB": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "enableGreenVB:"
+   },
+   "enableLiveStreamReminder": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableLiveStreamReminder:"
+   },
+   "enableMeetingManualCaption": {
+    "params": [
+     {
+      "name": "bEnable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "enableMeetingManualCaption:"
+   },
+   "enableMeetingQAFeature": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableMeetingQAFeature:"
+   },
+   "enableMuteOnEntry:allowUnmuteBySelf:": {
+    "params": [
+     {
+      "name": "bEnable",
+      "type": "BOOL"
+     },
+     {
+      "name": "allowUnmuteBySelf",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableMuteOnEntry:allowUnmuteBySelf:"
+   },
+   "enableOptimizeForSharedVideo": {
+    "params": [
+     {
+      "name": "enableVideo",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "enableOptimizeForSharedVideo:"
+   },
+   "enableParticipantsCreateWithoutHost": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableParticipantsCreateWithoutHost:"
+   },
+   "enablePlayMeetingAudio": {
+    "params": [
+     {
+      "name": "enabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCRawDataError",
+    "selector": "enablePlayMeetingAudio:"
+   },
+   "enableReceiveSpokenlLanguageContent": {
+    "params": [
+     {
+      "name": "enabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableReceiveSpokenlLanguageContent:"
+   },
+   "enableRequestLiveTranscription": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "enableRequestLiveTranscription:"
+   },
+   "enableVideoAutoFraming:forMode:": {
+    "params": [
+     {
+      "name": "setting",
+      "type": "MobileRTCAutoFramingParameter *"
+     },
+     {
+      "name": "mode",
+      "type": "MobileRTCAutoFramingMode"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableVideoAutoFraming:forMode:"
+   },
+   "enableVirtualNameTag": {
+    "params": [
+     {
+      "name": "bEnabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableVirtualNameTag:"
+   },
+   "endLiving": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "endLiving:"
+   },
+   "get3DAvatarImageList": {
+    "params": [],
+    "returns": "NSArray <MobileRTC3DAvatarImageInfo* >*",
+    "selector": "get3DAvatarImageList"
+   },
+   "getALLQuestionCount": {
+    "params": [],
+    "returns": "int",
+    "selector": "getALLQuestionCount"
+   },
+   "getActivePollingID": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getActivePollingID"
+   },
+   "getAdminHelper": {
+    "params": [],
+    "returns": "MobileRTCBOAdmin *",
+    "selector": "getAdminHelper"
+   },
+   "getAllChatMessageID": {
+    "params": [],
+    "returns": "NSArray <NSString *> *",
+    "selector": "getAllChatMessageID"
+   },
+   "getAllLanguageList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCInterpretationLanguage *> *",
+    "selector": "getAllLanguageList"
+   },
+   "getAllQuestionList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCQAItem *> *",
+    "selector": "getAllQuestionList"
+   },
+   "getAllSupportedSignLanguageInfoList": {
+    "params": [],
+    "returns": "NSArray<MobileRTCSignInterpreterLanguage *> *",
+    "selector": "getAllSupportedSignLanguageInfoList"
+   },
+   "getAnswer": {
+    "params": [
+     {
+      "name": "answerID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCQAAnswerItem *",
+    "selector": "getAnswer:"
+   },
+   "getAnsweredQuestionCount": {
+    "params": [],
+    "returns": "int",
+    "selector": "getAnsweredQuestionCount"
+   },
+   "getAnsweredQuestionList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCQAItem *> *",
+    "selector": "getAnsweredQuestionList"
+   },
+   "getAssistantHelper": {
+    "params": [],
+    "returns": "MobileRTCBOAssistant *",
+    "selector": "getAssistantHelper"
+   },
+   "getAttedeeHelper": {
+    "params": [],
+    "returns": "MobileRTCBOAttendee *",
+    "selector": "getAttedeeHelper"
+   },
+   "getAttendeeChatPriviledge": {
+    "params": [],
+    "returns": "MobileRTCMeetingChatPriviledgeType",
+    "selector": "getAttendeeChatPriviledge"
+   },
+   "getAttendeeViewMode": {
+    "params": [],
+    "returns": "MobileRTCAttendeeViewMode",
+    "selector": "getAttendeeViewMode"
+   },
+   "getAuthorizedBotListByUserID": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "NSArray <NSNumber *> *",
+    "selector": "getAuthorizedBotListByUserID:"
+   },
+   "getAvailableLanguageList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCInterpretationLanguage *> *",
+    "selector": "getAvailableLanguageList"
+   },
+   "getAvailableMeetingSpokenLanguages": {
+    "params": [],
+    "returns": "NSArray<MobileRTCLiveTranscriptionLanguage*>*",
+    "selector": "getAvailableMeetingSpokenLanguages"
+   },
+   "getAvailableSignLanguageInfoList": {
+    "params": [],
+    "returns": "NSArray<MobileRTCSignInterpreterLanguage *> *",
+    "selector": "getAvailableSignLanguageInfoList"
+   },
+   "getAvailableTranslationLanguages": {
+    "params": [],
+    "returns": "NSArray<MobileRTCLiveTranscriptionLanguage*>*",
+    "selector": "getAvailableTranslationLanguages"
+   },
+   "getBGImageList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCVirtualBGImageInfo *>*",
+    "selector": "getBGImageList"
+   },
+   "getBOStatus": {
+    "params": [],
+    "returns": "MobileRTCBOStatus",
+    "selector": "getBOStatus"
+   },
+   "getBotAuthorizedUserInfoByUserID": {
+    "params": [
+     {
+      "name": "botUserId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCMeetingUserInfo*",
+    "selector": "getBotAuthorizedUserInfoByUserID:"
+   },
+   "getCallOutCallerID": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getCallOutCallerID"
+   },
+   "getCameraDeviceList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCCameraDevice *>*",
+    "selector": "getCameraDeviceList"
+   },
+   "getChatLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getChatLegalNoticesExplained"
+   },
+   "getChatLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getChatLegalNoticesPrompt"
+   },
+   "getCloudRecordingStatus": {
+    "params": [],
+    "returns": "MobileRTCRecordingStatus",
+    "selector": "getCloudRecordingStatus"
+   },
+   "getCompanionChildList": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "NSArray *",
+    "selector": "getCompanionChildList:"
+   },
+   "getCompanionParentUser": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCMeetingUserInfo *",
+    "selector": "getCompanionParentUser:"
+   },
+   "getCreatorHelper": {
+    "params": [],
+    "returns": "MobileRTCBOCreator *",
+    "selector": "getCreatorHelper"
+   },
+   "getCurrentLiveStreamItem": {
+    "params": [],
+    "returns": "MobileRTCLiveStreamItem *",
+    "selector": "getCurrentLiveStreamItem"
+   },
+   "getCurrentMeetingCallInParticipantID": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "getCurrentMeetingCallInParticipantID"
+   },
+   "getDataHelper": {
+    "params": [],
+    "returns": "MobileRTCBOData *",
+    "selector": "getDataHelper"
+   },
+   "getDialInAllCountryCodes": {
+    "params": [],
+    "returns": "NSArray <NSArray <MobileRTCCallCountryCode *> *> *",
+    "selector": "getDialInAllCountryCodes"
+   },
+   "getDialInCallCodesWithCountryId": {
+    "params": [
+     {
+      "name": "countryId",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "NSArray <MobileRTCCallCountryCode *> *",
+    "selector": "getDialInCallCodesWithCountryId:"
+   },
+   "getDialInCurrentCountryCode": {
+    "params": [],
+    "returns": "MobileRTCCallCountryCode *",
+    "selector": "getDialInCurrentCountryCode"
+   },
+   "getDismissedQuestionCount": {
+    "params": [],
+    "returns": "int",
+    "selector": "getDismissedQuestionCount"
+   },
+   "getDismissedQuestionList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCQAItem *> *",
+    "selector": "getDismissedQuestionList"
+   },
+   "getDocSharingSourceInfoList": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "NSArray<MobileRTCDocSharingSourceInfo *>*",
+    "selector": "getDocSharingSourceInfoList:"
+   },
+   "getDocsCreateOption": {
+    "params": [],
+    "returns": "MobileRTCDocsCreateOption",
+    "selector": "getDocsCreateOption"
+   },
+   "getDocsShareOption": {
+    "params": [],
+    "returns": "MobileRTCDocsShareOption",
+    "selector": "getDocsShareOption"
+   },
+   "getE2EEMeetingSecurityCode": {
+    "params": [],
+    "returns": "NSString*",
+    "selector": "getE2EEMeetingSecurityCode"
+   },
+   "getE2EEMeetingSecurityCodePassedSeconds": {
+    "params": [],
+    "returns": "unsigned int",
+    "selector": "getE2EEMeetingSecurityCodePassedSeconds"
+   },
+   "getEncryptionType": {
+    "params": [],
+    "returns": "MobileRTCMeetingEncryptionType",
+    "selector": "getEncryptionType"
+   },
+   "getFocusModeShareType": {
+    "params": [],
+    "returns": "MobileRTCFocusModeShareType",
+    "selector": "getFocusModeShareType"
+   },
+   "getH323MeetingPassword": {
+    "params": [],
+    "returns": "NSString*",
+    "selector": "getH323MeetingPassword"
+   },
+   "getIPAddressList": {
+    "params": [],
+    "returns": "NSArray <NSString *> *",
+    "selector": "getIPAddressList"
+   },
+   "getInMeetingDataCenterInfo": {
+    "params": [],
+    "returns": "NSString*",
+    "selector": "getInMeetingDataCenterInfo"
+   },
+   "getInMeetingUserList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *> *",
+    "selector": "getInMeetingUserList"
+   },
+   "getInterpretationLanguageByID": {
+    "params": [
+     {
+      "name": "lanID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "MobileRTCInterpretationLanguage *",
+    "selector": "getInterpretationLanguageByID:"
+   },
+   "getInterpreterActiveLan": {
+    "params": [],
+    "returns": "NSInteger",
+    "selector": "getInterpreterActiveLan"
+   },
+   "getInterpreterAvailableLanguages": {
+    "params": [],
+    "returns": "NSArray <MobileRTCInterpretationLanguage *> *",
+    "selector": "getInterpreterAvailableLanguages"
+   },
+   "getInterpreterLans": {
+    "params": [],
+    "returns": "NSArray <MobileRTCInterpretationLanguage *> *",
+    "selector": "getInterpreterLans"
+   },
+   "getInterpreterList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCMeetingInterpreter *> *",
+    "selector": "getInterpreterList"
+   },
+   "getInterpreterListenLan": {
+    "params": [],
+    "returns": "NSInteger",
+    "selector": "getInterpreterListenLan"
+   },
+   "getJoinedLanguageID": {
+    "params": [],
+    "returns": "NSInteger",
+    "selector": "getJoinedLanguageID"
+   },
+   "getJoiningBOName": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getJoiningBOName"
+   },
+   "getLiveStreamURL": {
+    "params": [],
+    "returns": "NSDictionary*",
+    "selector": "getLiveStreamURL"
+   },
+   "getLiveTranscriptLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getLiveTranscriptLegalNoticesExplained"
+   },
+   "getLiveTranscriptLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getLiveTranscriptLegalNoticesPrompt"
+   },
+   "getLiveTranscriptionStatus": {
+    "params": [],
+    "returns": "MobileRTCLiveTranscriptionStatus",
+    "selector": "getLiveTranscriptionStatus"
+   },
+   "getLocalVideoOrderList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *>*",
+    "selector": "getLocalVideoOrderList"
+   },
+   "getMaxTransferFileSize": {
+    "params": [],
+    "returns": "unsigned long long",
+    "selector": "getMaxTransferFileSize"
+   },
+   "getMeetingAudioStatisticInfo": {
+    "params": [],
+    "returns": "MobileRTCAudioStatisticInfo *",
+    "selector": "getMeetingAudioStatisticInfo"
+   },
+   "getMeetingPassword": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getMeetingPassword"
+   },
+   "getMeetingShareStatisticInfo": {
+    "params": [],
+    "returns": "MobileRTCASVStatisticInfo *",
+    "selector": "getMeetingShareStatisticInfo"
+   },
+   "getMeetingSpokenLanguage": {
+    "params": [],
+    "returns": "MobileRTCLiveTranscriptionLanguage *",
+    "selector": "getMeetingSpokenLanguage"
+   },
+   "getMeetingState": {
+    "params": [],
+    "returns": "MobileRTCMeetingState",
+    "selector": "getMeetingState"
+   },
+   "getMeetingType": {
+    "params": [],
+    "returns": "MobileRTCMeetingType",
+    "selector": "getMeetingType"
+   },
+   "getMeetingVideoStatisticInfo": {
+    "params": [],
+    "returns": "MobileRTCASVStatisticInfo *",
+    "selector": "getMeetingVideoStatisticInfo"
+   },
+   "getMyQuestionCount": {
+    "params": [],
+    "returns": "int",
+    "selector": "getMyQuestionCount"
+   },
+   "getMyQuestionList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCQAItem *> *",
+    "selector": "getMyQuestionList"
+   },
+   "getOpenQuestionCount": {
+    "params": [],
+    "returns": "int",
+    "selector": "getOpenQuestionCount"
+   },
+   "getOpenQuestionList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCQAItem *> *",
+    "selector": "getOpenQuestionList"
+   },
+   "getPSUserID": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "getPSUserID"
+   },
+   "getPanelistChatPrivilege": {
+    "params": [],
+    "returns": "MobileRTCPanelistChatPrivilegeType",
+    "selector": "getPanelistChatPrivilege"
+   },
+   "getParticipantCount": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "getParticipantCount"
+   },
+   "getParticipantID": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "getParticipantID"
+   },
+   "getPollAnonymousLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getPollAnonymousLegalNoticesExplained"
+   },
+   "getPollLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getPollLegalNoticesExplained"
+   },
+   "getPollLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getPollLegalNoticesPrompt"
+   },
+   "getPollingAnswerResultItemList": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "NSArray <MobileRTCPollingAnswerResultItem *> *",
+    "selector": "getPollingAnswerResultItemList:"
+   },
+   "getPollingItemByID": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCPollingItem *",
+    "selector": "getPollingItemByID:"
+   },
+   "getPollingItemList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCPollingItem *> *",
+    "selector": "getPollingItemList"
+   },
+   "getPollingQuestionImagePath:questionID:": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     },
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "NSString *",
+    "selector": "getPollingQuestionImagePath:questionID:"
+   },
+   "getPollingQuestionItemList": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "NSArray <MobileRTCPollingQuestionItem *> *",
+    "selector": "getPollingQuestionItemList:"
+   },
+   "getPollingRightAnswerItemList": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "NSArray <MobileRTCPollingAnswerItem *> *",
+    "selector": "getPollingRightAnswerItemList:"
+   },
+   "getQALegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getQALegalNoticesExplained"
+   },
+   "getQALegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getQALegalNoticesPrompt"
+   },
+   "getQueryHelper": {
+    "params": [],
+    "returns": "MobileRTCAICompanionQueryHelper *",
+    "selector": "getQueryHelper"
+   },
+   "getQuestion": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCQAItem *",
+    "selector": "getQuestion:"
+   },
+   "getQuestionCharactersMaxLen:questionID:": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString*"
+     },
+     {
+      "name": "questionID",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "NSInteger",
+    "selector": "getQuestionCharactersMaxLen:questionID:"
+   },
+   "getQuestionCharactersMinLen:questionID:": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString*"
+     },
+     {
+      "name": "questionID",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "NSInteger",
+    "selector": "getQuestionCharactersMinLen:questionID:"
+   },
+   "getRawLiveStreamPrivilegeUserList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *> *",
+    "selector": "getRawLiveStreamPrivilegeUserList"
+   },
+   "getRawLiveStreamingInfoList": {
+    "params": [],
+    "returns": "NSArray<MobileRTCRawLiveStreamInfo *> *",
+    "selector": "getRawLiveStreamingInfoList"
+   },
+   "getRoomDeviceList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCRoomDevice *> *",
+    "selector": "getRoomDeviceList"
+   },
+   "getSelectedCamera": {
+    "params": [],
+    "returns": "MobileRTCCameraDevice *",
+    "selector": "getSelectedCamera"
+   },
+   "getShareMeetingChatStartedLegalNoticeContent": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getShareMeetingChatStartedLegalNoticeContent"
+   },
+   "getShareMeetingChatStoppedLegalNoticeContent": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getShareMeetingChatStoppedLegalNoticeContent"
+   },
+   "getShareSettingType": {
+    "params": [],
+    "returns": "MobileRTCShareSettingType",
+    "selector": "getShareSettingType"
+   },
+   "getSharingSourceInfoList": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "NSArray <MobileRTCSSharingSourceInfo*> *",
+    "selector": "getSharingSourceInfoList:"
+   },
+   "getSignInterpretationLanguageInfoByID": {
+    "params": [
+     {
+      "name": "signLanguageID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSignInterpreterLanguage *",
+    "selector": "getSignInterpretationLanguageInfoByID:"
+   },
+   "getSignInterpretationStatus": {
+    "params": [],
+    "returns": "MobileRTCSignInterpretationStatus",
+    "selector": "getSignInterpretationStatus"
+   },
+   "getSignInterpreterAssignedLanID": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getSignInterpreterAssignedLanID"
+   },
+   "getSignInterpreterList": {
+    "params": [],
+    "returns": "NSArray<MobileRTCSignInterpreter *> *",
+    "selector": "getSignInterpreterList"
+   },
+   "getSmartSummaryHelper": {
+    "params": [],
+    "returns": "MobileRTCAICompanionSmartSummaryHelper *",
+    "selector": "getSmartSummaryHelper"
+   },
+   "getSpotLightedVideoUserList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *>*",
+    "selector": "getSpotLightedVideoUserList"
+   },
+   "getSupportCountryInfo": {
+    "params": [],
+    "returns": "NSArray <MobileRTCCallCountryCode*>*",
+    "selector": "getSupportCountryInfo"
+   },
+   "getSupportLiveStreamItems": {
+    "params": [],
+    "returns": "NSArray <MobileRTCLiveStreamItem*>*",
+    "selector": "getSupportLiveStreamItems"
+   },
+   "getSupportedMeetingAudioType": {
+    "params": [],
+    "returns": "NSInteger",
+    "selector": "getSupportedMeetingAudioType"
+   },
+   "getTransferFileTypeAllowList": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getTransferFileTypeAllowList"
+   },
+   "getTranslationLanguage": {
+    "params": [],
+    "returns": "MobileRTCLiveTranscriptionLanguage *",
+    "selector": "getTranslationLanguage"
+   },
+   "getUnencryptedExceptionCount": {
+    "params": [],
+    "returns": "unsigned int",
+    "selector": "getUnencryptedExceptionCount"
+   },
+   "getUnencryptedExceptionInfo": {
+    "params": [],
+    "returns": "NSString*",
+    "selector": "getUnencryptedExceptionInfo"
+   },
+   "getUserVideoSize": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "CGSize",
+    "selector": "getUserVideoSize:"
+   },
+   "getVideoAutoFramingMode": {
+    "params": [],
+    "returns": "MobileRTCAutoFramingMode",
+    "selector": "getVideoAutoFramingMode"
+   },
+   "getVideoAutoFramingSetting": {
+    "params": [
+     {
+      "name": "mode",
+      "type": "MobileRTCAutoFramingMode"
+     }
+    ],
+    "returns": "MobileRTCAutoFramingParameter *",
+    "selector": "getVideoAutoFramingSetting:"
+   },
+   "getVideoOrderList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *>*",
+    "selector": "getVideoOrderList"
+   },
+   "getViewableDocSharingUserList": {
+    "params": [],
+    "returns": "NSArray<NSNumber *>*",
+    "selector": "getViewableDocSharingUserList"
+   },
+   "getViewableSharingUserList": {
+    "params": [],
+    "returns": "NSArray<NSNumber *>*",
+    "selector": "getViewableSharingUserList"
+   },
+   "getWebinarAttendeeChatPrivilege": {
+    "params": [],
+    "returns": "MobileRTCChatAllowAttendeeChat",
+    "selector": "getWebinarAttendeeChatPrivilege"
+   },
+   "getWebinarAttendeeList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *> *",
+    "selector": "getWebinarAttendeeList"
+   },
+   "getWebinarRegistrationLegalNoticesExplained": {
+    "params": [],
+    "returns": "MobileRTCWebinarRegistLegalNoticeContent *",
+    "selector": "getWebinarRegistrationLegalNoticesExplained"
+   },
+   "getWebinarRegistrationLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getWebinarRegistrationLegalNoticesPrompt"
+   },
+   "getWhiteboardCreateOption": {
+    "params": [],
+    "returns": "MobileRTCWhiteboardCreateOption",
+    "selector": "getWhiteboardCreateOption"
+   },
+   "getWhiteboardLegalNoticesExplained": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getWhiteboardLegalNoticesExplained"
+   },
+   "getWhiteboardLegalNoticesPrompt": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "getWhiteboardLegalNoticesPrompt"
+   },
+   "getWhiteboardShareOption": {
+    "params": [],
+    "returns": "MobileRTCWhiteboardShareOption",
+    "selector": "getWhiteboardShareOption"
+   },
+   "handZoomWebUrl": {
+    "params": [
+     {
+      "name": "meetingUrl",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "handZoomWebUrl:"
+   },
+   "hasPromptAndDePromptPrivilege": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hasPromptAndDePromptPrivilege"
+   },
+   "hasRawLiveStreamPrivilege": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "hasRawLiveStreamPrivilege:"
+   },
+   "hideAANPanel": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "hideAANPanel"
+   },
+   "hideAboutButtonOnCloudWhiteboard": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideAboutButtonOnCloudWhiteboard:"
+   },
+   "hideCloudWhiteboardHelperCenterButton": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideCloudWhiteboardHelperCenterButton:"
+   },
+   "hideCloudWhiteboardOpenInBrowserButton": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideCloudWhiteboardOpenInBrowserButton:"
+   },
+   "hideDynamicNoticeForAICompanionPanel": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "hideDynamicNoticeForAICompanionPanel"
+   },
+   "hideFeedbackButtonOnCloudWhiteboard": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideFeedbackButtonOnCloudWhiteboard:"
+   },
+   "hideParticipantProfilePictures": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "hideParticipantProfilePictures:"
+   },
+   "hideShareButtonOnCloudWhiteboard": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideShareButtonOnCloudWhiteboard:"
+   },
+   "is3DAvatarEffectForAllMeetingEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "is3DAvatarEffectForAllMeetingEnabled"
+   },
+   "is3DAvatarEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "is3DAvatarEnabled"
+   },
+   "is3DAvatarSupportedByDevice": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "is3DAvatarSupportedByDevice"
+   },
+   "is3rdPartyTelephonyAudioOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "is3rdPartyTelephonyAudioOn"
+   },
+   "isAllowAskQuestionAnonymously": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowAskQuestionAnonymously"
+   },
+   "isAllowAttendeeTalk": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isAllowAttendeeTalk:"
+   },
+   "isAllowAttendeeUpVoteQuestion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowAttendeeUpVoteQuestion"
+   },
+   "isAllowAttendeeViewAllQuestion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowAttendeeViewAllQuestion"
+   },
+   "isAllowCommentQuestion": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowCommentQuestion"
+   },
+   "isAllowPanelistStartVideo": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowPanelistStartVideo"
+   },
+   "isAllowSignLanuageInterpreterToTalk": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isAllowSignLanuageInterpreterToTalk:"
+   },
+   "isAllowToAddNewVBItem": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAllowToAddNewVBItem"
+   },
+   "isAlphaChannelModeEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAlphaChannelModeEnabled"
+   },
+   "isAnnotationOff": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAnnotationOff"
+   },
+   "isAskQuestionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAskQuestionEnabled"
+   },
+   "isAttendeeRaiseHandAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAttendeeRaiseHandAllowed"
+   },
+   "isAttendeeViewTheParticipantCountAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAttendeeViewTheParticipantCountAllowed"
+   },
+   "isAutoAllowLocalRecordingRequest": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAutoAllowLocalRecordingRequest"
+   },
+   "isBOMeetingEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isBOMeetingEnabled"
+   },
+   "isBOMeetingStarted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isBOMeetingStarted"
+   },
+   "isBackCamera": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isBackCamera"
+   },
+   "isBackstageEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isBackstageEnabled"
+   },
+   "isBroadcastingVoiceToBO": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isBroadcastingVoiceToBO"
+   },
+   "isCMREnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCMREnabled"
+   },
+   "isCMRInProgress": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCMRInProgress"
+   },
+   "isCMRPaused": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCMRPaused"
+   },
+   "isCallRoomDeviceSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCallRoomDeviceSupported"
+   },
+   "isCallingRoomDevice": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCallingRoomDevice"
+   },
+   "isCaptionsEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCaptionsEnabled"
+   },
+   "isChatDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isChatDisabled"
+   },
+   "isChatMessageCanBeDeleted": {
+    "params": [
+     {
+      "name": "msgId",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isChatMessageCanBeDeleted:"
+   },
+   "isDeviceSharing": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDeviceSharing"
+   },
+   "isDeviceSupportSmartVirtualBG": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDeviceSupportSmartVirtualBG"
+   },
+   "isDialOutInProgress": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDialOutInProgress"
+   },
+   "isDialOutSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDialOutSupported"
+   },
+   "isDirectAppShareMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDirectAppShareMeeting"
+   },
+   "isEmojiReactionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isEmojiReactionEnabled"
+   },
+   "isEnableOptimizeForSharedVideo": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isEnableOptimizeForSharedVideo"
+   },
+   "isFailoverMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isFailoverMeeting"
+   },
+   "isFileTransferEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isFileTransferEnabled"
+   },
+   "isFocusModeEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isFocusModeEnabled"
+   },
+   "isFocusModeOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isFocusModeOn"
+   },
+   "isFollowHostVideoOrderOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isFollowHostVideoOrderOn"
+   },
+   "isH323User": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isH323User:"
+   },
+   "isHostUser": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isHostUser:"
+   },
+   "isInBOMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isInBOMeeting"
+   },
+   "isIncomingAudioStopped": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isIncomingAudioStopped"
+   },
+   "isIncomingVideoStoped": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isIncomingVideoStoped"
+   },
+   "isInterpretationEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isInterpretationEnabled"
+   },
+   "isInterpretationStarted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isInterpretationStarted"
+   },
+   "isInterpreter": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isInterpreter"
+   },
+   "isLiveStreamReminderEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isLiveStreamReminderEnabled"
+   },
+   "isLiveTranscriptLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isLiveTranscriptLegalNoticeAvailable"
+   },
+   "isLiveTranscriptionFeatureEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isLiveTranscriptionFeatureEnabled"
+   },
+   "isMainSessionAudioMuted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMainSessionAudioMuted"
+   },
+   "isMajorAudioTurnOff": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMajorAudioTurnOff"
+   },
+   "isMeetingChatLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingChatLegalNoticeAvailable"
+   },
+   "isMeetingCoHost": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingCoHost"
+   },
+   "isMeetingHost": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingHost"
+   },
+   "isMeetingLocked": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingLocked"
+   },
+   "isMeetingManualCaptionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingManualCaptionEnabled"
+   },
+   "isMeetingQAFeatureOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingQAFeatureOn"
+   },
+   "isMeetingSupportCC": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMeetingSupportCC"
+   },
+   "isMultiLanguageTranscriptionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMultiLanguageTranscriptionEnabled"
+   },
+   "isMuteOnEntryOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMuteOnEntryOn"
+   },
+   "isMyAudioMuted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMyAudioMuted"
+   },
+   "isMyself": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isMyself:"
+   },
+   "isOtherSharingDocs": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isOtherSharingDocs"
+   },
+   "isOtherSharingWhiteboard": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isOtherSharingWhiteboard"
+   },
+   "isPSModeStarted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPSModeStarted"
+   },
+   "isParticipantProfilePicturesHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantProfilePicturesHidden"
+   },
+   "isParticipantRequestCloudRecordingEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantRequestCloudRecordingEnabled"
+   },
+   "isParticipantRequestLocalRecordingAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantRequestLocalRecordingAllowed"
+   },
+   "isParticipantsCreateWithoutHostEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantsCreateWithoutHostEnabled"
+   },
+   "isParticipantsRenameAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantsRenameAllowed"
+   },
+   "isParticipantsShareWhiteBoardAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantsShareWhiteBoardAllowed"
+   },
+   "isParticipantsStartVideoAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantsStartVideoAllowed"
+   },
+   "isParticipantsUnmuteSelfAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isParticipantsUnmuteSelfAllowed"
+   },
+   "isPlayChimeOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPlayChimeOn"
+   },
+   "isPlayMeetingAudioEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPlayMeetingAudioEnabled"
+   },
+   "isPollingLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPollingLegalNoticeAvailable"
+   },
+   "isPrivateChatDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPrivateChatDisabled"
+   },
+   "isQAEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isQAEnabled"
+   },
+   "isQALegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isQALegalNoticeAvailable"
+   },
+   "isQuestionCaseSensitive:questionID:": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     },
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isQuestionCaseSensitive:questionID:"
+   },
+   "isRawLiveStreamSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isRawLiveStreamSupported"
+   },
+   "isRawLiveStreaming": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isRawLiveStreaming:"
+   },
+   "isReceiveSpokenLanguageContentEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isReceiveSpokenLanguageContentEnabled"
+   },
+   "isRequestToStartLiveTranscriptionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isRequestToStartLiveTranscriptionEnabled"
+   },
+   "isSameUser:compareTo:": {
+    "params": [
+     {
+      "name": "user1",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "user2",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isSameUser:compareTo:"
+   },
+   "isSelfOriginalHost": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSelfOriginalHost"
+   },
+   "isSendingMyVideo": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSendingMyVideo"
+   },
+   "isShareMeetingChatLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isShareMeetingChatLegalNoticeAvailable"
+   },
+   "isSharedAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSharedAudio"
+   },
+   "isSharingDocsOut": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSharingDocsOut"
+   },
+   "isSharingWhiteboardOut": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSharingWhiteboardOut"
+   },
+   "isShowAvatar": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isShowAvatar"
+   },
+   "isSignInterpretationEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSignInterpretationEnabled"
+   },
+   "isSignInterpreter": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSignInterpreter"
+   },
+   "isSmartRecordingEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSmartRecordingEnabled"
+   },
+   "isStartingShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isStartingShare"
+   },
+   "isStopIncomingVideoSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isStopIncomingVideoSupported"
+   },
+   "isSupportDocs": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportDocs"
+   },
+   "isSupportFollowHostVideoOrder": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportFollowHostVideoOrder"
+   },
+   "isSupportOptimizeForSharedVideo": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportOptimizeForSharedVideo"
+   },
+   "isSupportPSMode": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportPSMode"
+   },
+   "isSupportPhone": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportPhone"
+   },
+   "isSupportRequestCaptions": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportRequestCaptions"
+   },
+   "isSupportShareAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportShareAudio"
+   },
+   "isSupportTranslationWhenRequestToStartCaptions": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportTranslationWhenRequestToStartCaptions"
+   },
+   "isSupportVirtualBG": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportVirtualBG"
+   },
+   "isSupportVirtualNameTag": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportVirtualNameTag"
+   },
+   "isSupportWhiteBoard": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportWhiteBoard"
+   },
+   "isSupportedVOIP": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportedVOIP"
+   },
+   "isTextLiveTranslationEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isTextLiveTranslationEnabled"
+   },
+   "isTurnOnAllAICompanionSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isTurnOnAllAICompanionSupported"
+   },
+   "isTurnoffAllAICompanionsSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isTurnoffAllAICompanionsSupported"
+   },
+   "isUnencryptedExceptionDataValid": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isUnencryptedExceptionDataValid"
+   },
+   "isUserAudioMuted": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isUserAudioMuted:"
+   },
+   "isUserPinned": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isUserPinned:"
+   },
+   "isUserSpotlighted": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isUserSpotlighted:"
+   },
+   "isUserVideoSending": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isUserVideoSending:"
+   },
+   "isUsingGreenVB": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isUsingGreenVB"
+   },
+   "isVideoAutoFramingEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isVideoAutoFramingEnabled"
+   },
+   "isViewingShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isViewingShare"
+   },
+   "isWebinarAttendee": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarAttendee"
+   },
+   "isWebinarEmojiReactionAllowed": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarEmojiReactionAllowed"
+   },
+   "isWebinarEmojiReactionSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarEmojiReactionSupported"
+   },
+   "isWebinarMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarMeeting"
+   },
+   "isWebinarPanelist": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarPanelist"
+   },
+   "isWebinarStarted": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWebinarStarted"
+   },
+   "isWhiteboardLegalNoticeAvailable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWhiteboardLegalNoticeAvailable"
+   },
+   "joinBackstage": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "joinBackstage"
+   },
+   "joinLanguageChannel": {
+    "params": [
+     {
+      "name": "lanID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "joinLanguageChannel:"
+   },
+   "joinMeetingWithJoinParam": {
+    "params": [
+     {
+      "name": "param",
+      "type": "MobileRTCMeetingJoinParam*"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "joinMeetingWithJoinParam:"
+   },
+   "joinSignLanguageChannel": {
+    "params": [
+     {
+      "name": "signLanID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "joinSignLanguageChannel:"
+   },
+   "leaveBackstage": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "leaveBackstage"
+   },
+   "leaveMeetingWithCmd": {
+    "params": [
+     {
+      "name": "cmd",
+      "type": "LeaveMeetingCmd"
+     }
+    ],
+    "returns": "void",
+    "selector": "leaveMeetingWithCmd:"
+   },
+   "leaveSignLanguageChannel": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "leaveSignLanguageChannel"
+   },
+   "lockMeeting": {
+    "params": [
+     {
+      "name": "lock",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "lockMeeting:"
+   },
+   "lowerAllHand": {
+    "params": [
+     {
+      "name": "isWebinarAttendee",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "lowerAllHand:"
+   },
+   "lowerHand": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "lowerHand:"
+   },
+   "makeHost": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "makeHost:"
+   },
+   "makeHost:withAssetsPrivilege:": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "infoList",
+      "type": "NSArray <MobileRTCGrantCoOwnerAssetsInfo*> *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "makeHost:withAssetsPrivilege:"
+   },
+   "meetingChatByID": {
+    "params": [
+     {
+      "name": "messageID",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "MobileRTCMeetingChat*",
+    "selector": "meetingChatByID:"
+   },
+   "meetingView": {
+    "params": [],
+    "returns": "UIView *",
+    "selector": "meetingView"
+   },
+   "modifyInterpreter:lan1:andLan2:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "lanID1",
+      "type": "NSInteger"
+     },
+     {
+      "name": "lanID2",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "modifyInterpreter:lan1:andLan2:"
+   },
+   "modifySignInterpreter:signLanId:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "signLanID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "modifySignInterpreter:signLanId:"
+   },
+   "moveUsersToBackstage": {
+    "params": [
+     {
+      "name": "userIDs",
+      "type": "NSArray<NSNumber *> *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "moveUsersToBackstage:"
+   },
+   "moveUsersToMainSession": {
+    "params": [
+     {
+      "name": "userIDs",
+      "type": "NSArray<NSNumber *> *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "moveUsersToMainSession:"
+   },
+   "muteAllUserAudio": {
+    "params": [
+     {
+      "name": "allowSelfUnmute",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "muteAllUserAudio:"
+   },
+   "muteMainSessionAudio": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "muteMainSessionAudio"
+   },
+   "muteMyAudio": {
+    "params": [
+     {
+      "name": "mute",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCAudioError",
+    "selector": "muteMyAudio:"
+   },
+   "muteMyVideo": {
+    "params": [
+     {
+      "name": "mute",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "muteMyVideo:"
+   },
+   "muteUserAudio:withUID:": {
+    "params": [
+     {
+      "name": "mute",
+      "type": "BOOL"
+     },
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "muteUserAudio:withUID:"
+   },
+   "myAudioOutputDescription": {
+    "params": [],
+    "returns": "MobileRTCAudioOutput",
+    "selector": "myAudioOutputDescription"
+   },
+   "myAudioType": {
+    "params": [],
+    "returns": "MobileRTCAudioType",
+    "selector": "myAudioType"
+   },
+   "myselfUserID": {
+    "params": [],
+    "returns": "NSUInteger",
+    "selector": "myselfUserID"
+   },
+   "pinVideo:withUser:": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     },
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "pinVideo:withUser:"
+   },
+   "playChime": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "playChime:"
+   },
+   "promptAttendee2Panelist": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "promptAttendee2Panelist:"
+   },
+   "queryNetworkQuality:withDataFlow:": {
+    "params": [
+     {
+      "name": "type",
+      "type": "MobileRTCComponentType"
+     },
+     {
+      "name": "sending",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCNetworkQuality",
+    "selector": "queryNetworkQuality:withDataFlow:"
+   },
+   "raiseMyHand": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "raiseMyHand"
+   },
+   "reclaimHost": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "reclaimHost"
+   },
+   "removeBGImage": {
+    "params": [
+     {
+      "name": "bgImageInfo",
+      "type": "MobileRTCVirtualBGImageInfo *"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "removeBGImage:"
+   },
+   "removeInterpreter": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "removeInterpreter:"
+   },
+   "removeRawLiveStreamPrivilege": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "removeRawLiveStreamPrivilege:"
+   },
+   "removeSignInterpreter": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "removeSignInterpreter:"
+   },
+   "removeUser": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "removeUser:"
+   },
+   "reopenQuestion": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "reopenQuestion:"
+   },
+   "requestAvatarForUser": {
+    "params": [
+     {
+      "name": "userid",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestAvatarForUser:"
+   },
+   "requestRawLiveStreaming:broadcastName:": {
+    "params": [
+     {
+      "name": "broadcastURL",
+      "type": "NSString *"
+     },
+     {
+      "name": "broadcastName",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestRawLiveStreaming:broadcastName:"
+   },
+   "requestSignLanuageInterpreterToTalk:allowToTalk:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     },
+     {
+      "name": "allowToTalk",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestSignLanuageInterpreterToTalk:allowToTalk:"
+   },
+   "requestStartCloudRecording": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestStartCloudRecording"
+   },
+   "requestToStartCaptions": {
+    "params": [
+     {
+      "name": "enableTranslation",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestToStartCaptions:"
+   },
+   "requestToStartLiveTranscription": {
+    "params": [
+     {
+      "name": "requestAnonymous",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "requestToStartLiveTranscription:"
+   },
+   "requestTurnOnAllAICompanion": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestTurnOnAllAICompanion"
+   },
+   "requestTurnoffAllAICompanion": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestTurnoffAllAICompanion"
+   },
+   "resetMeetingAudioForCallKitHeld": {
+    "params": [],
+    "returns": "void",
+    "selector": "resetMeetingAudioForCallKitHeld"
+   },
+   "resetMeetingAudioSession": {
+    "params": [],
+    "returns": "void",
+    "selector": "resetMeetingAudioSession"
+   },
+   "restartPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "restartPolling:"
+   },
+   "resumePauseCMR": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "resumePauseCMR"
+   },
+   "revokeCoHost": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "revokeCoHost:"
+   },
+   "rotateMyVideo": {
+    "params": [
+     {
+      "name": "rotation",
+      "type": "UIDeviceOrientation"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "rotateMyVideo:"
+   },
+   "sendChatMsg": {
+    "params": [
+     {
+      "name": "msg",
+      "type": "MobileRTCMeetingChat *"
+     }
+    ],
+    "returns": "MobileRTCSendChatError",
+    "selector": "sendChatMsg:"
+   },
+   "sendEmojiFeedback": {
+    "params": [
+     {
+      "name": "type",
+      "type": "MobileRTCEmojiFeedbackType"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "sendEmojiFeedback:"
+   },
+   "sendEmojiReaction": {
+    "params": [
+     {
+      "name": "type",
+      "type": "MobileRTCEmojiReactionType"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "sendEmojiReaction:"
+   },
+   "sendPairingCode:WithMeetingNumber:": {
+    "params": [
+     {
+      "name": "code",
+      "type": "NSString*"
+     },
+     {
+      "name": "meetingNumber",
+      "type": "unsigned long long"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "sendPairingCode:WithMeetingNumber:"
+   },
+   "set3DAvatarImage": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "set3DAvatarImage:"
+   },
+   "setAnswerCheck:check:": {
+    "params": [
+     {
+      "name": "answerItem",
+      "type": "MobileRTCPollingAnswerItem *"
+     },
+     {
+      "name": "check",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setAnswerCheck:check:"
+   },
+   "setAnswerContent:answerText:": {
+    "params": [
+     {
+      "name": "answerItem",
+      "type": "MobileRTCPollingAnswerItem *"
+     },
+     {
+      "name": "answerText",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setAnswerContent:answerText:"
+   },
+   "setAttendeeViewMode": {
+    "params": [
+     {
+      "name": "mode",
+      "type": "MobileRTCAttendeeViewMode"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setAttendeeViewMode:"
+   },
+   "setCloudWhiteboardFeedbackUrl": {
+    "params": [
+     {
+      "name": "feedbackUrl",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setCloudWhiteboardFeedbackUrl:"
+   },
+   "setCustomizedInvitationDomain": {
+    "params": [
+     {
+      "name": "invitationDomain",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setCustomizedInvitationDomain:"
+   },
+   "setCustomizedPollingUrl:bCreate:": {
+    "params": [
+     {
+      "name": "pollingURL",
+      "type": "NSString *"
+     },
+     {
+      "name": "bCreate",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setCustomizedPollingUrl:bCreate:"
+   },
+   "setDocsCreateOption": {
+    "params": [
+     {
+      "name": "option",
+      "type": "MobileRTCDocsCreateOption"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setDocsCreateOption:"
+   },
+   "setDocsShareOption": {
+    "params": [
+     {
+      "name": "option",
+      "type": "MobileRTCDocsShareOption"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setDocsShareOption:"
+   },
+   "setFaceRecognitionFailStrategy": {
+    "params": [
+     {
+      "name": "strategy",
+      "type": "MobileRTCFaceRecognitionFailStrategy"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setFaceRecognitionFailStrategy:"
+   },
+   "setFocusModeShareType": {
+    "params": [
+     {
+      "name": "shareType",
+      "type": "MobileRTCFocusModeShareType"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setFocusModeShareType:"
+   },
+   "setInterpreterActiveLan": {
+    "params": [
+     {
+      "name": "activeLanID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setInterpreterActiveLan:"
+   },
+   "setInterpreterListenLan": {
+    "params": [
+     {
+      "name": "lanID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setInterpreterListenLan:"
+   },
+   "setMeetingSpokenLanguage:isForAll:": {
+    "params": [
+     {
+      "name": "languageID",
+      "type": "NSInteger"
+     },
+     {
+      "name": "isForAll",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setMeetingSpokenLanguage:isForAll:"
+   },
+   "setMeetingTopics": {
+    "params": [
+     {
+      "name": "meetingTopic",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setMeetingTopics:"
+   },
+   "setShareAudio": {
+    "params": [
+     {
+      "name": "enableAudio",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setShareAudio:"
+   },
+   "setShareSettingType": {
+    "params": [
+     {
+      "name": "shareType",
+      "type": "MobileRTCShareSettingType"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setShareSettingType:"
+   },
+   "setTranslationLanguage": {
+    "params": [
+     {
+      "name": "languageID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setTranslationLanguage:"
+   },
+   "setVideoAutoFramingMode": {
+    "params": [
+     {
+      "name": "mode",
+      "type": "MobileRTCAutoFramingMode"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setVideoAutoFramingMode:"
+   },
+   "setVideoAutoFramingRatio": {
+    "params": [
+     {
+      "name": "ratio",
+      "type": "CGFloat"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setVideoAutoFramingRatio:"
+   },
+   "setVideoQualityPreference": {
+    "params": [
+     {
+      "name": "preferenceSetting",
+      "type": "MobileRTCVideoPreferenceSetting *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setVideoQualityPreference:"
+   },
+   "setWhiteboardCreateOption": {
+    "params": [
+     {
+      "name": "option",
+      "type": "MobileRTCWhiteboardCreateOption"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setWhiteboardCreateOption:"
+   },
+   "setWhiteboardShareOption": {
+    "params": [
+     {
+      "name": "option",
+      "type": "MobileRTCWhiteboardShareOption"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setWhiteboardShareOption:"
+   },
+   "showAvatar": {
+    "params": [
+     {
+      "name": "bShow",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "showAvatar:"
+   },
+   "showDashboardView": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "showDashboardView"
+   },
+   "showDocDashboardView": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "showDocDashboardView"
+   },
+   "showMeetingControlBar": {
+    "params": [],
+    "returns": "void",
+    "selector": "showMeetingControlBar"
+   },
+   "showMinimizeMeetingFromZoomUIMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "showMinimizeMeetingFromZoomUIMeeting"
+   },
+   "spotlightVideo:withUser:": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     },
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "spotlightVideo:withUser:"
+   },
+   "startAppShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "startAppShare"
+   },
+   "startInterpretation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "startInterpretation"
+   },
+   "startLiveStreamWithStreamingURL:StreamingKey:BroadcastURL:": {
+    "params": [
+     {
+      "name": "streamingURL",
+      "type": "NSString*"
+     },
+     {
+      "name": "key",
+      "type": "NSString*"
+     },
+     {
+      "name": "broadcastURL",
+      "type": "NSString*"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "startLiveStreamWithStreamingURL:StreamingKey:BroadcastURL:"
+   },
+   "startLiveTranscription": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "startLiveTranscription"
+   },
+   "startLiving": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "startLiving:"
+   },
+   "startMeetingWithStartParam": {
+    "params": [
+     {
+      "name": "param",
+      "type": "MobileRTCMeetingStartParam*"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "startMeetingWithStartParam:"
+   },
+   "startNewWhiteboardShare": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "startNewWhiteboardShare"
+   },
+   "startPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "startPolling:"
+   },
+   "startRawArchiving": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "startRawArchiving"
+   },
+   "startRawLiveStreaming:broadcastName:": {
+    "params": [
+     {
+      "name": "broadcastURL",
+      "type": "NSString *"
+     },
+     {
+      "name": "broadcastName",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "startRawLiveStreaming:broadcastName:"
+   },
+   "startSharePollingResult": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "startSharePollingResult:"
+   },
+   "startSignInterpretation": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "startSignInterpretation"
+   },
+   "startWebinar": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "startWebinar"
+   },
+   "stopAppShare": {
+    "params": [],
+    "returns": "void",
+    "selector": "stopAppShare"
+   },
+   "stopIncomingAudio": {
+    "params": [
+     {
+      "name": "enabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopIncomingAudio:"
+   },
+   "stopIncomingVideo": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopIncomingVideo:"
+   },
+   "stopInterpretation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopInterpretation"
+   },
+   "stopLiveStream": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopLiveStream"
+   },
+   "stopLiveTranscription": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopLiveTranscription"
+   },
+   "stopPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopPolling:"
+   },
+   "stopPreview": {
+    "params": [],
+    "returns": "void",
+    "selector": "stopPreview"
+   },
+   "stopRawArchiving": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "stopRawArchiving"
+   },
+   "stopRawLiveStream": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopRawLiveStream"
+   },
+   "stopSharePollingResult": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopSharePollingResult:"
+   },
+   "stopSignInterpretation": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopSignInterpretation"
+   },
+   "stopUserVideo": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "stopUserVideo:"
+   },
+   "stopWhiteboardShare": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "stopWhiteboardShare"
+   },
+   "submitPolling": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "submitPolling:"
+   },
+   "suspendParticipantsActivites": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "suspendParticipantsActivites"
+   },
+   "suspendSharing": {
+    "params": [
+     {
+      "name": "suspend",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "suspendSharing:"
+   },
+   "switchCamera": {
+    "params": [
+     {
+      "name": "cameraId",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "switchCamera:"
+   },
+   "switchMyAudioSource": {
+    "params": [],
+    "returns": "MobileRTCAudioError",
+    "selector": "switchMyAudioSource"
+   },
+   "switchMyCamera": {
+    "params": [],
+    "returns": "MobileRTCCameraError",
+    "selector": "switchMyCamera"
+   },
+   "switchToActiveSpeaker": {
+    "params": [],
+    "returns": "void",
+    "selector": "switchToActiveSpeaker"
+   },
+   "switchToDriveScene": {
+    "params": [],
+    "returns": "void",
+    "selector": "switchToDriveScene"
+   },
+   "switchToVideoWall": {
+    "params": [],
+    "returns": "void",
+    "selector": "switchToVideoWall"
+   },
+   "transferFile:toUser:": {
+    "params": [
+     {
+      "name": "filePath",
+      "type": "NSString *"
+     },
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "transferFile:toUser:"
+   },
+   "transferFileToAll": {
+    "params": [
+     {
+      "name": "filePath",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "transferFileToAll:"
+   },
+   "turnFocusModeOn": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "turnFocusModeOn:"
+   },
+   "turnOffAllAICompanion": {
+    "params": [
+     {
+      "name": "deleteMeetingAssets",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "turnOffAllAICompanion:"
+   },
+   "turnOffMajorAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "turnOffMajorAudio"
+   },
+   "turnOnAllAICompanion": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "turnOnAllAICompanion"
+   },
+   "turnOnCMR": {
+    "params": [
+     {
+      "name": "on",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "turnOnCMR:"
+   },
+   "turnOnMajorAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "turnOnMajorAudio"
+   },
+   "unMuteMainSessionAudio": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "unMuteMainSessionAudio"
+   },
+   "unSpotlightAllVideos": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "unSpotlightAllVideos"
+   },
+   "updateVirtualNameTagRosterInfo": {
+    "params": [
+     {
+      "name": "userRoster",
+      "type": "NSArray<MobileRTCVirtualNameTag*>*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "updateVirtualNameTagRosterInfo:"
+   },
+   "useBGImage": {
+    "params": [
+     {
+      "name": "bgImage",
+      "type": "MobileRTCVirtualBGImageInfo *"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "useBGImage:"
+   },
+   "userInfoByID": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCMeetingUserInfo*",
+    "selector": "userInfoByID:"
+   },
+   "viewPollingResultFromBrowser": {
+    "params": [
+     {
+      "name": "pollingID",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "viewPollingResultFromBrowser:"
+   },
+   "voteupQuestion:voteup:": {
+    "params": [
+     {
+      "name": "questionID",
+      "type": "NSString *"
+     },
+     {
+      "name": "voteup",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "voteupQuestion:voteup:"
+   },
+   "withdrawCCPrivilege": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "withdrawCCPrivilege:"
+   },
+   "zoomCamera": {
+    "params": [
+     {
+      "name": "velocity",
+      "type": "CGFloat"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "zoomCamera:"
+   }
+  },
+  "route": "getMeetingService"
+ },
+ "MeetingSettings": {
+  "class": "MobileRTCMeetingSettings",
+  "methods": {
+   "autoConnectInternetAudio": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "autoConnectInternetAudio"
+   },
+   "callInDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "callInDisabled"
+   },
+   "callOutDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "callOutDisabled"
+   },
+   "deleteCustom3DAvatarImage": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "deleteCustom3DAvatarImage:"
+   },
+   "disableCallIn": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableCallIn:"
+   },
+   "disableCallOut": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableCallOut:"
+   },
+   "disableClearWebKitCache": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableClearWebKitCache:"
+   },
+   "disableConfidentialWatermark": {
+    "params": [
+     {
+      "name": "disable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "disableConfidentialWatermark:"
+   },
+   "disableCopyMeetingUrl": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableCopyMeetingUrl:"
+   },
+   "disableDriveMode": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableDriveMode:"
+   },
+   "disableFreeMeetingUpgradeTips": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableFreeMeetingUpgradeTips:"
+   },
+   "disableGalleryView": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableGalleryView:"
+   },
+   "disableMinimizeMeeting": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableMinimizeMeeting:"
+   },
+   "disableShowVideoPreviewWhenJoinMeeting": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableShowVideoPreviewWhenJoinMeeting:"
+   },
+   "disableVirtualBackground": {
+    "params": [
+     {
+      "name": "disabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "disableVirtualBackground:"
+   },
+   "downloadCustom3DAvatarDefaultImageModelData": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "downloadCustom3DAvatarDefaultImageModelData"
+   },
+   "downloadCustom3DAvatarImageModelData": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "downloadCustom3DAvatarImageModelData:"
+   },
+   "driveModeDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "driveModeDisabled"
+   },
+   "duplicateCustom3DAvatarImage": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "duplicateCustom3DAvatarImage:"
+   },
+   "enable5GHighBandWidth": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enable5GHighBandWidth:"
+   },
+   "enableCenterStageMode": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "enableCenterStageMode:"
+   },
+   "enableEchoCancellation": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "enableEchoCancellation:"
+   },
+   "enableGrabShareWithoutReminder": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableGrabShareWithoutReminder:"
+   },
+   "enableHideSelfView": {
+    "params": [
+     {
+      "name": "isHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableHideSelfView:"
+   },
+   "enableMicOriginalInput": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableMicOriginalInput:"
+   },
+   "enableMirrorEffect": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableMirrorEffect:"
+   },
+   "enableShareContentFlashDetection": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableShareContentFlashDetection:"
+   },
+   "enableShowMyMeetingElapseTime": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableShowMyMeetingElapseTime:"
+   },
+   "enableZoomDocs": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableZoomDocs:"
+   },
+   "faceBeautyEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "faceBeautyEnabled"
+   },
+   "finishCreateCustom3DAvatar": {
+    "params": [
+     {
+      "name": "save",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "finishCreateCustom3DAvatar:"
+   },
+   "finishEditCustom3DAvatar": {
+    "params": [
+     {
+      "name": "save",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "finishEditCustom3DAvatar:"
+   },
+   "freeMeetingUpgradeTipsDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "freeMeetingUpgradeTipsDisabled"
+   },
+   "galleryViewDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "galleryViewDisabled"
+   },
+   "getCustom3DAvatarImageList": {
+    "params": [],
+    "returns": "NSArray<MobileRTC3DAvatarImageInfo*> *",
+    "selector": "getCustom3DAvatarImageList"
+   },
+   "hideReactionsOnMeetingUI": {
+    "params": [
+     {
+      "name": "hidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideReactionsOnMeetingUI:"
+   },
+   "hideRegisterWebinarInfoWindow": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hideRegisterWebinarInfoWindow"
+   },
+   "hideRequestRecordPrivilegeDialog": {
+    "params": [
+     {
+      "name": "bHide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "hideRequestRecordPrivilegeDialog:"
+   },
+   "isCenterStageModeSupported": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCenterStageModeSupported"
+   },
+   "isCustom3DAvatarDefaultImageModelDataReady": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCustom3DAvatarDefaultImageModelDataReady"
+   },
+   "isCustom3DAvatarEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isCustom3DAvatarEnabled"
+   },
+   "isCustom3DAvatarImageModelDataReady": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isCustom3DAvatarImageModelDataReady:"
+   },
+   "isDisabledClearWebKitCache": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isDisabledClearWebKitCache"
+   },
+   "isEchoCancellationOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isEchoCancellationOn"
+   },
+   "isEnabledCenterStageMode": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isEnabledCenterStageMode"
+   },
+   "isHideConfirmStartArchiveDialog": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isHideConfirmStartArchiveDialog"
+   },
+   "isHideMeetingInputUserInfoWindow": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isHideMeetingInputUserInfoWindow"
+   },
+   "isHideNoVideoUsersEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isHideNoVideoUsersEnabled"
+   },
+   "isHideSelfViewEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isHideSelfViewEnabled"
+   },
+   "isHideWebinarNameInputWindow": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isHideWebinarNameInputWindow"
+   },
+   "isMirrorEffectEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isMirrorEffectEnabled"
+   },
+   "isShareContentFlashDetectionEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isShareContentFlashDetectionEnabled"
+   },
+   "isSupportEchoCancellation": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportEchoCancellation"
+   },
+   "micOriginalInputEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "micOriginalInputEnabled"
+   },
+   "minimizeMeetingDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "minimizeMeetingDisabled"
+   },
+   "muteAudioWhenJoinMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "muteAudioWhenJoinMeeting"
+   },
+   "muteVideoWhenJoinMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "muteVideoWhenJoinMeeting"
+   },
+   "prePopulateWebinarRegistrationInfo:username:": {
+    "params": [
+     {
+      "name": "email",
+      "type": "NSString *"
+     },
+     {
+      "name": "username",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "prePopulateWebinarRegistrationInfo:username:"
+   },
+   "reactionSkinTone": {
+    "params": [],
+    "returns": "MobileRTCEmojiReactionSkinTone",
+    "selector": "reactionSkinTone"
+   },
+   "reactionsOnMeetingUIHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "reactionsOnMeetingUIHidden"
+   },
+   "setAutoConnectInternetAudio": {
+    "params": [
+     {
+      "name": "connected",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setAutoConnectInternetAudio:"
+   },
+   "setCustom3DAvatarImage": {
+    "params": [
+     {
+      "name": "imageInfo",
+      "type": "MobileRTC3DAvatarImageInfo*"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "setCustom3DAvatarImage:"
+   },
+   "setFaceBeautyEnabled": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setFaceBeautyEnabled:"
+   },
+   "setHideConfirmStartArchiveDialog": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideConfirmStartArchiveDialog:"
+   },
+   "setHideMeetingInputUserInfoWindow": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideMeetingInputUserInfoWindow:"
+   },
+   "setHideNoVideoUsersEnabled": {
+    "params": [
+     {
+      "name": "enabled",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideNoVideoUsersEnabled:"
+   },
+   "setHideRegisterWebinarInfoWindow": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideRegisterWebinarInfoWindow:"
+   },
+   "setHideWebinarNameInputWindow": {
+    "params": [
+     {
+      "name": "hide",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideWebinarNameInputWindow:"
+   },
+   "setMuteAudioWhenJoinMeeting": {
+    "params": [
+     {
+      "name": "muted",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMuteAudioWhenJoinMeeting:"
+   },
+   "setMuteVideoWhenJoinMeeting": {
+    "params": [
+     {
+      "name": "muted",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMuteVideoWhenJoinMeeting:"
+   },
+   "setReactionSkinTone": {
+    "params": [
+     {
+      "name": "skinTone",
+      "type": "MobileRTCEmojiReactionSkinTone"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "setReactionSkinTone:"
+   },
+   "setSpeakerOffWhenInMeeting": {
+    "params": [
+     {
+      "name": "speakerOff",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setSpeakerOffWhenInMeeting:"
+   },
+   "showMyMeetingElapseTime": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "showMyMeetingElapseTime"
+   },
+   "showVideoPreviewWhenJoinMeetingDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "showVideoPreviewWhenJoinMeetingDisabled"
+   },
+   "speakerOffWhenInMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "speakerOffWhenInMeeting"
+   },
+   "videoCallPictureInPictureEnabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "videoCallPictureInPictureEnabled"
+   },
+   "virtualBackgroundDisabled": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "virtualBackgroundDisabled"
+   }
+  },
+  "route": "getMeetingSettings"
+ },
+ "MobileRTC": {
+  "class": "MobileRTC",
+  "methods": {
+   "appDidBecomeActive": {
+    "params": [],
+    "returns": "void",
+    "selector": "appDidBecomeActive"
+   },
+   "appDidEnterBackground": {
+    "params": [],
+    "returns": "void",
+    "selector": "appDidEnterBackground"
+   },
+   "appWillResignActive": {
+    "params": [],
+    "returns": "void",
+    "selector": "appWillResignActive"
+   },
+   "appWillTerminate": {
+    "params": [],
+    "returns": "void",
+    "selector": "appWillTerminate"
+   },
+   "cleanup": {
+    "params": [],
+    "returns": "void",
+    "selector": "cleanup"
+   },
+   "getAnnotationService": {
+    "params": [],
+    "returns": "MobileRTCAnnotationService *",
+    "selector": "getAnnotationService"
+   },
+   "getAuthService": {
+    "params": [],
+    "returns": "MobileRTCAuthService *",
+    "selector": "getAuthService"
+   },
+   "getCameraControlService": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "MobileRTCCameraControlService *",
+    "selector": "getCameraControlService:"
+   },
+   "getDirectShareService": {
+    "params": [],
+    "returns": "MobileRTCDirectShareService *",
+    "selector": "getDirectShareService"
+   },
+   "getMeetingService": {
+    "params": [],
+    "returns": "MobileRTCMeetingService *",
+    "selector": "getMeetingService"
+   },
+   "getMeetingSettings": {
+    "params": [],
+    "returns": "MobileRTCMeetingSettings *",
+    "selector": "getMeetingSettings"
+   },
+   "getReminderHelper": {
+    "params": [],
+    "returns": "MobileRTCReminderHelper *",
+    "selector": "getReminderHelper"
+   },
+   "getRemoteControlService": {
+    "params": [],
+    "returns": "MobileRTCRemoteControlService *",
+    "selector": "getRemoteControlService"
+   },
+   "getSMSService": {
+    "params": [],
+    "returns": "MobileRTCSMSService *",
+    "selector": "getSMSService"
+   },
+   "getShareSourceHelper": {
+    "params": [],
+    "returns": "MobileRTCShareSourceHelper *",
+    "selector": "getShareSourceHelper"
+   },
+   "getVideoSourceHelper": {
+    "params": [],
+    "returns": "MobileRTCVideoSourceHelper *",
+    "selector": "getVideoSourceHelper"
+   },
+   "getWaitingRoomService": {
+    "params": [],
+    "returns": "MobileRTCWaitingRoomService *",
+    "selector": "getWaitingRoomService"
+   },
+   "hasRawDataLicense": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hasRawDataLicense"
+   },
+   "isEnabledCustomizeMeetingUI": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isEnabledCustomizeMeetingUI"
+   },
+   "isRTCAuthorized": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isRTCAuthorized"
+   },
+   "isSupportedCustomizeMeetingUI": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportedCustomizeMeetingUI"
+   },
+   "mobileRTCPresentationScene": {
+    "params": [],
+    "returns": "UIScene *",
+    "selector": "mobileRTCPresentationScene"
+   },
+   "mobileRTCRootController": {
+    "params": [],
+    "returns": "UINavigationController *",
+    "selector": "mobileRTCRootController"
+   },
+   "mobileRTCVersion": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "mobileRTCVersion"
+   },
+   "revokeCameraControlPrivilege": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "revokeCameraControlPrivilege"
+   },
+   "setLanguage": {
+    "params": [
+     {
+      "name": "lang",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setLanguage:"
+   },
+   "setMobileRTCCustomLocalizableName": {
+    "params": [
+     {
+      "name": "localizableName",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMobileRTCCustomLocalizableName:"
+   },
+   "supportedLanguages": {
+    "params": [],
+    "returns": "NSArray <NSString *> *",
+    "selector": "supportedLanguages"
+   },
+   "switchDomain:force:": {
+    "params": [
+     {
+      "name": "newDomain",
+      "type": "NSString *"
+     },
+     {
+      "name": "force",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "switchDomain:force:"
+   }
+  },
+  "route": ""
+ },
+ "ReminderHelper": {
+  "class": "MobileRTCReminderHelper",
+  "methods": {
+   "setDisclaimerBannerUIConfig": {
+    "params": [
+     {
+      "name": "config",
+      "type": "MobileRTCDisclaimerBannerConfig *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setDisclaimerBannerUIConfig:"
+   }
+  },
+  "route": "getReminderHelper"
+ },
+ "RemoteControlService": {
+  "class": "MobileRTCRemoteControlService",
+  "methods": {
+   "grabRemoteControlView": {
+    "params": [
+     {
+      "name": "remoteShareView",
+      "type": "MobileRTCActiveShareView *"
+     }
+    ],
+    "returns": "MobileRTCRemoteControlError",
+    "selector": "grabRemoteControlView:"
+   },
+   "isHaveRemoteControlRight": {
+    "params": [
+     {
+      "name": "remoteShareView",
+      "type": "MobileRTCActiveShareView *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isHaveRemoteControlRight:"
+   },
+   "isRemoteController": {
+    "params": [
+     {
+      "name": "remoteShareView",
+      "type": "MobileRTCActiveShareView *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "isRemoteController:"
+   },
+   "remoteControlCharInput": {
+    "params": [
+     {
+      "name": "str",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCRemoteControlError",
+    "selector": "remoteControlCharInput:"
+   },
+   "remoteControlKeyInput": {
+    "params": [
+     {
+      "name": "key",
+      "type": "MobileRTCRemoteControlInputType"
+     }
+    ],
+    "returns": "MobileRTCRemoteControlError",
+    "selector": "remoteControlKeyInput:"
+   }
+  },
+  "route": "getRemoteControlService"
+ },
+ "SMSService": {
+  "class": "MobileRTCSMSService",
+  "methods": {
+   "enableZoomAuthRealNameMeetingUIShown": {
+    "params": [
+     {
+      "name": "enable",
+      "type": "bool"
+     }
+    ],
+    "returns": "void",
+    "selector": "enableZoomAuthRealNameMeetingUIShown:"
+   },
+   "getReVerifySMSVerificationCodeHandler": {
+    "params": [],
+    "returns": "MobileRTCVerifySMSHandler *",
+    "selector": "getReVerifySMSVerificationCodeHandler"
+   },
+   "getResendSMSVerificationCodeHandler": {
+    "params": [],
+    "returns": "MobileRTCRetrieveSMSHandler *",
+    "selector": "getResendSMSVerificationCodeHandler"
+   },
+   "getSupportPhoneNumberCountryList": {
+    "params": [],
+    "returns": "NSArray <MobileRTCRealNameCountryInfo *> *",
+    "selector": "getSupportPhoneNumberCountryList"
+   },
+   "setDefaultCellPhoneInfo:phoneNum:": {
+    "params": [
+     {
+      "name": "countryCode",
+      "type": "NSString *"
+     },
+     {
+      "name": "phoneNum",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "BOOL",
+    "selector": "setDefaultCellPhoneInfo:phoneNum:"
+   }
+  },
+  "route": "getSMSService"
+ },
+ "WaitingRoomService": {
+  "class": "MobileRTCWaitingRoomService",
+  "methods": {
+   "admitAllToMeeting": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "admitAllToMeeting"
+   },
+   "admitToMeeting": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "admitToMeeting:"
+   },
+   "canExpelUser": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canExpelUser"
+   },
+   "canRenameUser": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "canRenameUser"
+   },
+   "enableWaitingRoomOnEntry": {
+    "params": [
+     {
+      "name": "bEnable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCMeetError",
+    "selector": "enableWaitingRoomOnEntry:"
+   },
+   "expelUser": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "expelUser:"
+   },
+   "isAudioEnabledInWaitingRoom": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isAudioEnabledInWaitingRoom"
+   },
+   "isPresetAudioUnmuteInWaitingRoom": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPresetAudioUnmuteInWaitingRoom"
+   },
+   "isPresetVideoUnmuteInWaitingRoom": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isPresetVideoUnmuteInWaitingRoom"
+   },
+   "isSupportWaitingRoom": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isSupportWaitingRoom"
+   },
+   "isVideoEnabledInWaitingRoom": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isVideoEnabledInWaitingRoom"
+   },
+   "isWaitingRoomOnEntryFlagOn": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWaitingRoomOnEntryFlagOn"
+   },
+   "isWaitingRoomOnEntryLocked": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "isWaitingRoomOnEntryLocked"
+   },
+   "presetAudioInWaitingRoom": {
+    "params": [
+     {
+      "name": "muteAudio",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "presetAudioInWaitingRoom:"
+   },
+   "presetVideoInWaitingRoom": {
+    "params": [
+     {
+      "name": "muteVideo",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "presetVideoInWaitingRoom:"
+   },
+   "putInWaitingRoom": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "putInWaitingRoom:"
+   },
+   "renameUser:newUserName:": {
+    "params": [
+     {
+      "name": "userID",
+      "type": "NSInteger"
+     },
+     {
+      "name": "userName",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "MobileRTCSDKError",
+    "selector": "renameUser:newUserName:"
+   },
+   "requestCustomWaitingRoomData": {
+    "params": [],
+    "returns": "MobileRTCSDKError",
+    "selector": "requestCustomWaitingRoomData"
+   },
+   "waitingRoomList": {
+    "params": [],
+    "returns": "NSArray <NSNumber *> *",
+    "selector": "waitingRoomList"
+   },
+   "waitingRoomUserInfoByID": {
+    "params": [
+     {
+      "name": "userId",
+      "type": "NSUInteger"
+     }
+    ],
+    "returns": "MobileRTCMeetingUserInfo*",
+    "selector": "waitingRoomUserInfoByID:"
+   }
+  },
+  "route": "getWaitingRoomService"
+ }
+}
