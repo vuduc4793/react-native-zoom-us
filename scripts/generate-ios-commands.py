@@ -75,6 +75,24 @@ def ts_for(objc):
 
 
 METHOD = re.compile(r"^\s*([-+])\s*\(([^)]*)\)\s*([^;{]+);", re.M)
+PROPERTY = re.compile(r"^\s*@property\s*(?:\(([^)]*)\))?\s*(.+?)\s*(\w+)\s*;", re.M)
+
+
+def parse_properties(body):
+    """@property becomes its accessors: reading one is a zero-argument call and
+    writing one is setX:, which is how they cross the bridge."""
+    out = []
+    for m in PROPERTY.finditer(body):
+        attrs = [a.strip() for a in (m.group(1) or "").split(",")]
+        objc_type, name = m.group(2), m.group(3)
+        getter = next((a.split("=", 1)[1].strip() for a in attrs if a.startswith("getter")), name)
+        out.append(("-", objc_type, getter, []))
+        if "readonly" in attrs:
+            continue
+        setter = next((a.split("=", 1)[1].strip() for a in attrs if a.startswith("setter")),
+                      "set" + name[0].upper() + name[1:] + ":")
+        out.append(("-", "void", setter, [(objc_type, name)]))
+    return out
 
 
 def parse_methods(body):
@@ -112,6 +130,7 @@ def main():
         for m in re.finditer(r"@interface\s+(\w+)\s*(?:\(([^)]*)\))?[^\n]*\n(.*?)\n@end", src, re.S):
             cls, body = m.group(1), m.group(3)
             classes.setdefault(cls, []).extend(parse_methods(body))
+            classes[cls].extend(parse_properties(body))
 
     if "MobileRTC" not in classes:
         sys.exit("MobileRTC not found in the headers; did the layout change?")

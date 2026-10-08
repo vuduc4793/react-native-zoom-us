@@ -17,6 +17,11 @@
     "returns": "MobileRTCAnnotationError",
     "selector": "clear:"
    },
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCAnnotationServiceDelegate>",
+    "selector": "delegate"
+   },
    "disableViewerAnnotation": {
     "params": [
      {
@@ -118,6 +123,11 @@
  "AuthService": {
   "class": "MobileRTCAuthService",
   "methods": {
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCAuthDelegate>",
+    "selector": "delegate"
+   },
    "enableAutoRegisterNotificationServiceForLogin": {
     "params": [
      {
@@ -158,10 +168,20 @@
     "returns": "BOOL",
     "selector": "isLoggedIn"
    },
+   "jwtToken": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "jwtToken"
+   },
    "logoutRTC": {
     "params": [],
     "returns": "BOOL",
     "selector": "logoutRTC"
+   },
+   "publicAppKey": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "publicAppKey"
    },
    "registerNotificationService": {
     "params": [
@@ -177,6 +197,26 @@
     "params": [],
     "returns": "void",
     "selector": "sdkAuth"
+   },
+   "setJwtToken": {
+    "params": [
+     {
+      "name": "jwtToken",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setJwtToken:"
+   },
+   "setPublicAppKey": {
+    "params": [
+     {
+      "name": "publicAppKey",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setPublicAppKey:"
    },
    "ssoLoginWithWebUriProtocol": {
     "params": [
@@ -203,6 +243,11 @@
     "params": [],
     "returns": "BOOL",
     "selector": "canStartDirectShare"
+   },
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCDirectShareServiceDelegate>",
+    "selector": "delegate"
    },
    "isDirectShareInProgress": {
     "params": [],
@@ -984,6 +1029,11 @@
     "returns": "void",
     "selector": "customizeMeetingTitle:"
    },
+   "customizedUImeetingDelegate": {
+    "params": [],
+    "returns": "id<MobileRTCCustomizedUIMeetingDelegate>",
+    "selector": "customizedUImeetingDelegate"
+   },
    "dePromptPanelist2Attendee": {
     "params": [
      {
@@ -993,6 +1043,11 @@
     ],
     "returns": "BOOL",
     "selector": "dePromptPanelist2Attendee:"
+   },
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCMeetingServiceDelegate>",
+    "selector": "delegate"
    },
    "deleteAnswer": {
     "params": [
@@ -3174,6 +3229,11 @@
     "returns": "BOOL",
     "selector": "playChime:"
    },
+   "previewView": {
+    "params": [],
+    "returns": "UIView *",
+    "selector": "previewView"
+   },
    "promptAttendee2Panelist": {
     "params": [
      {
@@ -4146,6 +4206,11 @@
     "returns": "BOOL",
     "selector": "autoConnectInternetAudio"
    },
+   "bottomBarHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "bottomBarHidden"
+   },
    "callInDisabled": {
     "params": [],
     "returns": "BOOL",
@@ -4155,6 +4220,31 @@
     "params": [],
     "returns": "BOOL",
     "selector": "callOutDisabled"
+   },
+   "callinRoomSystemHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "callinRoomSystemHidden"
+   },
+   "calloutRoomSystemHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "calloutRoomSystemHidden"
+   },
+   "changeToAttendeeHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "changeToAttendeeHidden"
+   },
+   "claimHostWithHostKeyHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "claimHostWithHostKeyHidden"
+   },
+   "closeCaptionHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "closeCaptionHidden"
    },
    "deleteCustom3DAvatarImage": {
     "params": [
@@ -4275,6 +4365,11 @@
     ],
     "returns": "void",
     "selector": "disableVirtualBackground:"
+   },
+   "disconnectAudioHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "disconnectAudioHidden"
    },
    "downloadCustom3DAvatarDefaultImageModelData": {
     "params": [],
@@ -4456,6 +4551,11 @@
     "returns": "void",
     "selector": "hideReactionsOnMeetingUI:"
    },
+   "hideRecoverMeetingDialog": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hideRecoverMeetingDialog"
+   },
    "hideRegisterWebinarInfoWindow": {
     "params": [],
     "returns": "BOOL",
@@ -4470,6 +4570,21 @@
     ],
     "returns": "void",
     "selector": "hideRequestRecordPrivilegeDialog:"
+   },
+   "hideStopLiveStreamDialog": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hideStopLiveStreamDialog"
+   },
+   "hintHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hintHidden"
+   },
+   "hostLeaveHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "hostLeaveHidden"
    },
    "isCenterStageModeSupported": {
     "params": [],
@@ -4551,6 +4666,61 @@
     "returns": "BOOL",
     "selector": "isSupportEchoCancellation"
    },
+   "meetingAudioHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingAudioHidden"
+   },
+   "meetingChatHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingChatHidden"
+   },
+   "meetingInviteHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingInviteHidden"
+   },
+   "meetingInviteUrlHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingInviteUrlHidden"
+   },
+   "meetingLeaveHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingLeaveHidden"
+   },
+   "meetingMoreHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingMoreHidden"
+   },
+   "meetingParticipantHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingParticipantHidden"
+   },
+   "meetingPasswordHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingPasswordHidden"
+   },
+   "meetingShareHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingShareHidden"
+   },
+   "meetingTitleHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingTitleHidden"
+   },
+   "meetingVideoHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "meetingVideoHidden"
+   },
    "micOriginalInputEnabled": {
     "params": [],
     "returns": "BOOL",
@@ -4585,6 +4755,21 @@
     "returns": "void",
     "selector": "prePopulateWebinarRegistrationInfo:username:"
    },
+   "promoteToPanelistHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "promoteToPanelistHidden"
+   },
+   "proximityMonitoringDisable": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "proximityMonitoringDisable"
+   },
+   "qaButtonHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "qaButtonHidden"
+   },
    "reactionSkinTone": {
     "params": [],
     "returns": "MobileRTCEmojiReactionSkinTone",
@@ -4594,6 +4779,11 @@
     "params": [],
     "returns": "BOOL",
     "selector": "reactionsOnMeetingUIHidden"
+   },
+   "recordButtonHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "recordButtonHidden"
    },
    "setAutoConnectInternetAudio": {
     "params": [
@@ -4605,6 +4795,66 @@
     "returns": "void",
     "selector": "setAutoConnectInternetAudio:"
    },
+   "setBottomBarHidden": {
+    "params": [
+     {
+      "name": "bottomBarHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setBottomBarHidden:"
+   },
+   "setCallinRoomSystemHidden": {
+    "params": [
+     {
+      "name": "callinRoomSystemHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setCallinRoomSystemHidden:"
+   },
+   "setCalloutRoomSystemHidden": {
+    "params": [
+     {
+      "name": "calloutRoomSystemHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setCalloutRoomSystemHidden:"
+   },
+   "setChangeToAttendeeHidden": {
+    "params": [
+     {
+      "name": "changeToAttendeeHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setChangeToAttendeeHidden:"
+   },
+   "setClaimHostWithHostKeyHidden": {
+    "params": [
+     {
+      "name": "claimHostWithHostKeyHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setClaimHostWithHostKeyHidden:"
+   },
+   "setCloseCaptionHidden": {
+    "params": [
+     {
+      "name": "closeCaptionHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setCloseCaptionHidden:"
+   },
    "setCustom3DAvatarImage": {
     "params": [
      {
@@ -4614,6 +4864,16 @@
     ],
     "returns": "MobileRTCSDKError",
     "selector": "setCustom3DAvatarImage:"
+   },
+   "setDisconnectAudioHidden": {
+    "params": [
+     {
+      "name": "disconnectAudioHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setDisconnectAudioHidden:"
    },
    "setFaceBeautyEnabled": {
     "params": [
@@ -4655,6 +4915,16 @@
     "returns": "void",
     "selector": "setHideNoVideoUsersEnabled:"
    },
+   "setHideRecoverMeetingDialog": {
+    "params": [
+     {
+      "name": "hideRecoverMeetingDialog",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideRecoverMeetingDialog:"
+   },
    "setHideRegisterWebinarInfoWindow": {
     "params": [
      {
@@ -4665,6 +4935,16 @@
     "returns": "void",
     "selector": "setHideRegisterWebinarInfoWindow:"
    },
+   "setHideStopLiveStreamDialog": {
+    "params": [
+     {
+      "name": "hideStopLiveStreamDialog",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHideStopLiveStreamDialog:"
+   },
    "setHideWebinarNameInputWindow": {
     "params": [
      {
@@ -4674,6 +4954,136 @@
     ],
     "returns": "void",
     "selector": "setHideWebinarNameInputWindow:"
+   },
+   "setHintHidden": {
+    "params": [
+     {
+      "name": "hintHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHintHidden:"
+   },
+   "setHostLeaveHidden": {
+    "params": [
+     {
+      "name": "hostLeaveHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setHostLeaveHidden:"
+   },
+   "setMeetingAudioHidden": {
+    "params": [
+     {
+      "name": "meetingAudioHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingAudioHidden:"
+   },
+   "setMeetingChatHidden": {
+    "params": [
+     {
+      "name": "meetingChatHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingChatHidden:"
+   },
+   "setMeetingInviteHidden": {
+    "params": [
+     {
+      "name": "meetingInviteHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingInviteHidden:"
+   },
+   "setMeetingInviteUrlHidden": {
+    "params": [
+     {
+      "name": "meetingInviteUrlHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingInviteUrlHidden:"
+   },
+   "setMeetingLeaveHidden": {
+    "params": [
+     {
+      "name": "meetingLeaveHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingLeaveHidden:"
+   },
+   "setMeetingMoreHidden": {
+    "params": [
+     {
+      "name": "meetingMoreHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingMoreHidden:"
+   },
+   "setMeetingParticipantHidden": {
+    "params": [
+     {
+      "name": "meetingParticipantHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingParticipantHidden:"
+   },
+   "setMeetingPasswordHidden": {
+    "params": [
+     {
+      "name": "meetingPasswordHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingPasswordHidden:"
+   },
+   "setMeetingShareHidden": {
+    "params": [
+     {
+      "name": "meetingShareHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingShareHidden:"
+   },
+   "setMeetingTitleHidden": {
+    "params": [
+     {
+      "name": "meetingTitleHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingTitleHidden:"
+   },
+   "setMeetingVideoHidden": {
+    "params": [
+     {
+      "name": "meetingVideoHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setMeetingVideoHidden:"
    },
    "setMuteAudioWhenJoinMeeting": {
     "params": [
@@ -4695,6 +5105,36 @@
     "returns": "void",
     "selector": "setMuteVideoWhenJoinMeeting:"
    },
+   "setPromoteToPanelistHidden": {
+    "params": [
+     {
+      "name": "promoteToPanelistHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setPromoteToPanelistHidden:"
+   },
+   "setProximityMonitoringDisable": {
+    "params": [
+     {
+      "name": "proximityMonitoringDisable",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setProximityMonitoringDisable:"
+   },
+   "setQaButtonHidden": {
+    "params": [
+     {
+      "name": "qaButtonHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setQaButtonHidden:"
+   },
    "setReactionSkinTone": {
     "params": [
      {
@@ -4705,6 +5145,16 @@
     "returns": "MobileRTCMeetError",
     "selector": "setReactionSkinTone:"
    },
+   "setRecordButtonHidden": {
+    "params": [
+     {
+      "name": "recordButtonHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setRecordButtonHidden:"
+   },
    "setSpeakerOffWhenInMeeting": {
     "params": [
      {
@@ -4714,6 +5164,46 @@
     ],
     "returns": "void",
     "selector": "setSpeakerOffWhenInMeeting:"
+   },
+   "setThumbnailInShare": {
+    "params": [
+     {
+      "name": "thumbnailInShare",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setThumbnailInShare:"
+   },
+   "setTipsHidden": {
+    "params": [
+     {
+      "name": "tipsHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setTipsHidden:"
+   },
+   "setTopBarHidden": {
+    "params": [
+     {
+      "name": "topBarHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setTopBarHidden:"
+   },
+   "setWaitingHUDHidden": {
+    "params": [
+     {
+      "name": "waitingHUDHidden",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setWaitingHUDHidden:"
    },
    "showMyMeetingElapseTime": {
     "params": [],
@@ -4730,6 +5220,21 @@
     "returns": "BOOL",
     "selector": "speakerOffWhenInMeeting"
    },
+   "thumbnailInShare": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "thumbnailInShare"
+   },
+   "tipsHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "tipsHidden"
+   },
+   "topBarHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "topBarHidden"
+   },
    "videoCallPictureInPictureEnabled": {
     "params": [],
     "returns": "BOOL",
@@ -4739,6 +5244,11 @@
     "params": [],
     "returns": "BOOL",
     "selector": "virtualBackgroundDisabled"
+   },
+   "waitingHUDHidden": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "waitingHUDHidden"
    }
   },
   "route": "getMeetingSettings"
@@ -4856,10 +5366,25 @@
     "returns": "BOOL",
     "selector": "isSupportedCustomizeMeetingUI"
    },
+   "mobileRTCCustomLocalizableName": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "mobileRTCCustomLocalizableName"
+   },
+   "mobileRTCDomain": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "mobileRTCDomain"
+   },
    "mobileRTCPresentationScene": {
     "params": [],
     "returns": "UIScene *",
     "selector": "mobileRTCPresentationScene"
+   },
+   "mobileRTCResPath": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "mobileRTCResPath"
    },
    "mobileRTCRootController": {
     "params": [],
@@ -4921,6 +5446,11 @@
  "ReminderHelper": {
   "class": "MobileRTCReminderHelper",
   "methods": {
+   "reminderDelegate": {
+    "params": [],
+    "returns": "id<MobileRTCReminderDelegate>",
+    "selector": "reminderDelegate"
+   },
    "setDisclaimerBannerUIConfig": {
     "params": [
      {
@@ -4937,6 +5467,11 @@
  "RemoteControlService": {
   "class": "MobileRTCRemoteControlService",
   "methods": {
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCRemoteControlDelegate>",
+    "selector": "delegate"
+   },
    "grabRemoteControlView": {
     "params": [
      {
@@ -4993,6 +5528,11 @@
  "SMSService": {
   "class": "MobileRTCSMSService",
   "methods": {
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCSMSServiceDelegate>",
+    "selector": "delegate"
+   },
    "enableZoomAuthRealNameMeetingUIShown": {
     "params": [
      {
@@ -5062,6 +5602,11 @@
     "params": [],
     "returns": "BOOL",
     "selector": "canRenameUser"
+   },
+   "delegate": {
+    "params": [],
+    "returns": "id<MobileRTCWaitingRoomServiceDelegate>",
+    "selector": "delegate"
    },
    "enableWaitingRoomOnEntry": {
     "params": [
