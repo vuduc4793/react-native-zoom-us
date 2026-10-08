@@ -78,6 +78,30 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.11.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0-alpha03'
     implementation 'androidx.navigation:navigation-compose:2.9.4'
+    // Navigation 3, which nothing else in the graph pulls in. Without it the
+    // in-meeting chat crashes the moment it opens:
+    //   java.lang.NoClassDefFoundError: androidx/navigation3/runtime/NavKey
+    //     at us.zoom.zmsg.fragment.MMChatInputFragment.onCreateView
+    // Found by tapping Chat in a real meeting, not by reading -- the empty
+    // JitPack POM means a missing dependency only ever shows up at runtime, on
+    // the one screen that touches it. Versions are Zoom's own, from
+    // mobilertc-android-studio/mobilertc/versions.gradle in 7.2.1.43944.
+    implementation 'androidx.navigation3:navigation3-runtime:1.1.3'
+    implementation 'androidx.navigation3:navigation3-ui:1.1.3'
+    implementation 'androidx.navigationevent:navigationevent:1.0.2'
+    implementation 'androidx.navigationevent:navigationevent-compose:1.0.2'
+
+    // Two more the empty POM hides, found the same way but before they crashed:
+    // extracting mobilertc's classes.jar and grepping the constant pools shows 3
+    // classes referencing androidx.paging.compose and 5 referencing
+    // androidx.credentials. Nothing else Zoom declares and the graph lacks is
+    // referenced at all -- protobuf, nimbus-jose-jwt, atomicfu, compose.material
+    // and the ui-test artifacts all come back with zero references, so they stay
+    // out. com.symbol:emdk has one reference but is Zebra-only and compileOnly
+    // for Zoom, and is not on a public repository.
+    implementation 'androidx.paging:paging-compose:3.3.5'
+    implementation 'androidx.credentials:credentials:1.5.0'
+    implementation 'androidx.credentials:credentials-play-services-auth:1.5.0'
     implementation 'androidx.profileinstaller:profileinstaller:1.4.0'
     implementation 'io.coil-kt:coil-compose:2.7.0'
     implementation 'io.coil-kt:coil-gif:2.7.0'
