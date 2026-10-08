@@ -371,9 +371,29 @@ RCT_EXPORT_METHOD(
             
             MobileRTCMeetError startMeetingResult = [ms startMeetingWithStartParam:params];
             NSLog(@"startMeeting, startMeetingResult=%lu", startMeetingResult);
+
+            // Settled by onMeetingStateChange / onMeetingError, which is why the
+            // blocks are stored above. Only an immediate failure is answered
+            // here, because then no delegate callback follows. This is the
+            // contract the Android side has always had.
+            if (startMeetingResult != MobileRTCMeetError_Success) {
+                meetingPromiseResolve = nil;
+                meetingPromiseReject = nil;
+                reject(@"ERR_ZOOM_START",
+                       [NSString stringWithFormat:@"startMeeting, errorCode=%lu", (unsigned long)startMeetingResult],
+                       nil);
+            }
+        } else {
+            meetingPromiseResolve = nil;
+            meetingPromiseReject = nil;
+            reject(@"ERR_ZOOM_START", @"getMeetingService returned nil; is the SDK initialized?", nil);
         }
-    } @catch (NSError *ex) {
-        reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing startMeeting", ex);
+    } @catch (NSException *ex) {
+        meetingPromiseResolve = nil;
+        meetingPromiseReject = nil;
+        reject(@"ERR_UNEXPECTED_EXCEPTION",
+               [NSString stringWithFormat:@"Executing startMeeting: %@", ex.reason ?: ex.name],
+               nil);
     }
 }
 
@@ -405,12 +425,37 @@ RCT_EXPORT_METHOD(
             joinParam.noVideo = data[@"noVideo"];
             
             MobileRTCMeetError joinMeetingResult = [ms joinMeetingWithJoinParam:joinParam];
-            
             NSLog(@"RNZoomUs onJoinaMeeting ret: %@", joinMeetingResult == MobileRTCMeetError_Success ? @"Success" : @(joinMeetingResult));
-            resolve(@(YES));
+
+            // Settled by onMeetingStateChange / onMeetingError, which is why the
+            // blocks are stored above. Only an immediate failure is answered
+            // here, because then no delegate callback follows. This is the
+            // contract the Android side has always had.
+            // Resolving here as well settled the same promise twice on every
+            // successful join -- "Tried to resolve a promise more than once",
+            // raised the moment the meeting starts rather than when it ends.
+            if (joinMeetingResult != MobileRTCMeetError_Success) {
+                meetingPromiseResolve = nil;
+                meetingPromiseReject = nil;
+                reject(@"ERR_ZOOM_JOIN",
+                       [NSString stringWithFormat:@"joinMeeting, errorCode=%lu", (unsigned long)joinMeetingResult],
+                       nil);
+            }
+        } else {
+            // Nothing would ever settle the promise otherwise: the caller's
+            // await would hang for the life of the app.
+            meetingPromiseResolve = nil;
+            meetingPromiseReject = nil;
+            reject(@"ERR_ZOOM_JOIN", @"getMeetingService returned nil; is the SDK initialized?", nil);
         }
-    } @catch (NSError *ex) {
-        reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing joinMeeting", ex);
+    } @catch (NSException *ex) {
+        // Was @catch(NSError *), which never matched: Objective-C throws
+        // NSException, so anything the SDK threw here escaped uncaught.
+        meetingPromiseResolve = nil;
+        meetingPromiseReject = nil;
+        reject(@"ERR_UNEXPECTED_EXCEPTION",
+               [NSString stringWithFormat:@"Executing joinMeeting: %@", ex.reason ?: ex.name],
+               nil);
     }
 }
 
