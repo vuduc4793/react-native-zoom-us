@@ -1135,12 +1135,17 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     [self sendEventWithName:@"MeetingEvent" event:[self meetErrorName:errorCode]];
     
     // Deliberately does not settle the join promise. This is the frame the red
-    // box named, and the header documents the callback only as "an error has
-    // occurred" -- it says nothing about which codes arrive on a healthy join,
-    // so treating every one of them as the answer to joinMeeting() turned
-    // whatever the SDK happened to report into a rejected join. The state
-    // machine decides instead, in onMeetingStateChange. The event is still
-    // emitted, so JavaScript sees every error either way.
+    // box named, and a device log confirms why: a perfectly healthy join emits
+    //
+    //   onMeetingError, errorCode=0, message=success
+    //
+    // right after the meeting connects. The header documents the callback only
+    // as "an error has occurred" and says nothing about that, so letting it
+    // answer joinMeeting() meant a success report settled the promise a second
+    // time. The state machine decides instead, in onMeetingStateChange -- the
+    // same log shows the states arriving as Connecting(1), InMeeting(3),
+    // Disconnecting(4), Ended(7), which is exactly what that handler keys on.
+    // The event is still emitted, so JavaScript sees every error either way.
 }
 
 - (void)onMeetingEndedReason:(MobileRTCMeetingEndReason)reason {
