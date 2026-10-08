@@ -1040,14 +1040,20 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
     
     if (state == MobileRTCMeetingState_InMeeting || state == MobileRTCMeetingState_Idle) {
-        if (!meetingPromiseResolve) {
+        // Clear before resolving, not after. Resolving re-enters JavaScript
+        // synchronously, and anything it does that makes the SDK emit another
+        // state change or error reaches this handler again with the blocks still
+        // set -- React Native then raises "Tried to resolve a promise more than
+        // once". Taking the block into a local and clearing the ivars first
+        // closes that window.
+        RCTPromiseResolveBlock resolve = meetingPromiseResolve;
+        if (!resolve) {
             return;
         }
-        
-        meetingPromiseResolve(@"Connected to zoom meeting");
-        
         meetingPromiseResolve = nil;
         meetingPromiseReject = nil;
+
+        resolve(@"Connected to zoom meeting");
     }
 }
 
@@ -1056,22 +1062,27 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     NSLog(@"onMeetingError, errorCode=%d, message=%@", errorCode, message);
     [self sendEventWithName:@"MeetingEvent" event:[self meetErrorName:errorCode]];
     
-    if (!meetingPromiseResolve) {
+    // Same ordering as onMeetingStateChange: clear first, settle second. This is
+    // the handler the crash report named -- leaving a meeting emits an error
+    // whose rejection runs JavaScript, which emits another one before the old
+    // code reached its cleanup.
+    RCTPromiseResolveBlock resolve = meetingPromiseResolve;
+    RCTPromiseRejectBlock reject = meetingPromiseReject;
+    if (!resolve) {
         return;
     }
-    
-    if (errorCode != MobileRTCMeetError_Success) {
-        meetingPromiseReject(
-                             @"ERR_ZOOM_MEETING",
-                             [NSString stringWithFormat:@"Error: %d, internalErrorCode=%@", errorCode, message],
-                             [NSError errorWithDomain:@"us.zoom.sdk" code:errorCode userInfo:nil]
-                             );
-    } else {
-        meetingPromiseResolve(@"Connected to zoom meeting");
-    }
-    
     meetingPromiseResolve = nil;
     meetingPromiseReject = nil;
+
+    if (errorCode != MobileRTCMeetError_Success) {
+        reject(
+               @"ERR_ZOOM_MEETING",
+               [NSString stringWithFormat:@"Error: %d, internalErrorCode=%@", errorCode, message],
+               [NSError errorWithDomain:@"us.zoom.sdk" code:errorCode userInfo:nil]
+               );
+    } else {
+        resolve(@"Connected to zoom meeting");
+    }
 }
 
 - (void)onMeetingEndedReason:(MobileRTCMeetingEndReason)reason {
