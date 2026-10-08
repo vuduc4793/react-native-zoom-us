@@ -104,7 +104,9 @@ def payload_entry(ctype, name):
         return f'@"{name}": {name} ?: @[]', name, ts
     # Any other object: report presence, since the object itself is not
     # serialisable and handlers are only meaningful on the native side.
-    return f'@"{name}Present": @({name} != nil)', f"{name}Present", "boolean"
+    # The flag stays for existing consumers; the object itself is serialized
+    # alongside it (RNZoomUsSerialize: properties + get/is/can/has, 2 levels).
+    return f'@"{name}Present": @({name} != nil), @"{name}": RNZoomUsSerialize({name})', f"{name}Present", "boolean"
 
 
 MANIFEST = {}

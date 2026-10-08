@@ -124,6 +124,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     private final static String TAG = "RNZoomUs";
     private final static int SCREEN_SHARE_REQUEST_CODE = 99;
     private final ReactApplicationContext reactContext;
+    // Notification-only listeners the module does not implement by hand
+    // (waiting room, webinar, Q&A, polling, reactions, recording, captions...).
+    private final RNZoomUsListeners extraListeners = new RNZoomUsListeners(this::emitZoomEvent);
 
     private Boolean shouldAutoConnectAudio;
     private Promise initializePromise;
@@ -189,6 +192,59 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
      * On the UI thread: most of the SDK asserts it, and the ones that do not do
      * not mind.
      */
+    
+    /**
+     * Call a method on an SDK object JS received earlier (its `__ref`): answer
+     * a prompt's handler, read more from an info object, and so on.
+     */
+    @ReactMethod
+    public void invokeRef(final String ref, final String method, final ReadableArray args,
+                          final Promise promise) {
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Object target = RNZoomUsRefs.get(ref);
+                if (target == null) {
+                    promise.reject("ERR_ZOOM_REF_EXPIRED", "ref " + ref + " is unknown or has expired");
+                    return;
+                }
+                try {
+                    Object result = RNZoomUsCommands.call(target, method, args);
+                    Object marshalled = RNZoomUsCommands.marshal(result, 0);
+                    if (marshalled == null) promise.resolve(null);
+                    else if (marshalled instanceof Boolean) promise.resolve((Boolean) marshalled);
+                    else if (marshalled instanceof Double) promise.resolve((Double) marshalled);
+                    else if (marshalled instanceof String) promise.resolve((String) marshalled);
+                    else if (marshalled instanceof WritableArray) promise.resolve((WritableArray) marshalled);
+                    else if (marshalled instanceof WritableMap) promise.resolve((WritableMap) marshalled);
+                    else promise.resolve(String.valueOf(marshalled));
+                } catch (java.lang.reflect.InvocationTargetException ex) {
+                    Throwable cause = ex.getCause() == null ? ex : ex.getCause();
+                    promise.reject("ERR_ZOOM_INVOKE", ref + "." + method + ": " + cause, cause);
+                } catch (Throwable t) {
+                    promise.reject("ERR_ZOOM_INVOKE", ref + "." + method + ": " + t, t);
+                }
+            }
+        });
+    }
+
+    /** Forget a ref JS no longer needs (optional: refs also expire on their own). */
+    @ReactMethod
+    public void releaseRef(final String ref) {
+        RNZoomUsRefs.release(ref);
+    }
+
+    /**
+     * Same API as iOS. Android has no completion-style prompt to hand over:
+     * when the host asks to start your video, the SDK shows its own dialog.
+     * Prompts that do carry a handler arrive with its `__ref` regardless.
+     */
+    @ReactMethod
+    public void setPromptMode(final String prompt, final String mode, final double timeoutMs,
+                              final Promise promise) {
+        promise.resolve(null);
+    }
+
     @ReactMethod
     public void invoke(final String path, final String method, final ReadableArray args,
                        final Promise promise) {
@@ -604,6 +660,14 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                         params.webinarToken = paramMap.getString("webinarToken");
                     if (paramMap.hasKey("zoomAccessToken"))
                         params.zoomAccessToken = paramMap.getString("zoomAccessToken");
+                    // Joining a meeting hosted by another Zoom account needs an
+                    // on-behalf token (error 63 UNABLE_TO_JOIN_EXTERNAL_MEETING without it).
+                    if (paramMap.hasKey("onBehalfToken") && !paramMap.isNull("onBehalfToken"))
+                        params.onBehalfToken = paramMap.getString("onBehalfToken");
+                    if (paramMap.hasKey("appPrivilegeToken") && !paramMap.isNull("appPrivilegeToken"))
+                        params.appPrivilegeToken = paramMap.getString("appPrivilegeToken");
+                    if (paramMap.hasKey("joinToken") && !paramMap.isNull("joinToken"))
+                        params.join_token = paramMap.getString("joinToken");
 
                     // Save promise and shouldAutoConnectAudio so that it can be resolved in onMeetingStatusChanged
                     // after zoomSDK.joinMeetingWithParams is called
@@ -735,7 +799,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
                     promise.resolve(rnUserList);
                 } catch (Exception ex) {
-                    promise.reject("ERR_UNEXPECTED_EXCEPTION getInMeetingUserIdList", ex);
+                    promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
                 }
             }
         });
@@ -1066,6 +1130,18 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         // Keep: Required for RN built in Event Emitter Calls.
     }
 
+    /** The chat controller, or null once the SDK or meeting is gone. */
+    private InMeetingChatController chatControllerOrNull() {
+        try {
+            ZoomSDK sdk = ZoomSDK.getInstance();
+            if (!sdk.isInitialized() || sdk.getInMeetingService() == null) return null;
+            return sdk.getInMeetingService().getInMeetingChatController();
+        } catch (Exception ex) {
+            Log.e(TAG, "chatControllerOrNull failed", ex);
+            return null;
+        }
+    }
+
     @ReactMethod
     public void sendChatMsg(final ReadableMap msgData, final Promise promise) {
         UiThreadUtil.runOnUiThread(new Runnable() {
@@ -1074,6 +1150,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 try {
                     ZoomSDK zoomSDK = ZoomSDK.getInstance();
                     if (!zoomSDK.isInitialized()) {
+                        promise.resolve(false);
                         return;
                     }
                     InMeetingChatController inMeetingChatController = zoomSDK.getInMeetingService().getInMeetingChatController();
@@ -1089,16 +1166,17 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                         String messageToHost = "";
                         String previousChatId = "";
 
-                        content = msgData.getString("content");
-                        receiverId = msgData.getInt("receiverId");
-                        chatTypeValue = msgData.getInt("chatMessageType");
-                        if (msgData.hasKey("hostId")) {
-                            hostId = msgData.getType("hostId").name().equals("String") ? Integer.parseInt(msgData.getString("hostId")) : msgData.getInt("hostId");
+                        // Missing or null fields must not throw: read with defaults.
+                        content = msgData.hasKey("content") && !msgData.isNull("content") ? msgData.getString("content") : "";
+                        receiverId = msgData.hasKey("receiverId") && !msgData.isNull("receiverId") ? (int) msgData.getDouble("receiverId") : 0;
+                        chatTypeValue = msgData.hasKey("chatMessageType") && !msgData.isNull("chatMessageType") ? (int) msgData.getDouble("chatMessageType") : -1;
+                        if (msgData.hasKey("hostId") && !msgData.isNull("hostId")) {
+                            hostId = msgData.getType("hostId").name().equals("String") ? Integer.parseInt(msgData.getString("hostId")) : (int) msgData.getDouble("hostId");
                         }
-                        if (msgData.hasKey("messageToHost")) {
+                        if (msgData.hasKey("messageToHost") && !msgData.isNull("messageToHost")) {
                             messageToHost = msgData.getString("messageToHost");
                         }
-                        if (msgData.hasKey("previousChatId")) {
+                        if (msgData.hasKey("previousChatId") && !msgData.isNull("previousChatId")) {
                             previousChatId = msgData.getString("previousChatId");
                         }
                         ZoomSDKChatMessageType chatMessageType;
@@ -1128,19 +1206,34 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                         chatMessageBuilder.setContent(content);
                         chatMessageBuilder.setReceiver(receiverId);
                         chatMessageBuilder.setMessageType(chatMessageType);
-                        InMeetingChatMessage inMeetingChatMessage = chatMessageBuilder.build();
-                        inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
-                        if (!messageToHost.isEmpty() && hostId != 0 && !previousChatId.isEmpty()) {
-                            inMeetingChatController.deleteChatMessage(previousChatId);
-                            Thread.sleep(2000);
-                            chatMessageBuilder.setContent(messageToHost);
-                            chatMessageBuilder.setReceiver(hostId);
-                            chatMessageBuilder.setMessageType(ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual);
-                            Thread.sleep(2000);
-                            inMeetingChatController.sendChatMsgTo(inMeetingChatMessage);
+                        MobileRTCSDKError result = inMeetingChatController.sendChatMsgTo(chatMessageBuilder.build());
+                        boolean sent = result == MobileRTCSDKError.SDKERR_SUCCESS;
+                        if (sent && !messageToHost.isEmpty() && hostId != 0 && !previousChatId.isEmpty()) {
+                            // Same steps and timing as iOS, without blocking the UI
+                            // thread: this used to Thread.sleep 4s here, and then
+                            // re-sent the censored message instead of the original.
+                            final String toHostContent = messageToHost;
+                            final int toHostId = hostId;
+                            final String deleteId = previousChatId;
+                            handler.postDelayed(() -> {
+                                InMeetingChatController later = chatControllerOrNull();
+                                if (later == null) return;
+                                later.deleteChatMessage(deleteId);
+                                handler.postDelayed(() -> {
+                                    InMeetingChatController last = chatControllerOrNull();
+                                    if (last == null) return;
+                                    ChatMessageBuilder toHost = new ChatMessageBuilder();
+                                    toHost.setContent(toHostContent);
+                                    toHost.setReceiver(toHostId);
+                                    toHost.setMessageType(ZoomSDKChatMessageType.ZoomSDKChatMessageType_To_Individual);
+                                    last.sendChatMsgTo(toHost.build());
+                                }, 2000);
+                            }, 2000);
                         }
+                        promise.resolve(sent);
+                        return;
                     }
-                    promise.resolve(true);
+                    promise.resolve(false);
                 } catch (Exception ex) {
                     promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
                 }
@@ -1198,13 +1291,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 try {
                     InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
                     if (inMeetingService != null) {
-                        long userIdLong = inMeetingService.getMyUserID();
-                        if (userIdLong >= Integer.MIN_VALUE && userIdLong <= Integer.MAX_VALUE) {
-                            int userIdInt = (int) userIdLong;
-                            promise.resolve(userIdInt);
-                        } else {
-                            promise.reject("ERR_USER_ID_OVERFLOW", "User ID is too large to convert to int.");
-                        }
+                        // A JS number holds any user id exactly, so no int narrowing,
+                        // and one settle per path -- this used to resolve twice.
+                        promise.resolve((double) inMeetingService.getMyUserID());
+                        return;
                     }
                     promise.resolve(null);
                 } catch (Exception ex) {
@@ -1271,6 +1361,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
+        extraListeners.attachAll();
         Log.i(TAG, "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
         String errorInfo = getAuthErrorName(errorCode);
         sendEvent("AuthEvent", errorInfo);
@@ -1312,6 +1403,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     // MeetingServiceListener
     @Override
     public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+        extraListeners.attachAll();
         Log.i(TAG, "onMeetingStatusChanged, meetingStatus=" + meetingStatus + ", errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
         updateVideoView();
@@ -1343,11 +1435,20 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 || meetingStatus == MeetingStatus.MEETING_STATUS_ENDED;
 
         if (over) {
+            // Structured, so JS can react to a specific failure (e.g. 63,
+            // unableToJoinExternalMeeting) without parsing the message --
+            // JSON.stringify of the error drops the message anyway.
+            WritableMap failure = Arguments.createMap();
+            failure.putInt("errorCode", errorCode);
+            failure.putString("errorName", getMeetErrorName(errorCode));
+            failure.putInt("internalErrorCode", internalErrorCode);
+            failure.putString("status", nameOf(meetingStatus));
             meetingPromise.reject(
                     "ERR_ZOOM_MEETING",
                     "Meeting state: " + nameOf(meetingStatus)
                             + ", errorCode=" + errorCode
-                            + ", internalErrorCode=" + internalErrorCode
+                            + ", internalErrorCode=" + internalErrorCode,
+                    failure
             );
             meetingPromise = null;
 
@@ -1458,12 +1559,20 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onHostAskUnMute(long userId) {
-        sendEvent("MeetingEvent", "askUnMuteAudio");
+        // userId of whoever asked; it used to be dropped.
+        WritableMap params = Arguments.createMap();
+        params.putString("event", "askUnMuteAudio");
+        params.putDouble("userId", userId);
+        sendBoth("MeetingEvent", "askUnMuteAudio", params);
     }
 
     @Override
     public void onHostAskStartVideo(long userId) {
-        sendEvent("MeetingEvent", "askUnMuteVideo");
+        // userId of whoever asked; it used to be dropped.
+        WritableMap params = Arguments.createMap();
+        params.putString("event", "askUnMuteVideo");
+        params.putDouble("userId", userId);
+        sendBoth("MeetingEvent", "askUnMuteVideo", params);
     }
 
     @Override
@@ -1477,7 +1586,11 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onMeetingCoHostChange(long userId, boolean isCoHost) {
-        sendEvent("MeetingEvent", "coHostChanged", userId);
+        WritableMap params = Arguments.createMap();
+        params.putString("event", "coHostChanged");
+        params.putDouble("userId", userId);
+        params.putBoolean("isCoHost", isCoHost);
+        sendBoth("MeetingEvent", "coHostChanged", params);
     }
 
     @Override
@@ -1489,6 +1602,10 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         final InMeetingUserInfo userInfo = ZoomSDK.getInstance().getInMeetingService().getMyUserInfo();
 
         sendEvent("MeetingEvent", "myAudioSourceTypeChanged", userInfo);
+        // The new source type itself, which the legacy payload never carried.
+        WritableMap __p = Arguments.createMap();
+        __p.putInt("type", type);
+        emitZoomEvent("onMyAudioSourceTypeChanged", __p);
     }
 
     @Override
@@ -1497,6 +1614,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         if (!zoomSDK.isInitialized()) {
             return;
         }
+        // Every participant, not just me -- iOS reports everyone's. The enum
+        // order matches MobileRTC_AudioStatus, so the ordinal is the same number
+        // iOS sends.
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", userId);
+        if (audioStatus != null) {
+            __p.putInt("audioStatus", audioStatus.ordinal());
+            __p.putString("audioStatusName", audioStatus.name());
+        }
+        emitZoomEvent("onUserAudioStatusChanged", __p);
         InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
 
         if (userId == inMeetingService.getMyUserID()) {
@@ -1512,6 +1639,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         if (!zoomSDK.isInitialized()) {
             return;
         }
+        // Every participant, not just me -- iOS reports everyone's. The enum
+        // order matches MobileRTC_VideoStatus, so the ordinal is the same number
+        // iOS sends.
+        WritableMap __p = Arguments.createMap();
+        __p.putDouble("userId", userId);
+        if (videoStatus != null) {
+            __p.putInt("videoStatus", videoStatus.ordinal());
+            __p.putString("videoStatusName", videoStatus.name());
+        }
+        emitZoomEvent("onUserVideoStatusChanged", __p);
         InMeetingService inMeetingService = ZoomSDK.getInstance().getInMeetingService();
 
         if (userId == inMeetingService.getMyUserID()) {
@@ -1534,6 +1671,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onMeetingNeedConfirmPreview(InMeetingPreviewHandler inMeetingPreviewHandler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("inMeetingPreviewHandlerPresent", inMeetingPreviewHandler != null);
+        RNZoomUsListeners.putTo(__p, "inMeetingPreviewHandler", inMeetingPreviewHandler, 0);
         emitZoomEvent("onMeetingNeedConfirmPreview", __p);
     }
 
@@ -1551,6 +1689,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onAppSignalPanelUpdated(InMeetingAppSignalPanelHandler inMeetingAppSignalPanelHandler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("inMeetingAppSignalPanelHandlerPresent", inMeetingAppSignalPanelHandler != null);
+        RNZoomUsListeners.putTo(__p, "inMeetingAppSignalPanelHandler", inMeetingAppSignalPanelHandler, 0);
         emitZoomEvent("onAppSignalPanelUpdated", __p);
     }
 
@@ -1565,6 +1704,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onUserConfirmToStartArchive(IMeetingArchiveConfirmHandler iMeetingArchiveConfirmHandler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("iMeetingArchiveConfirmHandlerPresent", iMeetingArchiveConfirmHandler != null);
+        RNZoomUsListeners.putTo(__p, "iMeetingArchiveConfirmHandler", iMeetingArchiveConfirmHandler, 0);
         emitZoomEvent("onUserConfirmToStartArchive", __p);
     }
 
@@ -1574,6 +1714,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         __p.putDouble("l", (double) l);
         __p.putString("cameraControlRequestType", cameraControlRequestType == null ? null : cameraControlRequestType.name());
         __p.putBoolean("iCameraControlRequestHandlerPresent", iCameraControlRequestHandler != null);
+        RNZoomUsListeners.putTo(__p, "iCameraControlRequestHandler", iCameraControlRequestHandler, 0);
         emitZoomEvent("onCameraControlRequestReceived", __p);
     }
 
@@ -1589,6 +1730,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onFileSendStart(ZoomSDKFileSender zoomSDKFileSender) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("zoomSDKFileSenderPresent", zoomSDKFileSender != null);
+        RNZoomUsListeners.putTo(__p, "zoomSDKFileSender", zoomSDKFileSender, 0);
         emitZoomEvent("onFileSendStart", __p);
     }
 
@@ -1596,6 +1738,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onFileReceived(ZoomSDKFileReceiver zoomSDKFileReceiver) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("zoomSDKFileReceiverPresent", zoomSDKFileReceiver != null);
+        RNZoomUsListeners.putTo(__p, "zoomSDKFileReceiver", zoomSDKFileReceiver, 0);
         emitZoomEvent("onFileReceived", __p);
     }
 
@@ -1603,6 +1746,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onFileTransferProgress(ZoomSDKFileTransferInfo zoomSDKFileTransferInfo) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("zoomSDKFileTransferInfoPresent", zoomSDKFileTransferInfo != null);
+        RNZoomUsListeners.putTo(__p, "zoomSDKFileTransferInfo", zoomSDKFileTransferInfo, 0);
         emitZoomEvent("onFileTransferProgress", __p);
     }
 
@@ -1668,6 +1812,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onUserConfirmRecoverMeeting(IRecoverMeetingHandle iRecoverMeetingHandle) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("iRecoverMeetingHandlePresent", iRecoverMeetingHandle != null);
+        RNZoomUsListeners.putTo(__p, "iRecoverMeetingHandle", iRecoverMeetingHandle, 0);
         emitZoomEvent("onUserConfirmRecoverMeeting", __p);
     }
 
@@ -1796,6 +1941,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         __p.putBoolean("needPassword", needPassword);
         __p.putBoolean("needDisplayName", needDisplayName);
         __p.putBoolean("handlerPresent", handler != null);
+        RNZoomUsListeners.putTo(__p, "handler", handler, 0);
         emitZoomEvent("onMeetingNeedPasswordOrDisplayName", __p);
     }
 
@@ -1810,6 +1956,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onJoinMeetingNeedUserInfo(IMeetingInputUserInfoHandler iMeetingInputUserInfoHandler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("iMeetingInputUserInfoHandlerPresent", iMeetingInputUserInfoHandler != null);
+        RNZoomUsListeners.putTo(__p, "iMeetingInputUserInfoHandler", iMeetingInputUserInfoHandler, 0);
         emitZoomEvent("onJoinMeetingNeedUserInfo", __p);
     }
 
@@ -1817,6 +1964,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onJoinWebinarNeedUserNameAndEmail(InMeetingEventHandler handler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("handlerPresent", handler != null);
+        RNZoomUsListeners.putTo(__p, "handler", handler, 0);
         emitZoomEvent("onJoinWebinarNeedUserNameAndEmail", __p);
     }
 
@@ -1824,6 +1972,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onWebinarNeedInputScreenName(InMeetingEventHandler inMeetingEventHandler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("inMeetingEventHandlerPresent", inMeetingEventHandler != null);
+        RNZoomUsListeners.putTo(__p, "inMeetingEventHandler", inMeetingEventHandler, 0);
         emitZoomEvent("onWebinarNeedInputScreenName", __p);
     }
 
@@ -1831,6 +1980,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onMeetingNeedCloseOtherMeeting(InMeetingEventHandler handler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("handlerPresent", handler != null);
+        RNZoomUsListeners.putTo(__p, "handler", handler, 0);
         emitZoomEvent("onMeetingNeedCloseOtherMeeting", __p);
     }
 
@@ -1927,6 +2077,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onChatMessageEditNotification(InMeetingChatMessage inMeetingChatMessage) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("inMeetingChatMessagePresent", inMeetingChatMessage != null);
+        RNZoomUsListeners.putTo(__p, "inMeetingChatMessage", inMeetingChatMessage, 0);
         emitZoomEvent("onChatMessageEditNotification", __p);
     }
 
@@ -2064,6 +2215,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     public void onLocalRecordingPrivilegeRequested(IRequestLocalRecordingPrivilegeHandler handler) {
         WritableMap __p = Arguments.createMap();
         __p.putBoolean("handlerPresent", handler != null);
+        RNZoomUsListeners.putTo(__p, "handler", handler, 0);
         emitZoomEvent("onLocalRecordingPrivilegeRequested", __p);
     }
 
@@ -2264,7 +2416,9 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             String formattedDate = sdf.format(new Date(msg.getTime()));
             params.putString("date", formattedDate);
             if (msg.getChatMessageType() != null) {
-                params.putInt("chatMessageType", msg.getChatMessageType().hashCode());
+                // ordinal, not hashCode(): hashCode differs per process. The order matches
+                // MobileRTCChatMessageType, so iOS and Android send the same number.
+                params.putInt("chatMessageType", msg.getChatMessageType().ordinal());
             }
             params.putBoolean("isChatToAll", msg.isChatToAll());
             params.putBoolean("isChatToWaitingroom", msg.isChatToWaitingroom());
@@ -2369,6 +2523,31 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         }
     }
 
+
+    /**
+     * Name for a MeetingError code the switch does not list: the constant's own
+     * name, camelCased (MEETING_ERROR_BLOCKED_BY_ACCOUNT_ADMIN ->
+     * blockedByAccountAdmin), so codes added by newer SDKs are named too.
+     */
+    private static String errorNameFromConstant(int errorCode) {
+        try {
+            for (java.lang.reflect.Field f : MeetingError.class.getFields()) {
+                if (f.getType() != int.class || f.getInt(null) != errorCode) continue;
+                String raw = f.getName().replaceFirst("^MEETING_ERROR_", "").toLowerCase(java.util.Locale.ROOT);
+                StringBuilder out = new StringBuilder();
+                boolean upper = false;
+                for (char c : raw.toCharArray()) {
+                    if (c == '_') { upper = true; continue; }
+                    out.append(upper ? Character.toUpperCase(c) : c);
+                    upper = false;
+                }
+                return out.toString();
+            }
+        } catch (Exception ignored) {
+        }
+        return "unknown";
+    }
+
     private String getMeetErrorName(final int errorCode) {
         switch (errorCode) {
             case MeetingError.MEETING_ERROR_INVALID_ARGUMENTS:
@@ -2420,7 +2599,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             case MeetingError.MEETING_ERROR_WEB_SERVICE_FAILED:
                 return "webServiceFailed"; // Android only
             default:
-                return "unknown";
+                return errorNameFromConstant(errorCode);
         }
     }
 
@@ -2449,17 +2628,32 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onHasCreatorRightsNotification(IBOCreator iboCreator) {
+        extraListeners.attachAll();
         Log.i(TAG, "onHasCreatorRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("creatorPresent", iboCreator != null);
+        RNZoomUsListeners.putTo(__p, "creator", iboCreator, 0);
+        emitZoomEvent("onHasCreatorRightsNotification", __p);
     }
 
     @Override
     public void onHasAdminRightsNotification(IBOAdmin iboAdmin) {
+        extraListeners.attachAll();
         Log.i(TAG, "onHasAdminRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("adminPresent", iboAdmin != null);
+        RNZoomUsListeners.putTo(__p, "admin", iboAdmin, 0);
+        emitZoomEvent("onHasAdminRightsNotification", __p);
     }
 
     @Override
     public void onHasAssistantRightsNotification(IBOAssistant iboAssistant) {
+        extraListeners.attachAll();
         Log.i(TAG, "onHasAssistantRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("assistantPresent", iboAssistant != null);
+        RNZoomUsListeners.putTo(__p, "assistant", iboAssistant, 0);
+        emitZoomEvent("onHasAssistantRightsNotification", __p);
     }
 
     @Override
@@ -2480,64 +2674,99 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             @Override
             public void onHelpRequestHandleResultReceived(ATTENDEE_REQUEST_FOR_HELP_RESULT eResult) {
                 Log.i(TAG, "onHelpRequestHandleResultReceived:" + eResult);
+        WritableMap __p = Arguments.createMap();
+        __p.putString("result", eResult == null ? null : eResult.name());
+        emitZoomEvent("onHelpRequestHandleResultReceived", __p);
             }
 
             @Override
             public void onHostJoinedThisBOMeeting() {
                 Log.i(TAG, "onHostJoinedThisBOMeeting:");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onHostJoinedThisBOMeeting", __p);
             }
 
             @Override
             public void onHostLeaveThisBOMeeting() {
                 Log.i(TAG, "onHostLeaveThisBOMeeting:");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onHostLeaveThisBOMeeting", __p);
             }
         });
     }
 
     @Override
     public void onHasDataHelperRightsNotification(IBOData iboData) {
+        extraListeners.attachAll();
         Log.i(TAG, "onHasDataHelperRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("dataHelperPresent", iboData != null);
+        RNZoomUsListeners.putTo(__p, "dataHelper", iboData, 0);
+        emitZoomEvent("onHasDataHelperRightsNotification", __p);
     }
 
     @Override
     public void onLostCreatorRightsNotification() {
         Log.i(TAG, "onLostCreatorRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onLostCreatorRightsNotification", __p);
     }
 
     @Override
     public void onLostAdminRightsNotification() {
         Log.i(TAG, "onLostAdminRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onLostAdminRightsNotification", __p);
     }
 
     @Override
     public void onLostAssistantRightsNotification() {
         Log.i(TAG, "onLostAssistantRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onLostAssistantRightsNotification", __p);
     }
 
     @Override
     public void onLostAttendeeRightsNotification() {
         Log.i(TAG, "onLostAttendeeRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onLostAttendeeRightsNotification", __p);
     }
 
     @Override
     public void onLostDataHelperRightsNotification() {
         Log.i(TAG, "onLostDataHelperRightsNotification");
+        WritableMap __p = Arguments.createMap();
+        emitZoomEvent("onLostDataHelperRightsNotification", __p);
     }
 
     @Override
     public void onNewBroadcastMessageReceived(String message, long senderId, String senderName) {
         Log.i(TAG, "onNewBroadcastMessageReceived:" + message + " senderId:" + senderId + " senderName:" + senderName);
+        WritableMap __p = Arguments.createMap();
+        __p.putString("message", message);
+        __p.putDouble("senderId", senderId);
+        __p.putString("senderName", senderName);
+        emitZoomEvent("onNewBroadcastMessageReceived", __p);
 
     }
 
     @Override
     public void onBOStopCountDown(int seconds) {
         Log.i(TAG, "onBOStopCountDown seconds: " + seconds);
+        WritableMap __p = Arguments.createMap();
+        __p.putInt("seconds", seconds);
+        emitZoomEvent("onBOStopCountDown", __p);
     }
 
     @Override
     public void onHostInviteReturnToMainSession(String name, ReturnToMainSessionHandler returnToMainSessionHandler) {
         Log.i(TAG, "onHostInviteReturnToMainSession name: " + name);
+        WritableMap __p = Arguments.createMap();
+        __p.putString("hostName", name);
+        __p.putBoolean("replyHandlerPresent", returnToMainSessionHandler != null);
+        RNZoomUsListeners.putTo(__p, "replyHandler", returnToMainSessionHandler, 0);
+        emitZoomEvent("onHostInviteReturnToMainSession", __p);
     }
 
     @Override
@@ -2550,16 +2779,45 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     @Override
     public void onBOSwitchRequestReceived(String strNewBOName, String strNewBOID) {
         Log.i(TAG, "onBOSwitchRequestReceived: boName: " + strNewBOName + ", boID: " + strNewBOID);
+        WritableMap __p = Arguments.createMap();
+        __p.putString("boName", strNewBOName);
+        __p.putString("boId", strNewBOID);
+        emitZoomEvent("onBOSwitchRequestReceived", __p);
     }
 
     @Override
     public void onBroadcastBOVoiceStatus(boolean start) {
         Log.i(TAG, "onBroadcastBOVoiceStatus " + start);
+        WritableMap __p = Arguments.createMap();
+        __p.putBoolean("start", start);
+        emitZoomEvent("onBroadcastBOVoiceStatus", __p);
     }
 
     @Override
     public void onBOOptionChanged(BOOption boOption) {
         Log.i(TAG, "onBOOptionChanged " + boOption);
+        WritableMap __p = Arguments.createMap();
+        if (boOption != null) {
+            WritableMap option = Arguments.createMap();
+            option.putString("countdown", boOption.countdown == null ? null : boOption.countdown.name());
+            option.putBoolean("isParticipantCanChooseBO", boOption.isParticipantCanChooseBO);
+            option.putBoolean("isParticipantCanReturnToMainSessionAtAnyTime", boOption.isParticipantCanReturnToMainSessionAtAnyTime);
+            option.putBoolean("isAutoMoveAllAssignedParticipantsEnabled", boOption.isAutoMoveAllAssignedParticipantsEnabled);
+            option.putBoolean("isBOTimerEnabled", boOption.isBOTimerEnabled);
+            option.putBoolean("isTimerAutoStopBOEnabled", boOption.isTimerAutoStopBOEnabled);
+            option.putInt("timerDurationMinutes", boOption.timerDurationMinutes);
+            option.putBoolean("isAttendeeContained", boOption.isAttendeeContained);
+            option.putBoolean("isPanelistCanChooseBO", boOption.isPanelistCanChooseBO);
+            option.putBoolean("isAttendeeCanChooseBO", boOption.isAttendeeCanChooseBO);
+            option.putBoolean("isUserConfigMaxRoomUserLimitsEnabled", boOption.isUserConfigMaxRoomUserLimitsEnabled);
+            option.putInt("nUserConfigMaxRoomUserLimits", boOption.nUserConfigMaxRoomUserLimits);
+            option.putBoolean("isAICompanionEnabled", boOption.isAICompanionEnabled);
+            option.putBoolean("isTranscriptionEnabled", boOption.isTranscriptionEnabled);
+            __p.putMap("boOption", option);
+        } else {
+            __p.putNull("boOption");
+        }
+        emitZoomEvent("onBOOptionChanged", __p);
     }
 
     @Override
@@ -2568,6 +2826,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         __p.putDouble("l", (double) l);
         __p.putString("sharingStatus", sharingStatus == null ? null : sharingStatus.name());
         __p.putBoolean("iShareActionPresent", iShareAction != null);
+        RNZoomUsListeners.putTo(__p, "iShareAction", iShareAction, 0);
         emitZoomEvent("onShareFromMainSession", __p);
     }
 
@@ -2614,6 +2873,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                     InMeetingBOController boController = inMeetingService.getInMeetingBOController();
                     IBOAttendee boAttendee = boController.getBOAttendeeHelper();
                     if (boAttendee == null) {
+                        promise.reject("BO_UNASSIGNED", "BO_UNASSIGNED");
                         return;
                     }
                     boolean ret = boAttendee.leaveBo();
@@ -2641,6 +2901,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                     InMeetingBOController boController = inMeetingService.getInMeetingBOController();
                     IBOAttendee boAttendee = boController.getBOAttendeeHelper();
                     if (boAttendee == null) {
+                        promise.reject("BO_UNASSIGNED", "BO_UNASSIGNED");
                         return;
                     }
                     boolean ret = boAttendee.isHostInThisBO();
@@ -2668,6 +2929,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                     InMeetingBOController boController = inMeetingService.getInMeetingBOController();
                     IBOAttendee boAttendee = boController.getBOAttendeeHelper();
                     if (boAttendee == null) {
+                        promise.reject("BO_UNASSIGNED", "BO_UNASSIGNED");
                         return;
                     }
                     boolean ret = boAttendee.requestForHelp();

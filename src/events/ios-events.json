@@ -44,11 +44,19 @@
  ],
  "onAICompanionFeatureSwitchRequested": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
  ],
  "onAICompanionFeatureTurnOffByParticipant": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"
@@ -129,6 +137,10 @@
  ],
  "onAnnotationService": [
   [
+   "service",
+   "unknown"
+  ],
+  [
    "servicePresent",
    "boolean"
   ],
@@ -149,6 +161,10 @@
  ],
  "onAppShareSplash": [],
  "onAppSignalPanelUpdated": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"
@@ -171,11 +187,19 @@
  "onAudioOutputChange": [],
  "onAvailableLanguageListUpdated": [
   [
+   "availableLanguageList",
+   "unknown"
+  ],
+  [
    "availableLanguageListPresent",
    "boolean"
   ]
  ],
  "onAvailableSignLanguageListUpdated": [
+  [
+   "availableSignLanguageList",
+   "unknown"
+  ],
   [
    "availableSignLanguageListPresent",
    "boolean"
@@ -199,6 +223,10 @@
  ],
  "onBOListInfoUpdated": [],
  "onBOOptionChanged": [
+  [
+   "newOption",
+   "unknown"
+  ],
   [
    "newOptionPresent",
    "boolean"
@@ -253,6 +281,10 @@
  ],
  "onChatMessageEditNotification": [
   [
+   "chatInfo",
+   "unknown"
+  ],
+  [
    "chatInfoPresent",
    "boolean"
   ]
@@ -281,6 +313,10 @@
  ],
  "onClickShareScreen": [
   [
+   "parentVC",
+   "unknown"
+  ],
+  [
    "parentVCPresent",
    "boolean"
   ]
@@ -291,14 +327,28 @@
    "boolean"
   ],
   [
+   "parentVC",
+   "unknown"
+  ],
+  [
    "parentVCPresent",
    "boolean"
+  ]
+ ],
+ "onClickedInviteButton": [
+  [
+   "handled",
+   "number"
   ]
  ],
  "onClosedCaptionReceived": [
   [
    "message",
    "string | null"
+  ],
+  [
+   "msgTime",
+   "unknown"
   ],
   [
    "msgTimePresent",
@@ -337,6 +387,10 @@
  ],
  "onCustomWaitingRoomDataUpdated": [
   [
+   "data",
+   "unknown"
+  ],
+  [
    "dataPresent",
    "boolean"
   ]
@@ -359,6 +413,10 @@
   ]
  ],
  "onDocsStatusChanged": [
+  [
+   "sourceInfo",
+   "unknown"
+  ],
   [
    "sourceInfoPresent",
    "boolean"
@@ -404,17 +462,29 @@
  "onFailedToStartShare": [],
  "onFileReceived": [
   [
+   "receiver",
+   "unknown"
+  ],
+  [
    "receiverPresent",
    "boolean"
   ]
  ],
  "onFileSendStart": [
   [
+   "sender",
+   "unknown"
+  ],
+  [
    "senderPresent",
    "boolean"
   ]
  ],
  "onFileTransferProgress": [
+  [
+   "info",
+   "unknown"
+  ],
   [
    "infoPresent",
    "boolean"
@@ -465,11 +535,19 @@
  ],
  "onHasAdminRightsNotification": [
   [
+   "admin",
+   "unknown"
+  ],
+  [
    "adminPresent",
    "boolean"
   ]
  ],
  "onHasAssistantRightsNotification": [
+  [
+   "assistant",
+   "unknown"
+  ],
   [
    "assistantPresent",
    "boolean"
@@ -477,17 +555,29 @@
  ],
  "onHasAttendeeRightsNotification": [
   [
+   "attendee",
+   "unknown"
+  ],
+  [
    "attendeePresent",
    "boolean"
   ]
  ],
  "onHasCreatorRightsNotification": [
   [
+   "creator",
+   "unknown"
+  ],
+  [
    "creatorPresent",
    "boolean"
   ]
  ],
  "onHasDataHelperRightsNotification": [
+  [
+   "dataHelper",
+   "unknown"
+  ],
   [
    "dataHelperPresent",
    "boolean"
@@ -511,6 +601,10 @@
    "string | null"
   ],
   [
+   "replyHandler",
+   "unknown"
+  ],
+  [
    "replyHandlerPresent",
    "boolean"
   ]
@@ -532,11 +626,19 @@
  ],
  "onIndicatorItemReceived": [
   [
+   "inMeetingIndicatorHandler",
+   "unknown"
+  ],
+  [
    "inMeetingIndicatorHandlerPresent",
    "boolean"
   ]
  ],
  "onIndicatorItemRemoved": [
+  [
+   "inMeetingIndicatorHandler",
+   "unknown"
+  ],
   [
    "inMeetingIndicatorHandlerPresent",
    "boolean"
@@ -566,6 +668,10 @@
  ],
  "onInterpreterLanguagesUpdated": [
   [
+   "availableLanguages",
+   "unknown"
+  ],
+  [
    "availableLanguagesPresent",
    "boolean"
   ]
@@ -590,11 +696,19 @@
  "onJoinMeetingConfirmed": [],
  "onJoinMeetingInfoRequired": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
  ],
  "onJoinMeetingNeedUserInfo": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"
@@ -615,8 +729,16 @@
  ],
  "onLiveTranscriptionMsgError": [
   [
+   "speakLanguage",
+   "unknown"
+  ],
+  [
    "speakLanguagePresent",
    "boolean"
+  ],
+  [
+   "transcriptLanguage",
+   "unknown"
   ],
   [
    "transcriptLanguagePresent",
@@ -624,6 +746,10 @@
   ]
  ],
  "onLiveTranscriptionMsgInfoReceived": [
+  [
+   "messageInfo",
+   "unknown"
+  ],
   [
    "messageInfoPresent",
    "boolean"
@@ -705,6 +831,10 @@
   ]
  ],
  "onMeetingParameterNotification": [
+  [
+   "meetingParam",
+   "unknown"
+  ],
   [
    "meetingParamPresent",
    "boolean"
@@ -796,11 +926,19 @@
  "onOngoingShareStopped": [],
  "onOptimizingShareForVideoClipStatusChanged": [
   [
+   "shareInfo",
+   "unknown"
+  ],
+  [
    "shareInfoPresent",
    "boolean"
   ]
  ],
  "onOriginalLanguageMsgReceived": [
+  [
+   "messageInfo",
+   "unknown"
+  ],
   [
    "messageInfoPresent",
    "boolean"
@@ -887,6 +1025,10 @@
  "onRawLiveStreamPrivilegeRequestTimeout": [],
  "onRawLiveStreamPrivilegeRequested": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
@@ -927,6 +1069,10 @@
  ],
  "onRequestLocalRecordingPrivilegeReceived": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
@@ -944,11 +1090,19 @@
  ],
  "onShareContentChanged": [
   [
+   "shareInfo",
+   "unknown"
+  ],
+  [
    "shareInfoPresent",
    "boolean"
   ]
  ],
  "onShareFromMainSession": [
+  [
+   "shareAction",
+   "unknown"
+  ],
   [
    "shareActionPresent",
    "boolean"
@@ -1231,6 +1385,10 @@
  ],
  "onSinkSharingStatus": [
   [
+   "shareInfo",
+   "unknown"
+  ],
+  [
    "shareInfoPresent",
    "boolean"
   ]
@@ -1271,6 +1429,10 @@
  ],
  "onSpokenLanguageChanged": [
   [
+   "spokenLanguage",
+   "unknown"
+  ],
+  [
    "spokenLanguagePresent",
    "boolean"
   ]
@@ -1302,11 +1464,19 @@
  "onStartCaptionsRequestApproved": [],
  "onStartCaptionsRequestReceived": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
  ],
  "onStartCloudRecordingRequested": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"
@@ -1364,11 +1534,19 @@
  ],
  "onUserConfirmRecoverMeeting": [
   [
+   "handler",
+   "unknown"
+  ],
+  [
    "handlerPresent",
    "boolean"
   ]
  ],
  "onUserConfirmToStartArchive": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"
@@ -1403,6 +1581,10 @@
   ]
  ],
  "onUserRawLiveStreamingStatusChanged": [
+  [
+   "liveStreamList",
+   "unknown"
+  ],
   [
    "liveStreamListPresent",
    "boolean"
@@ -1489,6 +1671,10 @@
   ]
  ],
  "onWebinarNeedInputScreenName": [
+  [
+   "handler",
+   "unknown"
+  ],
   [
    "handlerPresent",
    "boolean"

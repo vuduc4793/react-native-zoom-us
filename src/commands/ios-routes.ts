@@ -5,6 +5,7 @@ export const ZOOM_IOS_ROUTES: Record<string, string> = {
   AnnotationService: "getAnnotationService",
   AuthService: "getAuthService",
   DirectShareService: "getDirectShareService",
+  InviteHelper: "@MobileRTCInviteHelper.sharedInstance",
   MeetingService: "getMeetingService",
   MeetingSettings: "getMeetingSettings",
   MobileRTC: "",

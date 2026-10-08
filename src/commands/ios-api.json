@@ -267,6 +267,167 @@
   },
   "route": "getDirectShareService"
  },
+ "InviteHelper": {
+  "class": "MobileRTCInviteHelper",
+  "methods": {
+   "disableCopyURL": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "disableCopyURL"
+   },
+   "disableInviteEmail": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "disableInviteEmail"
+   },
+   "disableInviteSMS": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "disableInviteSMS"
+   },
+   "inviteCopyURL": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "inviteCopyURL"
+   },
+   "inviteEmailContent": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "inviteEmailContent"
+   },
+   "inviteEmailSubject": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "inviteEmailSubject"
+   },
+   "inviteSMS": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "inviteSMS"
+   },
+   "joinMeetingURL": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "joinMeetingURL"
+   },
+   "meetingPassword": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "meetingPassword"
+   },
+   "ongoingMeetingID": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "ongoingMeetingID"
+   },
+   "ongoingMeetingNumber": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "ongoingMeetingNumber"
+   },
+   "ongoingMeetingStartTime": {
+    "params": [],
+    "returns": "NSDate *",
+    "selector": "ongoingMeetingStartTime"
+   },
+   "ongoingMeetingTopic": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "ongoingMeetingTopic"
+   },
+   "ongoingRecurringMeeting": {
+    "params": [],
+    "returns": "BOOL",
+    "selector": "ongoingRecurringMeeting"
+   },
+   "rawMeetingPassword": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "rawMeetingPassword"
+   },
+   "setDisableCopyURL": {
+    "params": [
+     {
+      "name": "disableCopyURL",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setDisableCopyURL:"
+   },
+   "setDisableInviteEmail": {
+    "params": [
+     {
+      "name": "disableInviteEmail",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setDisableInviteEmail:"
+   },
+   "setDisableInviteSMS": {
+    "params": [
+     {
+      "name": "disableInviteSMS",
+      "type": "BOOL"
+     }
+    ],
+    "returns": "void",
+    "selector": "setDisableInviteSMS:"
+   },
+   "setInviteCopyURL": {
+    "params": [
+     {
+      "name": "inviteCopyURL",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setInviteCopyURL:"
+   },
+   "setInviteEmailContent": {
+    "params": [
+     {
+      "name": "inviteEmailContent",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setInviteEmailContent:"
+   },
+   "setInviteEmailSubject": {
+    "params": [
+     {
+      "name": "inviteEmailSubject",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setInviteEmailSubject:"
+   },
+   "setInviteSMS": {
+    "params": [
+     {
+      "name": "inviteSMS",
+      "type": "NSString *"
+     }
+    ],
+    "returns": "void",
+    "selector": "setInviteSMS:"
+   },
+   "tollCallInNumber": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "tollCallInNumber"
+   },
+   "tollFreeCallInNumber": {
+    "params": [],
+    "returns": "NSString *",
+    "selector": "tollFreeCallInNumber"
+   }
+  },
+  "route": "@MobileRTCInviteHelper.sharedInstance"
+ },
  "MeetingService": {
   "class": "MobileRTCMeetingService",
   "methods": {

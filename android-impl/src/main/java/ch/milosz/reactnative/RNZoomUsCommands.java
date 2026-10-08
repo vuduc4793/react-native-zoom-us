@@ -142,6 +142,17 @@ class RNZoomUsCommands {
       return out;
     }
 
+    // An SDK object JS received earlier, passed back as {__ref}.
+    if (args.getType(i) == ReadableType.Map) {
+      com.facebook.react.bridge.ReadableMap map = args.getMap(i);
+      if (map != null && map.hasKey("__ref") && !map.isNull("__ref")) {
+        Object ref = RNZoomUsRefs.get(map.getString("__ref"));
+        if (ref == null) throw new IllegalArgumentException("argument " + i + ": ref " + map.getString("__ref") + " has expired");
+        if (!type.isInstance(ref)) throw new IllegalArgumentException("argument " + i + ": ref is " + ref.getClass().getName() + ", not " + type.getName());
+        return ref;
+      }
+    }
+
     throw new IllegalArgumentException(
         "cannot convert argument " + i + " to " + type.getName()
             + "; this call needs a native wrapper rather than the generic bridge");
@@ -179,8 +190,14 @@ class RNZoomUsCommands {
     // An SDK object: flatten its no-argument getters, which is the only shape
     // that can cross the bridge. Depth-limited because some of them hold
     // references back into the meeting graph.
-    if (depth >= MAX_DEPTH) return value.toString();
+    if (depth >= MAX_DEPTH) {
+      WritableMap ref = Arguments.createMap();
+      ref.putString("__ref", RNZoomUsRefs.put(value));
+      return ref;
+    }
     WritableMap out = Arguments.createMap();
+    // Lets JS call methods on this object or pass it back as an argument.
+    out.putString("__ref", RNZoomUsRefs.put(value));
     for (Method method : value.getClass().getMethods()) {
       String name = method.getName();
       if (method.getParameterTypes().length != 0) continue;

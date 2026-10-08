@@ -47,7 +47,7 @@ export function useZoomParticipantCount(initial = 0) {
   const [count, setCount] = React.useState(initial);
 
   useZoomEvent("inMeetingUserCount", (payload) => {
-    if (typeof payload.userList === "number") setCount(payload.userList);
+    if (typeof payload.count === "number") setCount(payload.count);
   });
   useZoomEvent("userJoin", (payload) => {
     setCount((current) => current + (payload.userList?.length ?? 0));

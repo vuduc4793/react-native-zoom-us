@@ -24,6 +24,9 @@ type IOSStatusExtraEvent =
     | 'MEETING_STATUS_ENDED'
     | 'MEETING_STATUS_LOCKED'
     | 'MEETING_STATUS_UNLOCKED'
+    | 'MEETING_STATUS_JOIN_BREAKOUT_ROOM'
+    | 'MEETING_STATUS_LEAVE_BREAKOUT_ROOM'
+    /** iOS builds before 2026-10: same states as the two above. */
     | 'MEETING_STATUS_JOIN_BO'
     | 'MEETING_STATUS_LEAVE_BO'
 

@@ -3,6 +3,7 @@
 //
 
 #import "RNZoomUsCommands.h"
+#import "RNZoomUsEvents.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <MobileRTC/MobileRTC.h>
@@ -35,7 +36,24 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
     }
     if (path == nil || path.length == 0) return target;
 
-    for (NSString *rawStep in [path componentsSeparatedByString:@"."]) {
+    NSMutableArray<NSString *> *steps = [[path componentsSeparatedByString:@"."] mutableCopy];
+    // "@MobileRTCInviteHelper.sharedInstance": start from an SDK class instead of
+    // [MobileRTC sharedRTC], for singletons that are not reachable from it.
+    NSString *first = [steps.firstObject stringByTrimmingCharactersInSet:
+                       [NSCharacterSet whitespaceCharacterSet]];
+    if ([first hasPrefix:@"@"]) {
+        NSString *className = [first substringFromIndex:1];
+        Class cls = [className hasPrefix:@"MobileRTC"] ? NSClassFromString(className) : Nil;
+        if (cls == Nil) {
+            if (error) *error = RNZoomUsCommandsError([NSString stringWithFormat:
+                @"%@ is not a MobileRTC class in this SDK build", className]);
+            return nil;
+        }
+        target = cls;
+        [steps removeObjectAtIndex:0];
+    }
+
+    for (NSString *rawStep in steps) {
         NSString *step = [rawStep stringByTrimmingCharactersInSet:
                           [NSCharacterSet whitespaceCharacterSet]];
         if (step.length == 0) continue;
@@ -153,6 +171,19 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
         if ([value isKindOfClass:[NSNull class]]) value = nil;
 
         if (enc[0] == '@') {
+            // An SDK object JS received earlier, passed back as {__ref}.
+            if ([value isKindOfClass:[NSDictionary class]] && value[@"__ref"] != nil) {
+                id ref = RNZoomUsRefGet(value[@"__ref"]);
+                if (ref == nil) {
+                    if (error) *error = RNZoomUsCommandsError([NSString stringWithFormat:
+                        @"argument %lu: ref %@ has expired", (unsigned long)i, value[@"__ref"]]);
+                    return nil;
+                }
+                value = ref;
+                __unsafe_unretained id unretainedRef = value;
+                [inv setArgument:&unretainedRef atIndex:(NSInteger)(i + 2)];
+                continue;
+            }
             if (value != nil &&
                 !([value isKindOfClass:[NSString class]] ||
                   [value isKindOfClass:[NSNumber class]] ||
@@ -279,6 +310,13 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
             out[[k description]] = m ?: [NSNull null];
         }];
         return out;
+    }
+
+    // MobileRTC objects: properties *and* get/is/can/has methods (many SDK
+    // classes expose data only as methods, which @property-only flattening
+    // turned into {}), plus `__ref` so JS can call methods on them.
+    for (Class c = [value class]; c != Nil; c = class_getSuperclass(c)) {
+        if ([NSStringFromClass(c) hasPrefix:@"MobileRTC"]) return RNZoomUsSerialize(value);
     }
 
     if (depth >= kMaxDepth) return [value description];

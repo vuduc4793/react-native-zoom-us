@@ -1,0 +1,365 @@
+{
+ "on3DAvatarItemDataDownloaded": [
+  "index",
+  "success"
+ ],
+ "on3DAvatarItemDataDownloading": [
+  "index"
+ ],
+ "onAICompanionFeatureCanNotBeTurnedOff": [
+  "featuresArr"
+ ],
+ "onAICompanionFeatureSwitchRequestResponse": [
+  "agree",
+  "timeout",
+  "turnOn"
+ ],
+ "onAICompanionFeatureSwitchRequested": [
+  "handler"
+ ],
+ "onAICompanionFeatureTurnOffByParticipant": [
+  "handler"
+ ],
+ "onAddAnswer": [
+  "answerID",
+  "success"
+ ],
+ "onAddQuestion": [
+  "questionID",
+  "success"
+ ],
+ "onAllowAskQuestionAnonymousStatus": [
+  "beAllowed"
+ ],
+ "onAllowAskQuestionStatus": [
+  "bEnabled"
+ ],
+ "onAllowAttendeeChatResult": [],
+ "onAllowAttendeeCommentQuestionStatus": [],
+ "onAllowAttendeeRaiseHandStatusChanged": [
+  "canRaiseHand"
+ ],
+ "onAllowAttendeeViewAllQuestionStatus": [
+  "beAllowed"
+ ],
+ "onAllowAttendeeViewTheParticipantCountStatusChanged": [
+  "canViewParticipantCount"
+ ],
+ "onAllowAttendeeVoteupQuestionStatus": [],
+ "onAllowPanelistStartVideoNotification": [],
+ "onAllowWebinarReactionStatusChanged": [
+  "canReaction"
+ ],
+ "onAnnotationSupportChanged": [],
+ "onAnnotationToolTypeChanged": [
+  "tool"
+ ],
+ "onAttendeeAudioStatusNotification": [
+  "canTalk",
+  "isMuted",
+  "userId"
+ ],
+ "onAttendeePromoteConfirmResult": [
+  "agree",
+  "userId"
+ ],
+ "onAvailableLanguageListUpdated": [
+  "availableLanguageList"
+ ],
+ "onAvailableSignLanguageListUpdated": [
+  "availableSignLanguageList"
+ ],
+ "onBOInfoUpdated": [
+  "boId"
+ ],
+ "onBOListInfoUpdated": [],
+ "onCallMeStatus": [],
+ "onCallOutRoomSystemStatusChanged": [],
+ "onCaptionStatusChanged": [
+  "enable"
+ ],
+ "onContactPresenceChanged": [],
+ "onCreateBOResponse": [
+  "BOID",
+  "success"
+ ],
+ "onCustom3DAvatarAllElementModelDataDownloaded": [],
+ "onCustom3DAvatarImageModelDataDownloaded": [],
+ "onCustomWaitingRoomDataUpdated": [],
+ "onDeleteAnswer": [
+  "answerIDArray"
+ ],
+ "onDeleteQuestion": [
+  "questionIDArray"
+ ],
+ "onDepromptPanelist2AttendeeResult": [
+  "errorCode"
+ ],
+ "onDirectShareStatusUpdate": [],
+ "onDisallowAttendeeChatResult": [],
+ "onDisallowPanelistStartVideoNotification": [],
+ "onDocsPermissionChanged": [],
+ "onDocsStatusChanged": [
+  "sourceInfo"
+ ],
+ "onE2EEMeetingSecurityCodeChanged": [],
+ "onEmojiFeedbackCanceled": [
+  "userId"
+ ],
+ "onEmojiFeedbackReceived": [
+  "type",
+  "userId"
+ ],
+ "onEmojiReactionReceived": [],
+ "onEmojiReactionReceivedInWebinar": [
+  "type"
+ ],
+ "onFailedToRequestSendQuery": [],
+ "onFailedToStartQuery": [],
+ "onFailedToStartSmartSummary": [],
+ "onGetRightAnswerListPrivilege": [
+  "bCan"
+ ],
+ "onHostUnsupportedStopNotesRequest": [],
+ "onIndicatorItemReceived": [
+  "inMeetingIndicatorHandler"
+ ],
+ "onIndicatorItemRemoved": [
+  "inMeetingIndicatorHandler"
+ ],
+ "onInterpretationStart": [],
+ "onInterpretationStop": [],
+ "onInterpreterActiveLanguageChanged": [
+  "activeLanID",
+  "userID"
+ ],
+ "onInterpreterLanguageChanged": [
+  "lanID1",
+  "lanID2"
+ ],
+ "onInterpreterLanguagesUpdated": [
+  "availableLanguages"
+ ],
+ "onInterpreterListChanged": [],
+ "onInterpreterRoleChanged": [
+  "isInterpreter",
+  "userID"
+ ],
+ "onInviteCallOutUserStatus": [],
+ "onLiveStreamReminderStatusChangeFailed": [],
+ "onLiveStreamReminderStatusChanged": [
+  "enable"
+ ],
+ "onLiveStreamStatusChange": [
+  "liveStreamStatus"
+ ],
+ "onLiveTranscriptionMsgError": [
+  "speakLanguage",
+  "transcriptLanguage"
+ ],
+ "onLiveTranscriptionMsgReceived": [
+  "messageInfo"
+ ],
+ "onLiveTranscriptionStatus": [
+  "status"
+ ],
+ "onManualCaptionStatusChanged": [
+  "bEnabled"
+ ],
+ "onMeetingAcceptedByOtherDevice": [],
+ "onMeetingDeclinedByOtherDevice": [],
+ "onMeetingDeviceListChanged": [],
+ "onMeetingInvitationCanceled": [],
+ "onMeetingInvitationDeclined": [],
+ "onMeetingQAStatusChanged": [
+  "isMeetingQAFeatureOn"
+ ],
+ "onMyNotesCanStartChanged": [],
+ "onMyNotesStatusChanged": [],
+ "onNeedRealNameAuthMeetingNotification": [],
+ "onNotificationServiceStatus": [
+  "error",
+  "status"
+ ],
+ "onOriginalLanguageMsgReceived": [
+  "messageInfo"
+ ],
+ "onPSUserStatusChanged": [
+  "isStart",
+  "userId"
+ ],
+ "onParingRoomSystemResult": [],
+ "onPollingActionResult": [
+  "actionType",
+  "bSuccess",
+  "errorMsg",
+  "pollingID"
+ ],
+ "onPollingElapsedTime": [
+  "pollingID",
+  "uElapsedtime"
+ ],
+ "onPollingInactive": [],
+ "onPollingListUpdated": [],
+ "onPollingQuestionImageDownloaded": [
+  "path",
+  "questionID"
+ ],
+ "onPollingResultUpdated": [
+  "pollingID"
+ ],
+ "onPollingStatusChanged": [
+  "pollingID",
+  "status"
+ ],
+ "onPromptAttendee2PanelistResult": [
+  "errorCode"
+ ],
+ "onQAConnectStarted": [],
+ "onQAConnected": [
+  "connected"
+ ],
+ "onQueryEnableActionCallback": [],
+ "onQuerySettingChanged": [],
+ "onQueryStateEnabledButNotStarted": [],
+ "onQueryStateNotSupported": [],
+ "onQueryStateStarted": [],
+ "onQueryStateSupportedButDisabled": [],
+ "onQuestionMarkedAsDismissed": [
+  "questionID"
+ ],
+ "onRawLiveStreamPrivilegeChanged": [
+  "hasPrivilege"
+ ],
+ "onRawLiveStreamPrivilegeRequestTimeout": [],
+ "onReceiveAnswer": [
+  "answerID"
+ ],
+ "onReceiveInvitationToMeeting": [],
+ "onReceiveOfflineNotificationPubKey": [],
+ "onReceiveQueryAnswer": [],
+ "onReceiveQuestion": [
+  "questionID"
+ ],
+ "onReceiveRequestToEnableQuery": [],
+ "onReceiveRequestToSendQuery": [],
+ "onReceiveRequestToStartQuery": [],
+ "onRegisterOfflineNotification": [],
+ "onRemoveBOResponse": [
+  "BOID",
+  "success"
+ ],
+ "onReopenQuestion": [
+  "questionID"
+ ],
+ "onRequestCloudRecordingResponse": [
+  "status"
+ ],
+ "onRequestContactDetailInfo": [],
+ "onRequestForLiveTranscriptReceived": [
+  "bAnonymous",
+  "requesterUserId"
+ ],
+ "onRequestLiveTranscriptionStatusChange": [],
+ "onRequestRawLiveStreamPrivilegeRequested": [
+  "handler"
+ ],
+ "onRequestSignInterpreterToTalk": [],
+ "onRequestStarContact": [],
+ "onRetrieveSMSVerificationCodeResultNotification": [],
+ "onRevokeUpvoteQuestion": [
+  "orderChanged",
+  "questionID"
+ ],
+ "onSelfAllowTalkNotification": [],
+ "onSelfDisallowTalkNotification": [],
+ "onSendQueryPrivilegeChanged": [],
+ "onSignInterpretationStatusChanged": [
+  "status"
+ ],
+ "onSignInterpreterLanguageChanged": [],
+ "onSignInterpreterListChanged": [],
+ "onSignInterpreterRoleChanged": [],
+ "onSmartSummaryStartRequestReceived": [],
+ "onSmartSummaryStateEnabledButNotStarted": [],
+ "onSmartSummaryStateNotSupported": [],
+ "onSmartSummaryStateStarted": [],
+ "onSmartSummaryStateSupportedButDisabled": [],
+ "onSpokenLanguageChanged": [
+  "spokenLanguage"
+ ],
+ "onStarContactListChanged": [],
+ "onStartCaptionsRequestApproved": [],
+ "onStartCaptionsRequestReceived": [
+  "handler"
+ ],
+ "onStartCloudRecordingRequested": [
+  "handler"
+ ],
+ "onTalkPrivilegeChanged": [
+  "hasPrivilege"
+ ],
+ "onTransferMeetingResult": [],
+ "onUnAssignedUserUpdated": [],
+ "onUnRegisterOfflineNotification": [],
+ "onUpdateBONameResponse": [
+  "BOID",
+  "success"
+ ],
+ "onUpvoteQuestion": [
+  "orderChanged",
+  "questionID"
+ ],
+ "onUserEndLiving": [
+  "questionID"
+ ],
+ "onUserGetRemoteControlPrivilege": [],
+ "onUserLivingReply": [
+  "questionID"
+ ],
+ "onUserRawLiveStreamPrivilegeChanged": [
+  "hasPrivilege",
+  "userId"
+ ],
+ "onUserRawLiveStreamingStatusChanged": [
+  "liveStreamList"
+ ],
+ "onUserThresholdReachedForLiveStream": [
+  "percent"
+ ],
+ "onVerifySMSVerificationCodeResultNotification": [],
+ "onWaitingRoomEntranceEnabled": [
+  "enabled"
+ ],
+ "onWaitingRoomPresetAudioStatusChanged": [
+  "audioCanTurnOn"
+ ],
+ "onWaitingRoomPresetVideoStatusChanged": [
+  "videoCanTurnOn"
+ ],
+ "onWaitingRoomUserJoin": [
+  "userId"
+ ],
+ "onWaitingRoomUserLeft": [
+  "userId"
+ ],
+ "onWaitingRoomUserNameChanged": [
+  "userID",
+  "userName"
+ ],
+ "onWebPreAssignBODataDownloadStatusChanged": [
+  "status"
+ ],
+ "onWhiteboardSettingsChanged": [
+  "createOption",
+  "enable",
+  "shareOption"
+ ],
+ "onWhiteboardStatusChanged": [
+  "status"
+ ],
+ "onZoomIdentityExpired": [],
+ "onZoomSDKLoginResult": [],
+ "onZoomSDKLogoutResult": [],
+ "remoteControlStarted": []
+}

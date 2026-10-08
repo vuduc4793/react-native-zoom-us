@@ -1,5 +1,6 @@
 import { NativeEventEmitter, EmitterSubscription } from "react-native";
 import { RNZoomUs } from "../../native";
+import { aliasesFor } from "./aliases";
 import type {
   ZoomEvent,
   ZoomEventName,
@@ -20,6 +21,58 @@ export { default } from "./legacy";
  */
 export const ZOOM_EVENT_CHANNEL = "ZoomUsEvent";
 
+/*
+ * The legacy vocabulary (userJoin, success, hostChanged, ...) is shared by both
+ * platforms, but each native side shaped some payloads its own way. They are
+ * made identical here, in JavaScript, so a shape that still differs is an OTA
+ * fix rather than a native release. Fields are added or retyped, never removed.
+ */
+const toNumber = (value: unknown): unknown => {
+  if (typeof value === "string" && value.trim() !== "" && !isNaN(Number(value))) {
+    return Number(value);
+  }
+  return value;
+};
+
+
+export function normalizeZoomEvent(raw: ZoomEvent): ZoomEvent {
+  const event: any = { ...raw };
+  // Older iOS binaries named the breakout-room states differently from
+  // Android; one name on both.
+  if (event.status === "MEETING_STATUS_JOIN_BO") event.status = "MEETING_STATUS_JOIN_BREAKOUT_ROOM";
+  if (event.status === "MEETING_STATUS_LEAVE_BO") event.status = "MEETING_STATUS_LEAVE_BREAKOUT_ROOM";
+  switch (event.event) {
+    case "userJoin":
+    case "userLeave":
+      // Android sends ids as strings, iOS as numbers.
+      event.userList = Array.isArray(event.userList)
+        ? event.userList.map(toNumber).filter((id: unknown) => typeof id === "number")
+        : [];
+      break;
+    case "inMeetingUserCount":
+      // Android put the count in `userId`, the iOS view in `userList`.
+      if (typeof event.count !== "number") {
+        const count = [event.userId, event.userList].map(toNumber).find((v) => typeof v === "number");
+        if (typeof count === "number") event.count = count;
+      }
+      break;
+    case "hostChanged":
+    case "coHostChanged":
+      event.userId = toNumber(event.userId);
+      break;
+    case "onChatMessageNotification": {
+      const info = event.chatInfo;
+      if (info && typeof info === "object") {
+        // Android spells it threadId, iOS threadID.
+        const thread = info.threadId ?? info.threadID ?? null;
+        event.chatInfo = { ...info, threadId: thread, threadID: thread };
+      }
+      break;
+    }
+  }
+  return event as ZoomEvent;
+}
+
 type AnyListener = (event: ZoomEvent) => void;
 type NamedListener = (payload: any, event: ZoomEvent) => void;
 
@@ -38,8 +91,15 @@ function ensureSubscribed() {
   if (subscription || !RNZoomUs) return;
 
   emitter = emitter ?? new NativeEventEmitter(RNZoomUs as any);
-  subscription = emitter.addListener(ZOOM_EVENT_CHANNEL, (event: ZoomEvent) => {
-    if (!event || typeof event.event !== "string") return;
+  subscription = emitter.addListener(ZOOM_EVENT_CHANNEL, (rawEvent: ZoomEvent) => {
+    if (!rawEvent || typeof rawEvent.event !== "string") return;
+    let event: ZoomEvent;
+    try {
+      event = normalizeZoomEvent(rawEvent);
+    } catch (error) {
+      console.error(`[react-native-zoom-us] normalizing "${rawEvent.event}" threw`, error);
+      event = rawEvent;
+    }
 
     // One subscriber throwing must not cost the others their event, and must
     // not escape into the native emitter's callback.
@@ -51,11 +111,21 @@ function ensureSubscribed() {
       }
     };
 
-    const listeners = named.get(event.event);
-    if (listeners) {
+    const deliverNamed = (name: string, payload: ZoomEvent) => {
+      const listeners = named.get(name);
+      if (!listeners) return;
       // Copy before iterating: a listener may unsubscribe itself.
-      for (const listener of Array.from(listeners)) deliver(listener, event, event);
+      for (const listener of Array.from(listeners)) deliver(listener, payload, payload);
+    };
+    deliverNamed(event.event, event);
+    // The same event under the other platform's name (src/events/aliases.ts).
+    let extras: ZoomEvent[] = [];
+    try {
+      extras = aliasesFor(event);
+    } catch (error) {
+      console.error(`[react-native-zoom-us] aliasing "${event.event}" threw`, error);
     }
+    for (const extra of extras) deliverNamed(extra.event, extra);
     for (const listener of Array.from(any)) deliver(listener, event);
   });
 }

@@ -150,6 +150,23 @@ def main():
         routes[name] = selector
         owner[name] = cls
 
+    # Singletons that hang off their own class rather than [MobileRTC sharedRTC]
+    # (MobileRTCInviteHelper +sharedInstance). "@Class.selector" tells the native
+    # resolver to start from the class object instead.
+    for cls, members in classes.items():
+        if cls == "MobileRTC" or not cls.startswith("MobileRTC"):
+            continue
+        for kind, ret, selector, params in members:
+            if kind != "+" or params or not selector.startswith("shared"):
+                continue
+            if clean_type(ret) != cls + " *":
+                continue
+            name = cls[len("MobileRTC"):]
+            if name in routes:
+                continue
+            routes[name] = "@" + cls + "." + selector
+            owner[name] = cls
+
     api, skipped, total = {}, 0, 0
     for name, cls in sorted(owner.items()):
         entries = {}

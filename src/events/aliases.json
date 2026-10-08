@@ -1,0 +1,185 @@
+{
+ "_comment": "Same callback, different name per SDK: [android name, ios name]. Delivered under both names on each platform by src/events/aliases.ts. Read by scripts/generate-events.py too.",
+ "rename": [
+  [
+   "onAddAnswer",
+   "onSinkQAAddAnswer"
+  ],
+  [
+   "onAddQuestion",
+   "onSinkQAAddQuestion"
+  ],
+  [
+   "onAllowAskQuestionAnonymousStatus",
+   "onSinkQAAllowAskQuestionAnonymouslyNotification"
+  ],
+  [
+   "onAllowAttendeeViewAllQuestionStatus",
+   "onSinkQAAllowAttendeeViewAllQuestionNotification"
+  ],
+  [
+   "onAnnotationToolTypeChanged",
+   "onAnnotationToolChanged"
+  ],
+  [
+   "onAttendeePromoteConfirmResult",
+   "onSinkAttendeePromoteConfirmResult"
+  ],
+  [
+   "onDeleteAnswer",
+   "onSinkDeleteAnswer"
+  ],
+  [
+   "onDeleteQuestion",
+   "onSinkDeleteQuestion"
+  ],
+  [
+   "onDepromptPanelist2AttendeeResult",
+   "onSinkDePromptPanelist2AttendeeResult"
+  ],
+  [
+   "onFreeMeetingUpgradeToProMeeting",
+   "onFreeMeetingUpgradedToProMeeting"
+  ],
+  [
+   "onLiveStreamReminderStatusChangeFailed",
+   "onLiveStreamReminderStatusChangedFailed"
+  ],
+  [
+   "onLiveTranscriptionMsgReceived",
+   "onLiveTranscriptionMsgInfoReceived"
+  ],
+  [
+   "onLiveTranscriptionStatus",
+   "onSinkLiveTranscriptionStatus"
+  ],
+  [
+   "onMeetingActiveVideo",
+   "onSinkMeetingActiveVideo"
+  ],
+  [
+   "onMyAudioSourceTypeChanged",
+   "onSinkMeetingMyAudioTypeChange"
+  ],
+  [
+   "onPromptAttendee2PanelistResult",
+   "onSinkPromptAttendee2PanelistResult"
+  ],
+  [
+   "onQAConnectStarted",
+   "onSinkQAConnectStarted"
+  ],
+  [
+   "onQAConnected",
+   "onSinkQAConnected"
+  ],
+  [
+   "onQuestionMarkedAsDismissed",
+   "onSinkQuestionMarkedAsDismissed"
+  ],
+  [
+   "onReceiveAnswer",
+   "onSinkReceiveAnswer"
+  ],
+  [
+   "onReceiveQuestion",
+   "onSinkReceiveQuestion"
+  ],
+  [
+   "onReopenQuestion",
+   "onSinkReopenQuestion"
+  ],
+  [
+   "onRequestForLiveTranscriptReceived",
+   "onSinkRequestForLiveTranscriptReceived"
+  ],
+  [
+   "onRequestRawLiveStreamPrivilegeRequested",
+   "onRawLiveStreamPrivilegeRequested"
+  ],
+  [
+   "onRevokeUpvoteQuestion",
+   "onSinkRevokeVoteupQuestion"
+  ],
+  [
+   "onSelfAllowTalkNotification",
+   "onSinkSelfAllowTalkNotification"
+  ],
+  [
+   "onSelfDisallowTalkNotification",
+   "onSinkSelfDisallowTalkNotification"
+  ],
+  [
+   "onShareSettingTypeChanged",
+   "onSinkShareSettingTypeChanged"
+  ],
+  [
+   "onSignInterpretationStatusChanged",
+   "onSignInterpretationStatusChange"
+  ],
+  [
+   "onSinkAttendeeChatPrivilegeChanged",
+   "onSinkAttendeeChatPriviledgeChanged"
+  ],
+  [
+   "onSpotlightVideoChanged",
+   "onSpotlightVideoChange"
+  ],
+  [
+   "onUpvoteQuestion",
+   "onSinkVoteupQuestion"
+  ],
+  [
+   "onUserAudioStatusChanged",
+   "onSinkMeetingAudioStatusChange"
+  ],
+  [
+   "onUserAudioTypeChanged",
+   "onSinkMeetingAudioTypeChange"
+  ],
+  [
+   "onUserEndLiving",
+   "onSinkUserEndLiving"
+  ],
+  [
+   "onUserLivingReply",
+   "onSinkUserLivingReply"
+  ],
+  [
+   "onUserNamesChanged",
+   "onSinkUserNameChanged"
+  ],
+  [
+   "onUserVideoStatusChanged",
+   "onSinkMeetingVideoStatusChange"
+  ],
+  [
+   "onWebinarNeedRegister",
+   "onSinkWebinarNeedRegister"
+  ],
+  [
+   "myAudioSourceTypeChanged",
+   "myAudioTypeChanged"
+  ]
+ ],
+ "meetingStateByStatus": {
+  "MEETING_STATUS_IDLE": 0,
+  "MEETING_STATUS_CONNECTING": 1,
+  "MEETING_STATUS_WAITINGFORHOST": 2,
+  "MEETING_STATUS_INMEETING": 3,
+  "MEETING_STATUS_DISCONNECTING": 4,
+  "MEETING_STATUS_RECONNECTING": 5,
+  "MEETING_STATUS_FAILED": 6,
+  "MEETING_STATUS_ENDED": 7,
+  "MEETING_STATUS_LOCKED": 8,
+  "MEETING_STATUS_UNLOCKED": 9,
+  "MEETING_STATUS_IN_WAITING_ROOM": 10,
+  "MEETING_STATUS_WEBINAR_PROMOTE": 11,
+  "MEETING_STATUS_WEBINAR_DEPROMOTE": 12,
+  "MEETING_STATUS_JOIN_BACKSTAGE": 15,
+  "MEETING_STATUS_LEAVE_BACKSTAGE": 16,
+  "MEETING_STATUS_JOIN_BREAKOUT_ROOM": 13,
+  "MEETING_STATUS_LEAVE_BREAKOUT_ROOM": 14
+ },
+ "meetingStateByStatus_comment": "MEETING_STATUS_* name (both platforms' legacy `status`) -> iOS MobileRTCMeetingState number, from RNZoomUs.m formatStateToString."
+}

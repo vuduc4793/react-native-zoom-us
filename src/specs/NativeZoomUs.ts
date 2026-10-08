@@ -51,6 +51,14 @@ export interface Spec extends TurboModule {
   sendChatMsg(msgData: UnsafeObject): Promise<void>;
   deleteChatMessage(msgId: string): Promise<void>;
 
+  getAllChatMessageID(): Promise<UnsafeObject>;
+
+  // Generic bridge: any SDK method by path, or on an object JS received (ref).
+  invoke(path: string, method: string, args: UnsafeObject): Promise<UnsafeObject>;
+  invokeRef(ref: string, method: string, args: UnsafeObject): Promise<UnsafeObject>;
+  releaseRef(ref: string): void;
+  setPromptMode(prompt: string, mode: string, timeoutMs: number): Promise<void>;
+
   // Required by NativeEventEmitter.
   addListener(eventName: string): void;
   removeListeners(count: Int32): void;

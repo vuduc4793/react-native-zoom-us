@@ -18,7 +18,7 @@
 }
 
 - (void)onJoinMeetingInfoRequired:(MobileRTCJoinMeetingInfoHandler *)handler {
-    RNZoomUsEmit(@"onJoinMeetingInfoRequired", @{@"handlerPresent": @(handler != nil)});
+    RNZoomUsEmit(@"onJoinMeetingInfoRequired", @{@"handlerPresent": @(handler != nil), @"handler": RNZoomUsSerialize(handler)});
 }
 
 - (void)onMeetingTopicChanged:(NSString *)meetingTopic {
@@ -27,7 +27,7 @@
 
 
 - (void)onChatMessageEditNotification:(MobileRTCMeetingChat *)chatInfo {
-    RNZoomUsEmit(@"onChatMessageEditNotification", @{@"chatInfoPresent": @(chatInfo != nil)});
+    RNZoomUsEmit(@"onChatMessageEditNotification", @{@"chatInfoPresent": @(chatInfo != nil), @"chatInfo": RNZoomUsSerialize(chatInfo)});
 }
 
 - (void)onLiveStreamReminderStatusChanged:(BOOL)enable {
@@ -43,15 +43,15 @@
 }
 
 - (void)onIndicatorItemReceived:(MobileRTCIndicatorHandler*)inMeetingIndicatorHandler {
-    RNZoomUsEmit(@"onIndicatorItemReceived", @{@"inMeetingIndicatorHandlerPresent": @(inMeetingIndicatorHandler != nil)});
+    RNZoomUsEmit(@"onIndicatorItemReceived", @{@"inMeetingIndicatorHandlerPresent": @(inMeetingIndicatorHandler != nil), @"inMeetingIndicatorHandler": RNZoomUsSerialize(inMeetingIndicatorHandler)});
 }
 
 - (void)onIndicatorItemRemoved:(MobileRTCIndicatorHandler*)inMeetingIndicatorHandler {
-    RNZoomUsEmit(@"onIndicatorItemRemoved", @{@"inMeetingIndicatorHandlerPresent": @(inMeetingIndicatorHandler != nil)});
+    RNZoomUsEmit(@"onIndicatorItemRemoved", @{@"inMeetingIndicatorHandlerPresent": @(inMeetingIndicatorHandler != nil), @"inMeetingIndicatorHandler": RNZoomUsSerialize(inMeetingIndicatorHandler)});
 }
 
 - (void)onAppSignalPanelUpdated:(MobileRTCAppSignalPanelHandler*)handler {
-    RNZoomUsEmit(@"onAppSignalPanelUpdated", @{@"handlerPresent": @(handler != nil)});
+    RNZoomUsEmit(@"onAppSignalPanelUpdated", @{@"handlerPresent": @(handler != nil), @"handler": RNZoomUsSerialize(handler)});
 }
 
 - (void)onMuteOnEntryStatusChange:(BOOL)bEnabled {
@@ -71,15 +71,15 @@
 }
 
 - (void)onShareContentChanged:(MobileRTCSSharingSourceInfo*)shareInfo {
-    RNZoomUsEmit(@"onShareContentChanged", @{@"shareInfoPresent": @(shareInfo != nil)});
+    RNZoomUsEmit(@"onShareContentChanged", @{@"shareInfoPresent": @(shareInfo != nil), @"shareInfo": RNZoomUsSerialize(shareInfo)});
 }
 
 - (void)onOptimizingShareForVideoClipStatusChanged:(MobileRTCSSharingSourceInfo*)shareInfo {
-    RNZoomUsEmit(@"onOptimizingShareForVideoClipStatusChanged", @{@"shareInfoPresent": @(shareInfo != nil)});
+    RNZoomUsEmit(@"onOptimizingShareForVideoClipStatusChanged", @{@"shareInfoPresent": @(shareInfo != nil), @"shareInfo": RNZoomUsSerialize(shareInfo)});
 }
 
 - (void)onStartCaptionsRequestReceived:(MobileRTCCaptionsControlHandler *)handler {
-    RNZoomUsEmit(@"onStartCaptionsRequestReceived", @{@"handlerPresent": @(handler != nil)});
+    RNZoomUsEmit(@"onStartCaptionsRequestReceived", @{@"handlerPresent": @(handler != nil), @"handler": RNZoomUsSerialize(handler)});
 }
 
 - (void)onStartCaptionsRequestApproved {
@@ -91,7 +91,7 @@
 }
 
 - (void)onSpokenLanguageChanged:(MobileRTCLiveTranscriptionLanguage *)spokenLanguage {
-    RNZoomUsEmit(@"onSpokenLanguageChanged", @{@"spokenLanguagePresent": @(spokenLanguage != nil)});
+    RNZoomUsEmit(@"onSpokenLanguageChanged", @{@"spokenLanguagePresent": @(spokenLanguage != nil), @"spokenLanguage": RNZoomUsSerialize(spokenLanguage)});
 }
 
 - (void)on3DAvatarItemThumbnailsDownloaded {
@@ -129,7 +129,7 @@
 }
 
 - (void)onUserConfirmRecoverMeeting:(MobileRTCRecoverMeetingHandle *)handler {
-    RNZoomUsEmit(@"onUserConfirmRecoverMeeting", @{@"handlerPresent": @(handler != nil)});
+    RNZoomUsEmit(@"onUserConfirmRecoverMeeting", @{@"handlerPresent": @(handler != nil), @"handler": RNZoomUsSerialize(handler)});
 }
 
 - (void)onHostUnsupportedStopNotesRequest {
@@ -161,7 +161,7 @@
 }
 
 - (void)onDocsStatusChanged:(MobileRTCDocSharingSourceInfo *)sourceInfo {
-    RNZoomUsEmit(@"onDocsStatusChanged", @{@"sourceInfoPresent": @(sourceInfo != nil)});
+    RNZoomUsEmit(@"onDocsStatusChanged", @{@"sourceInfoPresent": @(sourceInfo != nil), @"sourceInfo": RNZoomUsSerialize(sourceInfo)});
 }
 
 - (void)onDocsPermissionChangedCreateOption:(MobileRTCDocsCreateOption)createOption shareOption:(MobileRTCDocsShareOption)shareOption {

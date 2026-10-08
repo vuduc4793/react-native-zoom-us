@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Color from "color";
 import { RNZoomUs, RNZoomUsVideoView, VideoAspectMode } from "../../native";
+import { useZoomViewEvents, ZoomViewEventProps } from "./viewEvents";
 
 type UnitKind = "active" | "preview" | "share" | "attendee" | "active-share";
 
@@ -42,7 +43,7 @@ interface ContextValue {
 
 const ZoomVideoViewContext = React.createContext<ContextValue | null>(null);
 
-export interface ZoomVideoViewProps {
+export interface ZoomVideoViewProps extends ZoomViewEventProps {
   style?: StyleProp<ViewStyle>;
   /**
    * How the video surface is composited on Android.
@@ -72,7 +73,8 @@ export interface ZoomVideoViewProps {
  *     />
  *   </ZoomVideoView>
  */
-function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children }: ZoomVideoViewProps) {
+function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children, ...events }: ZoomVideoViewProps) {
+  const eventProps = useZoomViewEvents(events);
   const containerRef = React.useRef<View | null>(null);
   const nativeRef = React.useRef<any>(null);
   const registrations = React.useRef(new Map<string, Registration>());
@@ -164,6 +166,7 @@ function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children }: ZoomVid
           style={StyleSheet.absoluteFill}
           layout={layout as any}
           zOrder={zOrder}
+          {...eventProps}
         />
       ) : null}
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">

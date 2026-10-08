@@ -23,9 +23,16 @@ IOS_MANIFEST = ROOT / "src/events/ios-events.json"
 LEGACY = {
     "userJoin": [("userList", "number[]")],
     "userLeave": [("userList", "number[]")],
-    "inMeetingUserCount": [("userList", "number")],
+    "inMeetingUserCount": [("count", "number")],
     "hostChanged": [("userId", "number")],
-    "coHostChanged": [("userId", "number")],
+    "coHostChanged": [("userId", "number"), ("isCoHost", "boolean")],
+    "myAudioTypeChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
+    "success": [("status", "string")],
+    # Every participant; ordinal matches MobileRTC_AudioStatus / MobileRTC_VideoStatus.
+    "onUserAudioStatusChanged": [("userId", "number"), ("audioStatus", "number"), ("audioStatusName", "string")],
+    "onUserVideoStatusChanged": [("userId", "number"), ("videoStatus", "number"), ("videoStatusName", "string")],
+    "showMinimizeMeeting": [("status", "string")],
+    "backFullScreenMeeting": [("status", "string")],
     "askUnMuteAudio": [],
     "askUnMuteVideo": [],
     "screenShareStarted": [],
@@ -35,8 +42,27 @@ LEGACY = {
     "myAudioStatusChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
     "myVideoStatusChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
     "myAudioSourceTypeChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
-    "onChatMessageNotification": [("chatId", "string"), ("senderId", "string"), ("senderName", "string"), ("receiverId", "string"), ("receiverName", "string"), ("content", "string"), ("date", "string")],
+    "onChatMessageNotification": [("chatInfo", "ZoomChatMessage | null")],
 }
+
+# Legacy names the iOS module emits as well (RNZoomUs.m mirrors its legacy
+# channel onto the unified one). Payloads match after normalizeZoomEvent.
+IOS_LEGACY = {
+    "userJoin", "userLeave", "inMeetingUserCount", "hostChanged", "coHostChanged",
+    "askUnMuteAudio", "askUnMuteVideo", "myAudioStatusChanged", "myVideoStatusChanged",
+    "myAudioTypeChanged", "myAudioSourceTypeChanged", "success", "onChatMessageNotification",
+    "showMinimizeMeeting", "backFullScreenMeeting",
+}
+# Rebuilt in JS by src/events/aliases.ts (derivedOnAndroid / derivedOnIos).
+DERIVED_ON_ANDROID = {
+    "onSinkMeetingUserJoin", "onSinkMeetingUserLeft", "onMeetingHostChange", "onMeetingCoHostChange",
+    "onSinkMeetingAudioRequestUnmuteByHost", "onSinkMeetingVideoRequestUnmuteByHost",
+    "onSinkMeetingUserRaiseHand", "onSinkMeetingUserLowerHand", "onMeetingStateChange",
+}
+DERIVED_ON_IOS = {"onLowOrRaiseHandStatusChanged"}
+
+# iOS-only legacy names (myAudioTypeChanged is aliased to Android's name in JS).
+IOS_LEGACY_ONLY = {"showMinimizeMeeting", "backFullScreenMeeting"}
 
 
 def ts_for(line):
@@ -46,7 +72,7 @@ def ts_for(line):
     kind, key, expr = m.group(1), m.group(2), m.group(3)
     if kind == "Boolean":
         return key, "boolean"
-    if kind == "Double":
+    if kind in ("Double", "Int"):
         return key, "number"
     if kind == "String":
         # Enums and other nullable references are emitted with a null guard.
@@ -54,14 +80,16 @@ def ts_for(line):
     if kind == "Array":
         return key, "number[]" if "toLongArray" in expr else "string[]"
     if kind == "Map":
-        return key, "ZoomMeetingParameter | null"
+        return key, "ZoomMeetingParameter | null" if key == "meetingParameter" else "Record<string, unknown> | null"
     return key, "unknown"
 
 
 def main():
     src = MODULE.read_text()
     blocks = re.findall(
-        r'\{\s*\n((?:\s*WritableMap __p = Arguments\.createMap\(\);\n)(?:.*?\n)*?)\s*emitZoomEvent\("(\w+)", __p\);',
+        # The emit block may follow other statements (a Log line, an early
+        # return), so anchor on the line, not on the method's opening brace.
+        r'\n((?:[ \t]*WritableMap __p = Arguments\.createMap\(\);\n)(?:.*?\n)*?)\s*emitZoomEvent\("(\w+)", __p\);',
         src,
     )
     if not blocks:
@@ -72,17 +100,43 @@ def main():
         entries[name] = [r for r in (ts_for(l) for l in body.splitlines()) if r]
     for name, fields in LEGACY.items():
         entries.setdefault(name, fields)
+    # Callbacks forwarded by RNZoomUsListeners (reflective proxies). Values are
+    # serialized at runtime, so named keys are `unknown` unless iOS types them;
+    # `args` carries every argument in order.
+    listener_manifest = ROOT / "src/events/android-listener-events.json"
+    if listener_manifest.exists():
+        ios_types = json.loads(IOS_MANIFEST.read_text()) if IOS_MANIFEST.exists() else {}
+        renamed = dict(json.loads((ROOT / "src/events/aliases.json").read_text())["rename"])
+        for name, keys in json.loads(listener_manifest.read_text()).items():
+            # Keys borrowed from the iOS callback carry its types too.
+            known = dict(ios_types.get(name) or ios_types.get(renamed.get(name, ""), []))
+            fields = [(k, known.get(k, "unknown")) for k in keys] + [("args", "unknown[]")]
+            entries.setdefault(name, fields)
 
     # Merge what iOS emits. scripts/generate-ios-delegates.py records the real
     # Objective-C types, so this does not have to re-parse them.
     ios = json.loads(IOS_MANIFEST.read_text()) if IOS_MANIFEST.exists() else {}
-    android_only = set(entries) - set(ios)
-    ios_only = set(ios) - set(entries)
-    both = set(entries) & set(ios)
+    android_names = set(entries) - IOS_LEGACY_ONLY
+    ios_names = set(ios) | IOS_LEGACY
+    # src/events/aliases.ts delivers each renamed pair under both names and
+    # rebuilds some iOS-named events on Android, so they exist on both.
+    aliases = json.loads((ROOT / "src/events/aliases.json").read_text())
+    for android, ios_name in aliases["rename"]:
+        if android in android_names:
+            android_names.add(ios_name)
+        if ios_name in ios_names:
+            ios_names.add(android)
+    android_names |= DERIVED_ON_ANDROID
+    ios_names |= DERIVED_ON_IOS
+    android_only = android_names - ios_names
+    ios_only = ios_names - android_names
+    both = android_names & ios_names
     for name, fields in ios.items():
         merged = {k: t for k, t in entries.get(name, [])}
         for key, ts in fields:
-            if key in merged and merged[key] != ts:
+            if merged.get(key) == "unknown":
+                merged[key] = ts
+            elif key in merged and merged[key] != ts:
                 # Platforms disagree on the shape; widen rather than pick one.
                 merged[key] = " | ".join(sorted({merged[key], ts}))
             else:
@@ -104,6 +158,28 @@ def main():
         "  meetingNumber: number;",
         "  meetingTopic: string | null;",
         "  meetingHost: string | null;",
+        "}",
+        "",
+        "/** A chat message, as both platforms send it inside onChatMessageNotification. */",
+        "export interface ZoomChatMessage {",
+        "  chatId: string | null;",
+        "  senderId: string | null;",
+        "  senderName: string | null;",
+        "  receiverId: string | null;",
+        "  receiverName: string | null;",
+        "  content: string | null;",
+        "  date: string | null;",
+        "  chatMessageType?: number;",
+        "  isMyself?: boolean;",
+        "  isPrivate?: boolean;",
+        "  isChatToAll?: boolean;",
+        "  isChatToAllPanelist?: boolean;",
+        "  isChatToWaitingroom?: boolean;",
+        "  isComment?: boolean;",
+        "  isThread?: boolean;",
+        "  /** Same value as threadID; both spellings are filled in. */",
+        "  threadId: string | null;",
+        "  threadID: string | null;",
         "}",
         "",
         "/** Every event the native side can emit, with its payload. */",

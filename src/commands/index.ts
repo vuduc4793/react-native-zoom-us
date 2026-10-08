@@ -106,4 +106,52 @@ export const zoom = new Proxy({} as ZoomNativeApi & ZoomIosApi, {
   },
 }) as ZoomNativeApi & ZoomIosApi;
 
+/** Something carrying a ref: an id, or any SDK object a callback or call gave you. */
+export type ZoomRef = string | { __ref: string };
+
+function refIdOf(ref: ZoomRef): string {
+  const id = typeof ref === "string" ? ref : ref?.__ref;
+  if (typeof id !== "string" || id.length === 0) {
+    throw new Error(
+      "[react-native-zoom-us] zoom.ref() needs an SDK object from an event or call " +
+        "(it carries __ref), or the ref string itself."
+    );
+  }
+  return id;
+}
+
+/**
+ * Call methods on an SDK object JS received -- a prompt's handler, an info
+ * object, a value a call returned:
+ *
+ *   addZoomListener("onRequestLocalRecordingPrivilegeChanged", ...)
+ *   await zoom.ref(payload.handler).grantLocalRecordingPrivilege()
+ *
+ * Method names are the SDK's own (Android Java / iOS selector). The object can
+ * also be passed back as an argument to any zoom.* call. Refs expire when many
+ * newer objects have crossed since (ERR_ZOOM_REF_EXPIRED).
+ */
+export function ref(target: ZoomRef): Record<string, (...args: unknown[]) => Promise<any>> {
+  const id = refIdOf(target);
+  return new Proxy(
+    {},
+    {
+      get(_t, key) {
+        if (typeof key !== "string" || key === "then") return undefined;
+        return (...args: unknown[]) => {
+          if (!RNZoomUs || typeof RNZoomUs.invokeRef !== "function") {
+            return unsupported("ref", key);
+          }
+          return RNZoomUs.invokeRef(id, key, args);
+        };
+      },
+    }
+  ) as Record<string, (...args: unknown[]) => Promise<any>>;
+}
+
+/** Forget a ref you are done with. Optional; refs also expire on their own. */
+export function releaseRef(target: ZoomRef): void {
+  if (RNZoomUs && typeof RNZoomUs.releaseRef === "function") RNZoomUs.releaseRef(refIdOf(target));
+}
+
 export default zoom;
