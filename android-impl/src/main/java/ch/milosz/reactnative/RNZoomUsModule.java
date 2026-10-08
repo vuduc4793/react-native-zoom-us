@@ -315,7 +315,16 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                     // Save promise so that it can be resolved in onZoomSDKInitializeResult
                     // after zoomSDK.initialize is called
                     initializePromise = promise;
-                    zoomSDK.initialize(reactContext.getCurrentActivity(), RNZoomUsModule.this, initParams);
+                    // Application context, not the current activity.
+                    // getCurrentActivity() returns null whenever no activity is
+                    // resumed -- during a restart, in the background, between
+                    // screens -- and ZoomSDK.initialize() given null does nothing
+                    // at all: no exception, no log, and onZoomSDKInitializeResult
+                    // never arrives, so the next joinMeeting fails with "ZoomSDK
+                    // has not been initialized successfully" and nothing says why.
+                    // The SDK only needs a Context here; activities are passed to
+                    // the calls that actually present UI.
+                    zoomSDK.initialize(reactContext.getApplicationContext(), RNZoomUsModule.this, initParams);
 
                 } catch (Exception ex) {
                     promise.reject("ERR_UNEXPECTED_EXCEPTION", ex);
