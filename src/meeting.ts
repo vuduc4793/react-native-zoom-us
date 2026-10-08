@@ -109,16 +109,22 @@ export async function getMyself(): Promise<ZoomParticipant | null> {
   return id == null ? null : getParticipant(id);
 }
 
-/** Everyone currently in the meeting (not the waiting room), myself included. */
-export async function getParticipants(): Promise<ZoomParticipant[]> {
-  let ids: unknown = [];
+/** Ids of everyone in the meeting (not the waiting room), myself included. */
+export async function getParticipantIds(): Promise<number[]> {
   try {
-    ids = await RNZoomUs.getInMeetingUserIdList();
+    const ids = await RNZoomUs.getInMeetingUserIdList();
+    return Array.isArray(ids) ? ids.map(Number).filter((n: number) => Number.isFinite(n) && n > 0) : [];
   } catch {
     return [];
   }
-  const list = Array.isArray(ids) ? ids.map(Number).filter(Number.isFinite) : [];
-  const people = await Promise.all(list.map(getParticipant));
+}
+
+/**
+ * Everyone, with details. One bridge call per person: prefer
+ * getParticipantIds() plus getParticipant() for large meetings.
+ */
+export async function getParticipants(): Promise<ZoomParticipant[]> {
+  const people = await Promise.all((await getParticipantIds()).map(getParticipant));
   return people.filter((p): p is ZoomParticipant => p != null);
 }
 
