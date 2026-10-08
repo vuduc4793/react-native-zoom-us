@@ -1085,16 +1085,31 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     }
     
     // The join promise is settled from the meeting *state*, never from an error
-    // callback -- the same rule the Android side has always followed, where only
-    // MEETING_STATUS_INMEETING resolves and only MEETING_STATUS_FAILED rejects.
-    // Anything else leaves it pending. Idle used to resolve here too, which
-    // answered a join with the state the meeting is in before it starts and
-    // after it ends.
+    // callback, and every state that ends the attempt settles it:
+    //
+    //   resolve  InMeeting, InWaitingRoom, WaitingForHost -- the join worked and
+    //            the user has landed somewhere, even if the host has not let
+    //            them in yet. Leaving these pending strands the caller's await
+    //            for as long as the wait lasts.
+    //   reject   Failed, Ended -- the attempt is over and the user is not in a
+    //            meeting. Ended matters: a meeting that finishes mid-join, or a
+    //            user who backs out of Zoom's own UI, never reaches Failed, and
+    //            a promise nothing will ever settle is worse than a wrong
+    //            answer because nothing times it out.
+    //   ignore   everything else, Idle included. Idle is the state before a
+    //            meeting starts as much as after one ends, so rejecting on it
+    //            would answer a join that has not begun.
     //
     // The blocks are taken into locals and the ivars cleared first: settling
     // re-enters JavaScript synchronously, and whatever that does can bring the
     // SDK straight back into this handler.
-    if (state == MobileRTCMeetingState_InMeeting || state == MobileRTCMeetingState_Failed) {
+    BOOL joined = state == MobileRTCMeetingState_InMeeting
+                || state == MobileRTCMeetingState_InWaitingRoom
+                || state == MobileRTCMeetingState_WaitingForHost;
+    BOOL over   = state == MobileRTCMeetingState_Failed
+                || state == MobileRTCMeetingState_Ended;
+
+    if (joined || over) {
         RCTPromiseResolveBlock resolve = meetingPromiseResolve;
         RCTPromiseRejectBlock reject = meetingPromiseReject;
         if (!resolve) {
@@ -1103,8 +1118,11 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         meetingPromiseResolve = nil;
         meetingPromiseReject = nil;
 
-        if (state == MobileRTCMeetingState_Failed) {
-            reject(@"ERR_ZOOM_MEETING", @"Meeting state: failed", nil);
+        if (over) {
+            reject(@"ERR_ZOOM_MEETING",
+                   [NSString stringWithFormat:@"Meeting state: %@",
+                    state == MobileRTCMeetingState_Failed ? @"failed" : @"ended"],
+                   nil);
         } else {
             resolve(@"Connected to zoom meeting");
         }

@@ -1324,19 +1324,40 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             return;
         }
 
-        if (meetingStatus == MeetingStatus.MEETING_STATUS_FAILED) {
+        // Every state that ends the attempt settles the promise:
+        //
+        //   resolve  INMEETING, IN_WAITING_ROOM, WAITINGFORHOST -- the join
+        //            worked and the user has landed somewhere, even if the host
+        //            has not let them in yet. Leaving the waiting room pending
+        //            stranded the caller's await for as long as the wait lasted.
+        //   reject   FAILED, ENDED. ENDED matters: a meeting that finishes
+        //            mid-join, or a user who backs out of Zoom's own UI, never
+        //            reaches FAILED, and a promise nothing will ever settle is
+        //            worse than a wrong answer because nothing times it out.
+        //   ignore   everything else, IDLE included -- it is the state before a
+        //            meeting starts as much as after one ends.
+        boolean joined = meetingStatus == MeetingStatus.MEETING_STATUS_INMEETING
+                || meetingStatus == MeetingStatus.MEETING_STATUS_IN_WAITING_ROOM
+                || meetingStatus == MeetingStatus.MEETING_STATUS_WAITINGFORHOST;
+        boolean over = meetingStatus == MeetingStatus.MEETING_STATUS_FAILED
+                || meetingStatus == MeetingStatus.MEETING_STATUS_ENDED;
+
+        if (over) {
             meetingPromise.reject(
                     "ERR_ZOOM_MEETING",
-                    "Error: " + errorCode + ", internalErrorCode=" + internalErrorCode
+                    "Meeting state: " + nameOf(meetingStatus)
+                            + ", errorCode=" + errorCode
+                            + ", internalErrorCode=" + internalErrorCode
             );
             meetingPromise = null;
 
             shouldAutoConnectAudio = null;
-        } else if (meetingStatus == MeetingStatus.MEETING_STATUS_INMEETING) {
+        } else if (joined) {
             meetingPromise.resolve("Connected to zoom meeting");
             meetingPromise = null;
 
-            if (shouldAutoConnectAudio != null && shouldAutoConnectAudio == true) {
+            if (meetingStatus == MeetingStatus.MEETING_STATUS_INMEETING
+                    && shouldAutoConnectAudio != null && shouldAutoConnectAudio == true) {
                 connectAudioWithVoIP();
             }
             shouldAutoConnectAudio = null;
