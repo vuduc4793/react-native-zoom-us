@@ -1084,21 +1084,30 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
         }];
     }
     
-    if (state == MobileRTCMeetingState_InMeeting || state == MobileRTCMeetingState_Idle) {
-        // Clear before resolving, not after. Resolving re-enters JavaScript
-        // synchronously, and anything it does that makes the SDK emit another
-        // state change or error reaches this handler again with the blocks still
-        // set -- React Native then raises "Tried to resolve a promise more than
-        // once". Taking the block into a local and clearing the ivars first
-        // closes that window.
+    // The join promise is settled from the meeting *state*, never from an error
+    // callback -- the same rule the Android side has always followed, where only
+    // MEETING_STATUS_INMEETING resolves and only MEETING_STATUS_FAILED rejects.
+    // Anything else leaves it pending. Idle used to resolve here too, which
+    // answered a join with the state the meeting is in before it starts and
+    // after it ends.
+    //
+    // The blocks are taken into locals and the ivars cleared first: settling
+    // re-enters JavaScript synchronously, and whatever that does can bring the
+    // SDK straight back into this handler.
+    if (state == MobileRTCMeetingState_InMeeting || state == MobileRTCMeetingState_Failed) {
         RCTPromiseResolveBlock resolve = meetingPromiseResolve;
+        RCTPromiseRejectBlock reject = meetingPromiseReject;
         if (!resolve) {
             return;
         }
         meetingPromiseResolve = nil;
         meetingPromiseReject = nil;
 
-        resolve(@"Connected to zoom meeting");
+        if (state == MobileRTCMeetingState_Failed) {
+            reject(@"ERR_ZOOM_MEETING", @"Meeting state: failed", nil);
+        } else {
+            resolve(@"Connected to zoom meeting");
+        }
     }
 }
 
@@ -1107,27 +1116,13 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
     NSLog(@"onMeetingError, errorCode=%d, message=%@", errorCode, message);
     [self sendEventWithName:@"MeetingEvent" event:[self meetErrorName:errorCode]];
     
-    // Same ordering as onMeetingStateChange: clear first, settle second. This is
-    // the handler the crash report named -- leaving a meeting emits an error
-    // whose rejection runs JavaScript, which emits another one before the old
-    // code reached its cleanup.
-    RCTPromiseResolveBlock resolve = meetingPromiseResolve;
-    RCTPromiseRejectBlock reject = meetingPromiseReject;
-    if (!resolve) {
-        return;
-    }
-    meetingPromiseResolve = nil;
-    meetingPromiseReject = nil;
-
-    if (errorCode != MobileRTCMeetError_Success) {
-        reject(
-               @"ERR_ZOOM_MEETING",
-               [NSString stringWithFormat:@"Error: %d, internalErrorCode=%@", errorCode, message],
-               [NSError errorWithDomain:@"us.zoom.sdk" code:errorCode userInfo:nil]
-               );
-    } else {
-        resolve(@"Connected to zoom meeting");
-    }
+    // Deliberately does not settle the join promise. This is the frame the red
+    // box named, and the header documents the callback only as "an error has
+    // occurred" -- it says nothing about which codes arrive on a healthy join,
+    // so treating every one of them as the answer to joinMeeting() turned
+    // whatever the SDK happened to report into a rejected join. The state
+    // machine decides instead, in onMeetingStateChange. The event is still
+    // emitted, so JavaScript sees every error either way.
 }
 
 - (void)onMeetingEndedReason:(MobileRTCMeetingEndReason)reason {
