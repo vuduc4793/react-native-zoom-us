@@ -106,7 +106,7 @@ def main():
     listener_manifest = ROOT / "src/events/android-listener-events.json"
     if listener_manifest.exists():
         ios_types = json.loads(IOS_MANIFEST.read_text()) if IOS_MANIFEST.exists() else {}
-        renamed = dict(json.loads((ROOT / "src/events/aliases.json").read_text())["rename"])
+        renamed = dict(json.loads((ROOT / "src/events/event-aliases.json").read_text())["rename"])
         for name, keys in json.loads(listener_manifest.read_text()).items():
             # Keys borrowed from the iOS callback carry its types too.
             known = dict(ios_types.get(name) or ios_types.get(renamed.get(name, ""), []))
@@ -120,7 +120,7 @@ def main():
     ios_names = set(ios) | IOS_LEGACY
     # src/events/aliases.ts delivers each renamed pair under both names and
     # rebuilds some iOS-named events on Android, so they exist on both.
-    aliases = json.loads((ROOT / "src/events/aliases.json").read_text())
+    aliases = json.loads((ROOT / "src/events/event-aliases.json").read_text())
     for android, ios_name in aliases["rename"]:
         if android in android_names:
             android_names.add(ios_name)

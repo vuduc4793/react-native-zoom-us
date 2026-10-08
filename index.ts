@@ -586,6 +586,12 @@ export type { ZoomVideoViewProps } from "./src/components/ZoomVideoView";
 
 export * from "./src/events";
 export * from "./src/enums";
+
+// Cross-platform reads/actions for custom meeting UIs (participants, reactions,
+// chat history ...), one shape on both SDKs. See src/meeting.ts.
+import * as zoomMeeting from "./src/meeting";
+export { zoomMeeting };
+export type { ZoomParticipant, ZoomRole, ZoomReaction, ZoomChatMessageInfo } from "./src/meeting";
 export * from "./src/hooks";
 
 // Android: the SDK is delivered as an on-demand module. See docs/DYNAMIC-FEATURE.md.

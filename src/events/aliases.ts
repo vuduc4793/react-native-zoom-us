@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 import type { ZoomEvent } from "./generated";
-import table from "./aliases.json";
+import table from "./event-aliases.json";
 
 /*
  * One event vocabulary on both platforms.
@@ -11,7 +11,7 @@ import table from "./aliases.json";
  * Here every event is also delivered under its other platform's name, so a
  * listener written against either name works on both:
  *
- *   - rename: [android, ios] pairs for the same callback (aliases.json)
+ *   - rename: [android, ios] pairs for the same callback (event-aliases.json)
  *   - derived: the iOS on* event rebuilt from the shared legacy one on
  *     Android, where the SDK has no separately named callback
  *

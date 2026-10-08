@@ -59,9 +59,9 @@ def main():
     emitted = set(re.findall(r'emitZoomEvent\("(\w+)"', module))
     emitted |= set(re.findall(r'send(?:Event|Both|EventChatInfo)\("\w+", "(\w+)"', module))
 
-    # Callbacks iOS names differently (src/events/aliases.json): take the keys
+    # Callbacks iOS names differently (src/events/event-aliases.json): take the keys
     # from the iOS name, so the payload matches under both names.
-    renamed = {a: i for a, i in json.loads((ROOT / "src/events/aliases.json").read_text())["rename"]}
+    renamed = {a: i for a, i in json.loads((ROOT / "src/events/event-aliases.json").read_text())["rename"]}
 
     paths = {name: info["path"] for name, info in api.items()}
     paths.update(EXTRA_PATHS)
