@@ -39,6 +39,13 @@ NSString *RNZoomUsRefPut(id value);
 id _Nullable RNZoomUsRefGet(NSString *_Nullable refId);
 void RNZoomUsRefRelease(NSString *_Nullable refId);
 
+/// Register `value` and exempt it from LRU eviction: it stays alive (held
+/// strongly) until RNZoomUsRefRelease or RNZoomUsRefUnpin. For listeners and
+/// handlers the SDK only holds weakly, or that JS must still reach much later.
+NSString *RNZoomUsRefPin(id value);
+/// Put a pinned ref back under LRU eviction (it stays usable for now).
+void RNZoomUsRefUnpin(NSString *_Nullable refId);
+
 /// A prompt Zoom hands over as a completion block (host asks to start my
 /// video). Mode "auto" (default) answers at once with `defaultAnswer`, exactly
 /// as before. Mode "js" hands JS a responder ({__ref}) whose `respond:` answers

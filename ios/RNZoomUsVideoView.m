@@ -8,6 +8,7 @@
 
 #import "RNZoomUsVideoView.h"
 #import "RNZoomUsEvents.h"
+#import "RNZoomUsListeners.h"
 #import "RNZoomUs.h"
 #import "RCTEventEmitter.h"
 #import "GlobalData.h"
@@ -954,6 +955,28 @@ CXCallController *callController;
 - (void)onClickedDialOut:(UIViewController *)parentVC isCallMe:(BOOL)me {
     RNZoomUsEmit(@"onClickedDialOut", @{@"parentVCPresent": @(parentVC != nil), @"parentVC": RNZoomUsSerialize(parentVC), @"me": @(me)});
     NSLog(@"RNZoomUsVideoView onClickedDialOut");
+}
+
+// Toolbar overrides (setButtonOverrides), for while this view holds
+// ms.delegate. NO -- the default -- leaves Zoom's own action in place, the same
+// as when these were not implemented. Invite has no meetingInviteHidden here
+// (that setting lives in RNZoomUs), so only the override can suppress it.
+- (BOOL)onClickedInviteButton:(UIViewController * _Nonnull)parentVC addInviteActionItem:(NSMutableArray <MobileRTCMeetingInviteActionItem *>* _Nullable)array {
+    BOOL handled = RNZoomUsMeetingButtonClicked(@"invite", NO);
+    RNZoomUsEmit(@"onClickedInviteButton", @{@"handled": @(handled)});
+    return handled;
+}
+- (BOOL)onClickedAudioButton:(UIViewController * _Nonnull)parentVC {
+    return RNZoomUsMeetingButtonClicked(@"audio", NO);
+}
+- (BOOL)onClickedParticipantsButton:(UIViewController * _Nonnull)parentVC {
+    return RNZoomUsMeetingButtonClicked(@"participants", NO);
+}
+- (BOOL)onClickedShareButton:(UIViewController * _Nonnull)parentVC addShareActionItem:(NSMutableArray <MobileRTCMeetingShareActionItem *>* _Nonnull)array {
+    return RNZoomUsMeetingButtonClicked(@"share", NO);
+}
+- (BOOL)onClickedEndButton:(UIViewController * _Nonnull)parentVC endButton:(UIButton * _Nonnull)endButton {
+    return RNZoomUsMeetingButtonClicked(@"end", NO);
 }
 
 - (void)onClosedCaptionReceived:(NSString *)message speakerId:(NSUInteger)speakerID msgTime:(NSDate *)msgTime {

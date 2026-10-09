@@ -127,6 +127,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     // Notification-only listeners the module does not implement by hand
     // (waiting room, webinar, Q&A, polling, reactions, recording, captions...).
     private final RNZoomUsListeners extraListeners = new RNZoomUsListeners(this::emitZoomEvent);
+    // create / createListener, toolbar button overrides, opt-in prompts.
+    private final RNZoomUsObjects objects = new RNZoomUsObjects(this::emitZoomEvent);
 
     private Boolean shouldAutoConnectAudio;
     private Promise initializePromise;
@@ -216,6 +218,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
                 }
                 try {
                     Object result = RNZoomUsCommands.call(target, method, args);
+                    // A prompt handler pinned until answered is answered now.
+                    RNZoomUsRefs.called(ref, method);
                     Object marshalled = RNZoomUsCommands.marshal(result, 0);
                     if (marshalled == null) promise.resolve(null);
                     else if (marshalled instanceof Boolean) promise.resolve((Boolean) marshalled);
@@ -234,21 +238,114 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
         });
     }
 
-    /** Forget a ref JS no longer needs (optional: refs also expire on their own). */
+    /**
+     * Forget a ref JS no longer needs (optional: refs also expire on their own).
+     * Also the only way a listener from createListener is let go of.
+     */
     @ReactMethod
     public void releaseRef(final String ref) {
-        RNZoomUsRefs.release(ref);
+        try {
+            RNZoomUsRefs.release(ref);
+        } catch (Throwable t) {
+            Log.w(TAG, "releaseRef(" + ref + ") failed: " + t);
+        }
     }
 
     /**
-     * Same API as iOS. Android has no completion-style prompt to hand over:
-     * when the host asks to start your video, the SDK shows its own dialog.
-     * Prompts that do carry a handler arrive with its `__ref` regardless.
+     * Same API as iOS. Android has no completion-style prompt for
+     * "videoUnmuteRequest": when the host asks to start your video, the SDK
+     * shows its own dialog, so that one stays a no-op.
+     *
+     * Opt-in prompts, "auto" (default: Zoom handles it) or "js":
+     *  - "reminder": recording / AI-companion disclaimers -> event
+     *    "onReminderNotify" {content, handler}; answer with
+     *    invokeRef(handler, "accept" | "decline" | "ignore").
+     *  - "network": proxy credentials / SSL certificate -> events
+     *    "onProxySettingNotification" / "onSSLCertVerifyNotification" {handler, args}.
+     * Set before initialize and it is applied once the SDK is ready.
      */
     @ReactMethod
     public void setPromptMode(final String prompt, final String mode, final double timeoutMs,
                               final Promise promise) {
-        promise.resolve(null);
+        if (!RNZoomUsObjects.handles(prompt)) {
+            promise.resolve(null);
+            return;
+        }
+        if (!"auto".equals(mode) && !"js".equals(mode)) {
+            promise.reject("ERR_ZOOM_PROMPT_MODE", "mode for " + prompt + " must be \"auto\" or \"js\", got " + mode);
+            return;
+        }
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    objects.setPromptMode(prompt, "js".equals(mode));
+                    promise.resolve(null);
+                } catch (Throwable t) {
+                    promise.reject("ERR_ZOOM_PROMPT_MODE", prompt + ": " + t, t);
+                }
+            }
+        });
+    }
+
+    /**
+     * Instantiate an SDK class by name ("JoinMeetingOptions", or a full /
+     * nested name) with its public no-arg constructor, apply `props` through
+     * setK(v) or a public field K, and register it: resolves the serialized
+     * object with `__ref`, to pass to invoke/invokeRef as {__ref}.
+     */
+    @ReactMethod
+    public void create(final String className, final ReadableMap props, final Promise promise) {
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(objects.create(className, props));
+                } catch (RNZoomUsObjects.CreateException ex) {
+                    promise.reject("ERR_ZOOM_CREATE", ex.getMessage());
+                } catch (Throwable t) {
+                    promise.reject("ERR_ZOOM_CREATE", className + ": " + t, t);
+                }
+            }
+        });
+    }
+
+    /**
+     * A listener for any SDK listener interface. Each callback emits
+     * "onListenerCallback" {listener, method, args} and returns the default
+     * (false / 0 / null). Pinned until releaseRef(listener.__ref).
+     */
+    @ReactMethod
+    public void createListener(final String interfaceName, final Promise promise) {
+        try {
+            promise.resolve(objects.createListener(interfaceName));
+        } catch (RNZoomUsObjects.CreateException ex) {
+            promise.reject("ERR_ZOOM_CREATE", ex.getMessage());
+        } catch (Throwable t) {
+            promise.reject("ERR_ZOOM_CREATE", interfaceName + ": " + t, t);
+        }
+    }
+
+    /**
+     * Which toolbar buttons of Zoom's meeting UI the app handles itself
+     * (invite, end, audio, video, share, more, participants): true suppresses
+     * Zoom's default action. Every click emits "onClickMeetingButton"
+     * {button, handled}. Replaces the previous set; keys left out are false.
+     */
+    @ReactMethod
+    public void setButtonOverrides(final ReadableMap overrides, final Promise promise) {
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    objects.setButtonOverrides(overrides);
+                    objects.registerUIDelegate();
+                    promise.resolve(null);
+                } catch (Throwable t) {
+                    promise.reject("ERR_ZOOM_BUTTON_OVERRIDES", String.valueOf(t), t);
+                }
+            }
+        });
     }
 
     @ReactMethod
@@ -1380,6 +1477,8 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
             initializePromise = null;
         } else {
             registerListener();
+            objects.registerUIDelegate();
+            objects.applyPrompts();
             initializePromise.resolve("Initialize Zoom SDK successfully.");
             initializePromise = null;
             // This might be the right spot for setMeetingSettings process
@@ -1410,6 +1509,7 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     @Override
     public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
         extraListeners.attachAll();
+        objects.applyPrompts();
         Log.i(TAG, "onMeetingStatusChanged, meetingStatus=" + meetingStatus + ", errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
         updateVideoView();

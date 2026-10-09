@@ -121,17 +121,10 @@ class RNZoomUsCommands {
     }
 
     if (List.class.isAssignableFrom(type)) {
-      ReadableArray nested = args.getArray(i);
-      java.util.ArrayList<Object> list = new java.util.ArrayList<>();
-      for (int n = 0; nested != null && n < nested.size(); n++) {
-        switch (nested.getType(n)) {
-          case Number: list.add((long) nested.getDouble(n)); break;
-          case String: list.add(nested.getString(n)); break;
-          case Boolean: list.add(nested.getBoolean(n)); break;
-          default: throw new IllegalArgumentException("unsupported list element at " + n);
-        }
+      if (args.getType(i) != ReadableType.Array) {
+        throw new IllegalArgumentException("argument " + i + " is not an array but " + type.getName() + " is a List");
       }
-      return list;
+      return listOf(args.getArray(i), "argument " + i);
     }
 
     if (type.isArray() && type.getComponentType() == long.class) {
@@ -139,6 +132,17 @@ class RNZoomUsCommands {
       int size = nested == null ? 0 : nested.size();
       long[] out = new long[size];
       for (int n = 0; n < size; n++) out[n] = (long) nested.getDouble(n);
+      return out;
+    }
+
+    // An array of objects (String[], an SDK type[], ...): each element goes
+    // through the same coercion, so [{__ref}, ...] becomes the SDK objects.
+    if (type.isArray() && !type.getComponentType().isPrimitive()
+        && args.getType(i) == ReadableType.Array) {
+      ReadableArray nested = args.getArray(i);
+      int size = nested == null ? 0 : nested.size();
+      Object out = Array.newInstance(type.getComponentType(), size);
+      for (int n = 0; n < size; n++) Array.set(out, n, coerce(type.getComponentType(), nested, n));
       return out;
     }
 
@@ -156,6 +160,70 @@ class RNZoomUsCommands {
     throw new IllegalArgumentException(
         "cannot convert argument " + i + " to " + type.getName()
             + "; this call needs a native wrapper rather than the generic bridge");
+  }
+
+  /**
+   * A JS array as a List, for List parameters (whose element type erasure
+   * hides): numbers become Long as before, {__ref} the registered SDK object,
+   * nested arrays nested Lists.
+   */
+  private static List<Object> listOf(ReadableArray nested, String where) {
+    java.util.ArrayList<Object> list = new java.util.ArrayList<>();
+    for (int n = 0; nested != null && n < nested.size(); n++) {
+      switch (nested.getType(n)) {
+        case Null: list.add(null); break;
+        case Number: list.add((long) nested.getDouble(n)); break;
+        case String: list.add(nested.getString(n)); break;
+        case Boolean: list.add(nested.getBoolean(n)); break;
+        case Array: list.add(listOf(nested.getArray(n), where + "[" + n + "]")); break;
+        case Map: list.add(refOf(nested.getMap(n), where + "[" + n + "]")); break;
+        default: throw new IllegalArgumentException("unsupported list element at " + where + "[" + n + "]");
+      }
+    }
+    return list;
+  }
+
+  private static Object refOf(com.facebook.react.bridge.ReadableMap map, String where) {
+    if (map == null || !map.hasKey("__ref") || map.isNull("__ref")) {
+      throw new IllegalArgumentException(where + ": only {__ref} objects can be passed inside an array");
+    }
+    Object ref = RNZoomUsRefs.get(map.getString("__ref"));
+    if (ref == null) throw new IllegalArgumentException(where + ": ref " + map.getString("__ref") + " has expired");
+    return ref;
+  }
+
+  /**
+   * Coerce one JS value (as ReadableMap.toHashMap() gives it) to `type`
+   * through the same rules as a call argument. Used by create() for props.
+   */
+  static Object coerceValue(Class<?> type, Object jsValue) {
+    WritableArray one = Arguments.createArray();
+    push(one, writable(jsValue));
+    try {
+      return coerce(type, one, 0);
+    } catch (IllegalArgumentException ex) {
+      throw ex;
+    } catch (RuntimeException ex) {
+      // e.g. a string read as a boolean: not this overload.
+      throw new IllegalArgumentException(ex.toString(), ex);
+    }
+  }
+
+  /** A toHashMap()/toArrayList() value back in bridge form (numbers as Double). */
+  private static Object writable(Object value) {
+    if (value == null || value instanceof Boolean || value instanceof String) return value;
+    if (value instanceof Number) return ((Number) value).doubleValue();
+    if (value instanceof Map) {
+      WritableMap out = Arguments.createMap();
+      for (Map.Entry<?, ?> e : ((Map<?, ?>) value).entrySet()) put(out, String.valueOf(e.getKey()), writable(e.getValue()));
+      return out;
+    }
+    if (value instanceof Collection) {
+      WritableArray out = Arguments.createArray();
+      for (Object item : (Collection<?>) value) push(out, writable(item));
+      return out;
+    }
+    return String.valueOf(value);
   }
 
   /** Turn an SDK return value into something the bridge can carry. */

@@ -562,8 +562,18 @@ async function isHostUser({ userId }: { userId: number }) {
  * "videoUnmuteRequest" -- the host asks to start your camera
  * (onSinkMeetingVideoRequestUnmuteByHost). iOS only: Android's SDK shows its
  * own dialog for this and has nothing to hand over; the call resolves there.
+ *
+ * "reminder" -- disclaimers Zoom needs consent for (recording, AI companion,
+ * live stream...). "js" emits "onReminderNotify" {content, handler}; answer
+ * with zoom.ref(payload.handler).accept() / decline() / ignore() -- there is
+ * no timeout, Zoom waits for you. "auto" (default): Zoom shows its own dialog.
+ * A custom meeting UI should switch this to "js".
+ *
+ * "network" (Android) -- proxy and SSL certificate prompts:
+ * "onProxySettingNotification" / "onSSLCertVerifyNotification" with the
+ * handler as a ref. iOS resolves without doing anything.
  */
-export type ZoomPrompt = "videoUnmuteRequest";
+export type ZoomPrompt = "videoUnmuteRequest" | "reminder" | "network";
 async function setPromptMode(prompt: ZoomPrompt, mode: "auto" | "js", timeoutMs = 10000): Promise<void> {
   if (typeof native.setPromptMode !== "function") return;
   return native.setPromptMode(prompt, mode, timeoutMs);
@@ -591,12 +601,20 @@ export * from "./src/enums";
 // chat history ...), one shape on both SDKs. See src/meeting.ts.
 import * as zoomMeeting from "./src/meeting";
 export { zoomMeeting };
-export type { ZoomParticipant, ZoomRole, ZoomReaction, ZoomChatMessageInfo } from "./src/meeting";
+export type { ZoomParticipant, ZoomRole, ZoomReaction, ZoomChatMessageInfo, ZoomReminder } from "./src/meeting";
 export * from "./src/hooks";
 
 // Android: the SDK is delivered as an on-demand module. See docs/DYNAMIC-FEATURE.md.
 export { default as ZoomModule } from "./src/module";
 export { zoom, ref, releaseRef } from "./src/commands";
+export { create, createListener, listen, setButtonOverrides } from "./src/listeners";
+export type { ZoomListenerHandle, ZoomMeetingButton } from "./src/listeners";
+// Q&A (webinars) and polls/quizzes, one shape on both SDKs. See src/qa.ts, src/polling.ts.
+import * as zoomQA from "./src/qa";
+import * as zoomPolling from "./src/polling";
+export { zoomQA, zoomPolling };
+export type { ZoomQuestion, ZoomAnswer, ZoomQAPermissions, ZoomQuestionList } from "./src/qa";
+export type { ZoomPoll, ZoomPollQuestion, ZoomPollAnswer, ZoomPollResult, ZoomPollStatus, ZoomPollQuestionKind } from "./src/polling";
 export type { ZoomRef } from "./src/commands";
 export type { ZoomNativeApi, ZoomObject } from "./src/commands";
 export type {

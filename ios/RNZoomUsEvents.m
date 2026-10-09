@@ -27,6 +27,8 @@ static const NSUInteger RNZoomUsRefMax = 512;
 static NSMutableDictionary<NSString *, id> *RNZoomUsRefsById;
 static NSMapTable *RNZoomUsRefsByObject; // identity -> id
 static NSMutableArray<NSString *> *RNZoomUsRefOrder; // least recently used first
+// Pinned ids are kept out of RNZoomUsRefOrder, so eviction never sees them.
+static NSMutableSet<NSString *> *RNZoomUsRefPinned;
 static unsigned long long RNZoomUsRefNext = 0;
 
 static void RNZoomUsRefInit(void) {
@@ -37,6 +39,7 @@ static void RNZoomUsRefInit(void) {
             initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality
                   valueOptions:NSPointerFunctionsStrongMemory capacity:64];
         RNZoomUsRefOrder = [NSMutableArray array];
+        RNZoomUsRefPinned = [NSMutableSet set];
     });
 }
 
@@ -45,6 +48,7 @@ NSString *RNZoomUsRefPut(id value) {
     @synchronized (RNZoomUsRefsById) {
         NSString *existing = [RNZoomUsRefsByObject objectForKey:value];
         if (existing && RNZoomUsRefsById[existing]) {
+            if ([RNZoomUsRefPinned containsObject:existing]) return existing;
             [RNZoomUsRefOrder removeObject:existing];
             [RNZoomUsRefOrder addObject:existing];
             return existing;
@@ -79,7 +83,28 @@ void RNZoomUsRefRelease(NSString *refId) {
         id gone = RNZoomUsRefsById[refId];
         [RNZoomUsRefsById removeObjectForKey:refId];
         [RNZoomUsRefOrder removeObject:refId];
+        [RNZoomUsRefPinned removeObject:refId];
         if (gone) [RNZoomUsRefsByObject removeObjectForKey:gone];
+    }
+}
+
+NSString *RNZoomUsRefPin(id value) {
+    RNZoomUsRefInit();
+    @synchronized (RNZoomUsRefsById) {
+        NSString *refId = RNZoomUsRefPut(value); // @synchronized is recursive
+        [RNZoomUsRefOrder removeObject:refId];
+        [RNZoomUsRefPinned addObject:refId];
+        return refId;
+    }
+}
+
+void RNZoomUsRefUnpin(NSString *refId) {
+    if (![refId isKindOfClass:[NSString class]]) return;
+    RNZoomUsRefInit();
+    @synchronized (RNZoomUsRefsById) {
+        if (![RNZoomUsRefPinned containsObject:refId]) return;
+        [RNZoomUsRefPinned removeObject:refId];
+        if (RNZoomUsRefsById[refId] != nil) [RNZoomUsRefOrder addObject:refId];
     }
 }
 

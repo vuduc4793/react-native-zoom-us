@@ -164,6 +164,7 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
     // Primitive arguments need storage that outlives the setArgument: call;
     // object arguments stay alive because `args` holds them for the whole call.
     NSMutableArray<NSMutableData *> *scratch = [NSMutableArray arrayWithCapacity:count];
+    NSMutableArray *keepAlive = [NSMutableArray array];
 
     for (NSUInteger i = 0; i < count; i++) {
         const char *enc = RNZoomUsSkipQualifiers([sig getArgumentTypeAtIndex:i + 2]);
@@ -171,6 +172,23 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
         if ([value isKindOfClass:[NSNull class]]) value = nil;
 
         if (enc[0] == '@') {
+            // An array holding {__ref} elements becomes an array of those
+            // objects. `keepAlive` owns it until the call returns, because the
+            // invocation only carries an unretained pointer.
+            if ([value isKindOfClass:[NSArray class]]) {
+                NSError *refError = nil;
+                id resolved = [self resolveRefs:value error:&refError];
+                if (resolved == nil) {
+                    if (error) *error = RNZoomUsCommandsError([NSString stringWithFormat:
+                        @"argument %lu: %@", (unsigned long)i,
+                        refError.localizedDescription ?: @"could not resolve refs"]);
+                    return nil;
+                }
+                [keepAlive addObject:resolved];
+                __unsafe_unretained id unretainedArray = resolved;
+                [inv setArgument:&unretainedArray atIndex:(NSInteger)(i + 2)];
+                continue;
+            }
             // An SDK object JS received earlier, passed back as {__ref}.
             if ([value isKindOfClass:[NSDictionary class]] && value[@"__ref"] != nil) {
                 id ref = RNZoomUsRefGet(value[@"__ref"]);
@@ -282,6 +300,35 @@ static const char *RNZoomUsSkipQualifiers(const char *enc) {
                 NSStringFromSelector(sel), ret]);
             return nil;
     }
+}
+
++ (nullable id)resolveRefs:(nullable id)value error:(NSError **)error {
+    if ([value isKindOfClass:[NSDictionary class]] && ((NSDictionary *)value)[@"__ref"] != nil) {
+        id refId = ((NSDictionary *)value)[@"__ref"];
+        id ref = RNZoomUsRefGet(refId);
+        if (ref == nil && error) {
+            *error = RNZoomUsCommandsError([NSString stringWithFormat:@"ref %@ has expired", refId]);
+        }
+        return ref;
+    }
+    if ([value isKindOfClass:[NSArray class]]) {
+        BOOL changed = NO;
+        NSMutableArray *out = [NSMutableArray arrayWithCapacity:((NSArray *)value).count];
+        for (id item in (NSArray *)value) {
+            BOOL isRef = [item isKindOfClass:[NSDictionary class]] && ((NSDictionary *)item)[@"__ref"] != nil;
+            if (isRef || [item isKindOfClass:[NSArray class]]) {
+                id resolved = [self resolveRefs:item error:error];
+                if (resolved == nil) return nil;
+                if (resolved != item) changed = YES;
+                [out addObject:resolved];
+            } else {
+                [out addObject:item];
+            }
+        }
+        // Without refs the array goes through exactly as it did before.
+        return changed ? out : value;
+    }
+    return value;
 }
 
 + (nullable id)marshal:(nullable id)value depth:(NSInteger)depth {

@@ -332,3 +332,42 @@ export async function getChatHistory(): Promise<ZoomChatMessageInfo[]> {
   );
   return messages.filter((m): m is ZoomChatMessageInfo => m != null);
 }
+
+export interface ZoomReminder {
+  title: string;
+  text: string;
+  /** The meeting waits until it is answered. */
+  blocking: boolean;
+  /** SDK enum name/number, for apps that word each kind themselves. */
+  type: unknown;
+  handler: { __ref: string } | null;
+  raw: any;
+}
+
+/**
+ * The "onReminderNotify" payload (setPromptMode("reminder", "js")): a
+ * disclaimer Zoom needs an answer to -- recording, AI companion, live stream.
+ */
+export function toReminder(payload: any): ZoomReminder | null {
+  const content = payload?.content;
+  if (!content || typeof content !== "object") return null;
+  const handlerRef = payload?.handler?.__ref;
+  return {
+    title: String(content.title ?? ""),
+    text: String(content.content ?? ""),
+    blocking: bool(content.blocking ?? content.isBlock ?? content.isBlocking),
+    type: content.type,
+    handler: typeof handlerRef === "string" && handlerRef ? { __ref: handlerRef } : null,
+    raw: payload,
+  };
+}
+
+/** Answer a reminder. "decline" maps to the iOS selector `declined`. */
+export async function answerReminder(reminder: ZoomReminder, answer: "accept" | "decline" | "ignore"): Promise<void> {
+  if (!reminder?.handler || !RNZoomUs || typeof RNZoomUs.invokeRef !== "function") return;
+  try {
+    await RNZoomUs.invokeRef(reminder.handler.__ref, answer, []);
+  } catch (error) {
+    console.warn("[react-native-zoom-us] answerReminder failed", error);
+  }
+}

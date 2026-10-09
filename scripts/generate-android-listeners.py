@@ -339,8 +339,10 @@ final class RNZoomUsListeners {
      * read through its public interfaces so obfuscated implementation classes
      * are never touched. Handlers and other objects JS cannot act on yet come
      * through with whatever state they expose, plus `__type`.
+     * Package-private: RNZoomUsObjects serializes created objects and
+     * prompt handlers with it too.
      */
-    private static WritableMap objectOf(Object value, int depth) {
+    static WritableMap objectOf(Object value, int depth) {
         WritableMap out = Arguments.createMap();
         out.putString("__type", publicTypeName(value.getClass()));
         // Handlers and other SDK objects can be acted on from JS by this id.

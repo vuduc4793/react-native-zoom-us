@@ -58,6 +58,9 @@ export interface Spec extends TurboModule {
   invokeRef(ref: string, method: string, args: UnsafeObject): Promise<UnsafeObject>;
   releaseRef(ref: string): void;
   setPromptMode(prompt: string, mode: string, timeoutMs: number): Promise<void>;
+  create(className: string, props: UnsafeObject): Promise<UnsafeObject>;
+  createListener(typeName: string): Promise<UnsafeObject>;
+  setButtonOverrides(overrides: UnsafeObject): Promise<void>;
 
   // Required by NativeEventEmitter.
   addListener(eventName: string): void;

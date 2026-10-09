@@ -23,6 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
                args:(nullable NSArray *)args
               error:(NSError **)error;
 
+/// Replace {__ref} placeholders JS sent back with the objects they name:
+/// a {__ref} map becomes the object, and an array becomes an array of the
+/// referenced objects (recursively for nested arrays). Anything else is
+/// returned unchanged. Sets `error` and returns nil when a ref has expired.
++ (nullable id)resolveRefs:(nullable id)value error:(NSError **)error;
+
 /// Turn an SDK return value into something the React Native bridge can carry.
 + (nullable id)marshal:(nullable id)value depth:(NSInteger)depth;
 

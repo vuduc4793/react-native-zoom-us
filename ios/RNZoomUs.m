@@ -2,6 +2,7 @@
 #import "RNZoomUs.h"
 #import "RNZoomUsEvents.h"
 #import "RNZoomUsCommands.h"
+#import "RNZoomUsListeners.h"
 #import <React/RCTViewManager.h>
 #import "ProviderDelegate.h"
 #import "GlobalData.h"
@@ -205,17 +206,21 @@ RCT_EXPORT_METHOD(invokeRef: (NSString *)refId
             return;
         }
         NSError *error = nil;
-        id result = [RNZoomUsCommands call:target selector:method args:args ?: @[] error:&error];
+        NSString *selectorName = RNZoomUsReminderMethodName(target, method);
+        id result = [RNZoomUsCommands call:target selector:selectorName args:args ?: @[] error:&error];
         if (error != nil) {
             reject(@"ERR_ZOOM_INVOKE", [NSString stringWithFormat:@"%@.%@: %@", refId, method,
                                         error.localizedDescription ?: @"call failed"], error);
             return;
         }
+        // An answered reminder handler no longer needs to outlive LRU eviction.
+        RNZoomUsAfterInvokeRef(target, refId, selectorName);
         resolve(result);
     });
 }
 
 /// Forget a ref JS no longer needs (optional: refs also expire on their own).
+/// Also the only way to drop a pinned ref (listeners, reminder handlers).
 RCT_EXPORT_METHOD(releaseRef: (NSString *)refId) {
     RNZoomUsRefRelease(refId);
 }
@@ -227,8 +232,121 @@ RCT_EXPORT_METHOD(setPromptMode: (NSString *)prompt
              timeoutMs:(double)timeoutMs
               resolver:(RCTPromiseResolveBlock)resolve
               rejecter:(RCTPromiseRejectBlock)reject) {
-    RNZoomUsSetPromptMode(prompt, mode, timeoutMs);
-    resolve(nil);
+    @try {
+        if ([prompt isKindOfClass:[NSString class]] && [prompt isEqualToString:@"reminder"]) {
+            // "js": onReminderNotify reaches JS with a pinned handler to
+            // accept/decline/ignore. "auto" (default): Zoom handles it itself.
+            RNZoomUsSetReminderMode(mode);
+        }
+        // "network" is Android only (proxy / SSL prompts); accepted as a no-op.
+        RNZoomUsSetPromptMode(prompt, mode, timeoutMs);
+        resolve(nil);
+    } @catch (NSException *ex) {
+        reject(@"ERR_ZOOM_PROMPT_MODE", ex.reason ?: @"setPromptMode failed", RNZoomUsErrorFromException(ex));
+    }
+}
+
+/// Construct an SDK object (a param or settings class) from JS:
+/// [[className alloc] init], then setK: for every prop K. Values go through the
+/// same coercion as invoke ({__ref}, arrays of refs, numbers to scalars).
+/// Resolves the serialized object with its __ref.
+RCT_EXPORT_METHOD(create: (NSString *)className
+                   props:(NSDictionary *)props
+                resolver:(RCTPromiseResolveBlock)resolve
+                rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            if (![className isKindOfClass:[NSString class]] || className.length == 0) {
+                reject(@"ERR_ZOOM_CREATE", @"create: no class name", nil);
+                return;
+            }
+            Class cls = NSClassFromString(className);
+            if (cls == Nil) {
+                reject(@"ERR_ZOOM_CREATE", [NSString stringWithFormat:@"%@ is not a class in this build", className], nil);
+                return;
+            }
+            id instance = [[cls alloc] init];
+            if (instance == nil) {
+                reject(@"ERR_ZOOM_CREATE", [NSString stringWithFormat:@"[[%@ alloc] init] returned nil", className], nil);
+                return;
+            }
+            NSMutableArray<NSString *> *failed = [NSMutableArray array];
+            NSDictionary *values = [props isKindOfClass:[NSDictionary class]] ? props : @{};
+            for (id key in values) {
+                if (![key isKindOfClass:[NSString class]] || [(NSString *)key length] == 0) {
+                    [failed addObject:[NSString stringWithFormat:@"%@ (not a property name)", key]];
+                    continue;
+                }
+                NSString *name = (NSString *)key;
+                NSString *setter = [NSString stringWithFormat:@"set%@%@:",
+                                    [[name substringToIndex:1] uppercaseString], [name substringFromIndex:1]];
+                if (![instance respondsToSelector:NSSelectorFromString(setter)]) {
+                    [failed addObject:[NSString stringWithFormat:@"%@ (no %@)", name, setter]];
+                    continue;
+                }
+                NSError *error = nil;
+                // NSNull reaches the setter as nil; call: refuses nil for scalars.
+                [RNZoomUsCommands call:instance selector:setter args:@[values[name] ?: [NSNull null]] error:&error];
+                if (error != nil) {
+                    [failed addObject:[NSString stringWithFormat:@"%@ (%@)", name,
+                                       error.localizedDescription ?: @"could not be set"]];
+                }
+            }
+            if (failed.count > 0) {
+                reject(@"ERR_ZOOM_CREATE", [NSString stringWithFormat:@"%@: could not set %@",
+                                            className, [failed componentsJoinedByString:@", "]], nil);
+                return;
+            }
+            id serialized = RNZoomUsSerialize(instance);
+            NSMutableDictionary *out = [serialized isKindOfClass:[NSDictionary class]]
+                ? [(NSDictionary *)serialized mutableCopy] : [NSMutableDictionary dictionary];
+            // Non-MobileRTC classes serialize as {__type} only; JS still needs the ref.
+            if (out[@"__ref"] == nil) out[@"__ref"] = RNZoomUsRefPut(instance);
+            if (out[@"__type"] == nil) out[@"__type"] = NSStringFromClass([instance class]) ?: className;
+            resolve(out);
+        } @catch (NSException *ex) {
+            reject(@"ERR_ZOOM_CREATE", [NSString stringWithFormat:@"%@: %@", className ?: @"",
+                                        ex.reason ?: ex.name ?: @"threw"], RNZoomUsErrorFromException(ex));
+        }
+    });
+}
+
+/// An object adopting the protocol `typeName` whose every callback reaches JS
+/// as "onListenerCallback" {listener, method, args}. Pinned until releaseRef,
+/// because SDK delegate properties are weak.
+RCT_EXPORT_METHOD(createListener: (NSString *)typeName
+                        resolver:(RCTPromiseResolveBlock)resolve
+                        rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            NSError *error = nil;
+            RNZoomUsDelegateProxy *proxy = [RNZoomUsDelegateProxy proxyForProtocolNamed:typeName error:&error];
+            if (proxy == nil) {
+                reject(@"ERR_ZOOM_CREATE_LISTENER", error.localizedDescription ?: @"could not create the listener", error);
+                return;
+            }
+            NSString *refId = RNZoomUsRefPin(proxy);
+            proxy.refId = refId;
+            resolve(@{@"__ref": refId, @"__type": proxy.protocolName});
+        } @catch (NSException *ex) {
+            reject(@"ERR_ZOOM_CREATE_LISTENER", ex.reason ?: @"createListener threw", RNZoomUsErrorFromException(ex));
+        }
+    });
+}
+
+/// Which toolbar buttons of Zoom's own meeting UI the app handles itself
+/// (invite, end, audio, video, share, more, participants). Every tap emits
+/// "onClickMeetingButton" {button, handled}. "video" and "more" have no iOS
+/// callback and are accepted for parity only.
+RCT_EXPORT_METHOD(setButtonOverrides: (NSDictionary *)overrides
+                            resolver:(RCTPromiseResolveBlock)resolve
+                            rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        RNZoomUsSetButtonOverrides([overrides isKindOfClass:[NSDictionary class]] ? overrides : nil);
+        resolve(nil);
+    } @catch (NSException *ex) {
+        reject(@"ERR_ZOOM_BUTTON_OVERRIDES", ex.reason ?: @"setButtonOverrides threw", RNZoomUsErrorFromException(ex));
+    }
 }
 
 RCT_EXPORT_METHOD(invoke: (NSString *)route
@@ -1184,6 +1302,9 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
                                 );
     } else {
         [self setMeetingSettings];
+        // setPromptMode("reminder", ...) may have run before the SDK had a
+        // reminder helper.
+        RNZoomUsApplyReminderMode();
         initializePromiseResolve(@"Initialize Zoom SDK successfully.");
     }
 }
@@ -1558,9 +1679,30 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (BOOL)onClickedInviteButton:(UIViewController * _Nonnull)parentVC addInviteActionItem:(NSMutableArray <MobileRTCMeetingInviteActionItem *>* _Nullable)array
 {
-    RNZoomUsEmit(@"onClickedInviteButton", @{@"handled": @(meetingInviteHidden)});
+    BOOL handled = RNZoomUsMeetingButtonClicked(@"invite", meetingInviteHidden);
+    RNZoomUsEmit(@"onClickedInviteButton", @{@"handled": @(handled)});
     // YES tells the SDK the app handled it, so no invite sheet (and no link) appears.
-    return meetingInviteHidden;
+    return handled;
+}
+
+// Toolbar overrides (setButtonOverrides). NO -- the default -- lets Zoom run
+// its own action, exactly as when these were not implemented. The share
+// override only covers the share button: with it off, picking "Screen" still
+// reaches onClickShareScreen: and the broadcast picker.
+- (BOOL)onClickedAudioButton:(UIViewController * _Nonnull)parentVC {
+    return RNZoomUsMeetingButtonClicked(@"audio", NO);
+}
+
+- (BOOL)onClickedParticipantsButton:(UIViewController * _Nonnull)parentVC {
+    return RNZoomUsMeetingButtonClicked(@"participants", NO);
+}
+
+- (BOOL)onClickedShareButton:(UIViewController * _Nonnull)parentVC addShareActionItem:(NSMutableArray <MobileRTCMeetingShareActionItem *>* _Nonnull)array {
+    return RNZoomUsMeetingButtonClicked(@"share", NO);
+}
+
+- (BOOL)onClickedEndButton:(UIViewController * _Nonnull)parentVC endButton:(UIButton * _Nonnull)endButton {
+    return RNZoomUsMeetingButtonClicked(@"end", NO);
 }
 
 - (void)onHostVideoOrderUpdated:(NSArray <NSNumber *>* _Nullable)orderArr;
