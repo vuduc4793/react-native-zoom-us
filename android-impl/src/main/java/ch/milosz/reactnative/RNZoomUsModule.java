@@ -153,6 +153,12 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, final Intent intent) {
+            if (requestCode == SCREEN_SHARE_REQUEST_CODE && resultCode != Activity.RESULT_OK) {
+                // The user declined the system's "start recording/casting"
+                // prompt; tell JS so a share button does not stay "starting".
+                sendEvent("MeetingEvent", "screenShareCancelled");
+                return;
+            }
             if (requestCode == SCREEN_SHARE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                 UiThreadUtil.runOnUiThread(new Runnable() {
                     @Override

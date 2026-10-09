@@ -39,6 +39,7 @@ LEGACY = {
     "screenShareStopped": [],
     "screenShareSuccess": [],
     "screenShareError": [],
+    "screenShareCancelled": [],
     "myAudioStatusChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
     "myVideoStatusChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],
     "myAudioSourceTypeChanged": [("userRole", "string"), ("audioType", "number"), ("isTalking", "boolean"), ("isMutedAudio", "boolean"), ("isMutedVideo", "boolean")],

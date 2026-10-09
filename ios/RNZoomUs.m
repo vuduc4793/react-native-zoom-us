@@ -812,20 +812,45 @@ RCT_EXPORT_METHOD(muteAllAttendee: (BOOL)allowUnmuteSelf resolver:(RCTPromiseRes
 }
 
 RCT_EXPORT_METHOD(startShareScreen: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    @try {
-        MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-        if (!ms) {
-            reject(@"ERR_ZOOM_MEETING_CONTROL", @"Cannot get meeting service.", nil);
-            return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+            if (!ms) {
+                reject(@"ERR_ZOOM_MEETING_CONTROL", @"Cannot get meeting service.", nil);
+                return;
+            }
+            // With a broadcast extension configured (iosScreenShareExtensionId),
+            // share the whole device screen: iOS shows its broadcast sheet and
+            // sharing starts when the user confirms there. Without one, fall
+            // back to sharing this app's own screen.
+            if ([self presentBroadcastPicker]) {
+                resolve(nil);
+            } else if ([ms startAppShare]) {
+                resolve(nil);
+            } else {
+                reject(@"ERR_ZOOM_MEETING_CONTROL", @"Fail to share screen", nil);
+            }
+        } @catch (NSException *ex) {
+            reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing startShareScreen", RNZoomUsErrorFromException(ex));
         }
-        if ([ms startAppShare]) {
-            resolve(nil);
-        } else {
-            reject(@"ERR_ZOOM_MEETING_CONTROL", @"Fail to share screen", nil);
+    });
+}
+
+/// Opens iOS's broadcast sheet preselected on the app's screen-share
+/// extension. Uses the picker's own button (public API) rather than a private
+/// selector. NO when no extension is configured.
+- (BOOL)presentBroadcastPicker {
+    if (screenShareExtension.length == 0) return NO;
+    RPSystemBroadcastPickerView *picker = [[RPSystemBroadcastPickerView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    picker.preferredExtension = screenShareExtension;
+    picker.showsMicrophoneButton = NO;
+    for (UIView *view in picker.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            [(UIButton *)view sendActionsForControlEvents:UIControlEventTouchUpInside];
+            return YES;
         }
-    } @catch (NSException *ex) {
-        reject(@"ERR_UNEXPECTED_EXCEPTION", @"Executing startShareScreen", RNZoomUsErrorFromException(ex));
     }
+    return NO;
 }
 
 RCT_EXPORT_METHOD(stopShareScreen: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -1429,15 +1454,7 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 - (void)onClickShareScreen:(UIViewController *)parentVC {
     RNZoomUsEmit(@"onClickShareScreen", @{@"parentVCPresent": @(parentVC != nil), @"parentVC": RNZoomUsSerialize(parentVC)});
-    if (@available(iOS 12.0, *)) {
-        CGRect frame = parentVC.view.bounds;
-        RPSystemBroadcastPickerView *pickerView = [[RPSystemBroadcastPickerView alloc] initWithFrame:frame];
-        pickerView.preferredExtension = screenShareExtension;
-        SEL buttonPressed = NSSelectorFromString(@"buttonPressed:");
-        if ([pickerView respondsToSelector:buttonPressed]) {
-            [pickerView performSelector:buttonPressed withObject:nil];
-        }
-    }
+    [self presentBroadcastPicker];
 }
 
 - (void)onSinkSharingStatus:(MobileRTCSSharingSourceInfo*_Nonnull)shareInfo {

@@ -152,6 +152,19 @@ export async function getSharingUserIds(): Promise<number[]> {
   }
 }
 
+/** Whether I am sharing my screen right now. */
+export async function isSharingOut(): Promise<boolean> {
+  try {
+    return bool(
+      isAndroid
+        ? await z.InMeetingShareController.isSharingOut()
+        : await z.MeetingService.isStartingShare()
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function getMeetingTopic(): Promise<string> {
   try {
     const topic = isAndroid

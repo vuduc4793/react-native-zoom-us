@@ -2,7 +2,7 @@
 //   android-impl/src/main/java/ch/milosz/reactnative/RNZoomUsModule.java
 //   src/events/ios-events.json (written by scripts/generate-ios-delegates.py)
 // Regenerate with scripts/generate-events.py. Do not edit by hand.
-// 78 Android-only, 57 iOS-only, 253 on both.
+// 79 Android-only, 57 iOS-only, 253 on both.
 
 export interface ZoomMeetingParameter {
   meetingType: string | null;
@@ -1759,6 +1759,8 @@ export interface ZoomEventPayloads {
   remoteControlStarted: {
     args: unknown[];
   };
+  /** android only */
+  screenShareCancelled: Record<string, never>;
   /** android only */
   screenShareError: Record<string, never>;
   /** android only */
