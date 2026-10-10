@@ -6,3 +6,11 @@ docs
 # compiled classes.dex from whatever was last built locally -- which is how
 # build artifacts ended up inside the app's patch-package patch once already.
 build
+
+# Local screenshots and editor files
+*.png
+!docs/**/*.png
+.vscode
+.idea
+__pycache__
+*.pyc

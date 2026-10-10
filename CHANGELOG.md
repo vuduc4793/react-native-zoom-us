@@ -2,9 +2,29 @@
 
 ### 14.0.0
 
+First stable release with the Zoom SDK as an on-demand Play feature module.
+
+Highlights:
+
+- Zoom Meeting SDK 7.2.1.43944 (Android) / 7.2.1.39202 (iOS, pod `RNZoomSDK`)
+- Android is split in two: `android/` is a small loader that ships in the base
+  APK, and `android-impl/` holds the bridge and the SDK for an on-demand
+  dynamic feature module, which keeps the base download well under Play's
+  200 MB limit. See docs/DYNAMIC-FEATURE.md
+- One OTA-adaptable surface on both platforms: `zoom` and `ref` reach any method of
+  the SDK's controllers and objects, `create` for SDK objects, `listen` for any
+  listener or delegate, `setButtonOverrides`, and `setPromptMode` for the
+  unmute, reminder and (Android) network prompts
+- Cross-platform helpers for custom UIs: `zoomMeeting`, `zoomQA`,
+  `zoomPolling`, lazy participant loading (`zoomMeeting.getParticipantIds`) and full-screen
+  sharing from a custom UI on both platforms (iOS broadcast extension, see
+  docs/IOS-SCREENSHARE.md)
+
+Detailed notes:
+
 Android:
 
-- Updated Zoom Meeting SDK to 7.1.6.41900
+- Updated Zoom Meeting SDK to 7.2.1.43944 (from JitPack, `com.github.vuduc4793:jitpack-zoom-us`)
 - BREAKING CHANGE: minSdkVersion raised to 28 (Android 9) — required by mobilertc.aar 7.1.x
 - compileSdk/targetSdk raised to 36, Java 17
 - Dependency set re-synced with the SDK's own `versions.gradle` (Kotlin 2.2.20,
@@ -59,7 +79,7 @@ New in v2 (both platforms):
 
 iOS:
 
-- Updated Zoom Meeting SDK to 7.1.5.37603
+- Updated Zoom Meeting SDK to 7.2.1.39202
 - BREAKING CHANGE: minimum deployment target raised to iOS 15.0
 - BREAKING CHANGE: the simulator slice is arm64-only; the podspec now sets
   `EXCLUDED_ARCHS[sdk=iphonesimulator*] = x86_64 i386` for both this pod and the app
