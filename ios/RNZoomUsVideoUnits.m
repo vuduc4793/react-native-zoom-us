@@ -51,9 +51,38 @@ static MobileRTCVideoAspect RNZoomUsAspect(NSInteger mode) {
 @property (nonatomic, strong) UIImageView *micOffView;
 @property (nonatomic, assign) NSInteger shownTarget;
 @property (nonatomic, assign) NSInteger lastAspect;
+- (void)muteZoomBadges;
 @end
 
 @implementation RNZoomUsVideoUnitCell
+
+/**
+ * Zoom draws its own badges into the video views: a raised-hand emoji, emoji
+ * reactions, a mute icon, a name. They are not driven by anything we set (the
+ * raised hand stuck on the active speaker with no hand up), there is no API to
+ * turn them off in custom UI, and the cell draws its own name and mute badge.
+ * Fade them out; Zoom only toggles `hidden` on them, so alpha 0 holds. Video,
+ * avatar and the full-size background are left alone.
+ */
+static BOOL RNZoomUsIsZoomBadge(UIView *view) {
+    if ([view isKindOfClass:[UILabel class]] || [view isKindOfClass:[UIButton class]]) return YES;
+    NSString *name = NSStringFromClass([view class]);
+    if ([name isEqualToString:@"LOTAnimationView"] || [name isEqualToString:@"ZMNUIImageView"]) return YES;
+    // Small image views are icons; the big one is the avatar/background.
+    return [view isKindOfClass:[UIImageView class]]
+        && CGRectGetWidth(view.frame) < 64 && CGRectGetHeight(view.frame) < 64;
+}
+
+- (void)muteZoomBadges
+{
+    // The badges sit one level down, beside the renderer and the avatar view
+    // (whose own initials label must stay), so look at exactly that level.
+    for (UIView *child in _videoView.subviews) {
+        for (UIView *sub in child.subviews) {
+            if (sub.alpha != 0 && RNZoomUsIsZoomBadge(sub)) sub.alpha = 0;
+        }
+    }
+}
 
 - (instancetype)initWithKind:(NSString *)kind
 {
@@ -126,6 +155,7 @@ static MobileRTCVideoAspect RNZoomUsAspect(NSInteger mode) {
     [super layoutSubviews];
     CGRect bounds = self.bounds;
     _videoView.frame = bounds;
+    [self muteZoomBadges];
 
     CGFloat inset = 6;
     CGFloat height = 18;
@@ -399,6 +429,7 @@ static MobileRTCVideoAspect RNZoomUsAspect(NSInteger mode) {
 
         [cell showTarget:target];
         if (![cell isShareKind]) [cell updateBadgeForUser:badgeUser service:ms];
+        [cell muteZoomBadges];
     }
 }
 

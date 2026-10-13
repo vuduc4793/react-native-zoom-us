@@ -559,34 +559,38 @@ CXCallController *callController;
 - (void)onChatMessageNotification:(MobileRTCMeetingChat * _Nullable)chatInfo;
 {
     NSLog(@"RNZoomUsVideoView MobileRTCMeetingChat-->%@",chatInfo.content);
+    NSDictionary *chatInfoDict = nil;
+    if (chatInfo) {
+        //            MobileRTCMeetingUserInfo *userInfo = [self getUserInfo:chatInfo.chatId];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
+        NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
+        // Same nullable strings as RNZoomUs.m: a dictionary literal raises
+        // when handed nil, and this runs inside an SDK callback.
+        chatInfoDict = @{
+            @"chatId": chatInfo.chatId ?: [NSNull null],
+            @"senderId": chatInfo.senderId ?: [NSNull null],
+            @"senderName": chatInfo.senderName ?: [NSNull null],
+            @"receiverId": chatInfo.receiverId ?: [NSNull null],
+            @"receiverName": chatInfo.receiverName ?: [NSNull null],
+            @"content": chatInfo.content ?: [NSNull null],
+            @"date": dateString ?: [NSNull null],
+            @"chatMessageType": @(chatInfo.chatMessageType),
+            @"isMyself": @(chatInfo.isMyself),
+            @"isPrivate": @(chatInfo.isPrivate),
+            @"isChatToAll": @(chatInfo.isChatToAll),
+            @"isChatToAllPanelist": @(chatInfo.isChatToAllPanelist),
+            @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
+            @"isComment": @(chatInfo.isComment),
+            @"isThread": @(chatInfo.isThread),
+            @"threadID": chatInfo.threadID ?: [NSNull null],
+        };
+    }
+    // While this view is mounted it is the meeting service delegate, so chat
+    // arrives here and not in RNZoomUs. Emit it like every other callback in
+    // this file, or nothing listening through the library hears new messages.
+    RNZoomUsEmit(@"onChatMessageNotification", @{@"chatInfo": chatInfoDict ?: [NSNull null]});
     if (self.onChatMessageNotification) {
-        NSDictionary *chatInfoDict = nil;
-        if (chatInfo) {
-            //            MobileRTCMeetingUserInfo *userInfo = [self getUserInfo:chatInfo.chatId];
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
-            NSString *dateString = [dateFormatter stringFromDate:chatInfo.date];
-            // Same nullable strings as RNZoomUs.m: a dictionary literal raises
-            // when handed nil, and this runs inside an SDK callback.
-            chatInfoDict = @{
-                @"chatId": chatInfo.chatId ?: [NSNull null],
-                @"senderId": chatInfo.senderId ?: [NSNull null],
-                @"senderName": chatInfo.senderName ?: [NSNull null],
-                @"receiverId": chatInfo.receiverId ?: [NSNull null],
-                @"receiverName": chatInfo.receiverName ?: [NSNull null],
-                @"content": chatInfo.content ?: [NSNull null],
-                @"date": dateString ?: [NSNull null],
-                @"chatMessageType": @(chatInfo.chatMessageType),
-                @"isMyself": @(chatInfo.isMyself),
-                @"isPrivate": @(chatInfo.isPrivate),
-                @"isChatToAll": @(chatInfo.isChatToAll),
-                @"isChatToAllPanelist": @(chatInfo.isChatToAllPanelist),
-                @"isChatToWaitingroom": @(chatInfo.isChatToWaitingroom),
-                @"isComment": @(chatInfo.isComment),
-                @"isThread": @(chatInfo.isThread),
-                @"threadID": chatInfo.threadID ?: [NSNull null],
-            };
-        }
         self.onChatMessageNotification(@{
             @"event": @"onChatMessageNotification",
             @"chatInfo": chatInfoDict ?: [NSNull null]
@@ -621,11 +625,13 @@ CXCallController *callController;
 
 - (void)onSinkMeetingUserRaiseHand:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingUserRaiseHand", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingUserRaiseHand==%@", @(userID));
 }
 
 - (void)onSinkMeetingUserLowerHand:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingUserLowerHand", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingUserLowerHand==%@", @(userID));
 }
 

@@ -1486,20 +1486,40 @@ RCT_EXPORT_METHOD(getMyselfUserID: (RCTPromiseResolveBlock)resolve rejecter:(RCT
 
         if (over) {
             NSString *statusName = [self formatStateToString:state] ?: @"";
-            NSError *failure = [NSError errorWithDomain:@"RNZoomUs" code:lastMeetErrorCode userInfo:@{
-                NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Meeting state: %@, errorCode=%ld",
-                                            statusName, (long)lastMeetErrorCode],
-                @"errorCode": @(lastMeetErrorCode),
-                @"errorName": [self meetErrorName:lastMeetErrorCode] ?: @"unknown",
-                @"status": statusName,
-            }];
-            reject(@"ERR_ZOOM_MEETING",
-                   [NSString stringWithFormat:@"Meeting state: %@, errorCode=%ld", statusName, (long)lastMeetErrorCode],
-                   failure);
+            if (lastMeetErrorCode == MobileRTCMeetError_Success) {
+                // iOS reports Failed first and the reason right after
+                // (Failed, then onMeetingError 9 "maximum of participants"),
+                // so give the reason a moment to land before answering.
+                __weak RNZoomUs *weakSelf = self;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(500 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                    RNZoomUs *strongSelf = weakSelf;
+                    if (strongSelf) {
+                        [strongSelf rejectJoin:reject status:statusName code:strongSelf->lastMeetErrorCode];
+                    } else {
+                        reject(@"ERR_ZOOM_MEETING", [NSString stringWithFormat:@"Meeting state: %@, errorCode=0", statusName], nil);
+                    }
+                });
+            } else {
+                [self rejectJoin:reject status:statusName code:lastMeetErrorCode];
+            }
         } else {
             resolve(@"Connected to zoom meeting");
         }
     }
+}
+
+- (void)rejectJoin:(RCTPromiseRejectBlock)reject status:(NSString *)statusName code:(MobileRTCMeetError)code {
+    if (!reject) return;
+    NSError *failure = [NSError errorWithDomain:@"RNZoomUs" code:code userInfo:@{
+        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Meeting state: %@, errorCode=%ld",
+                                    statusName ?: @"", (long)code],
+        @"errorCode": @(code),
+        @"errorName": [self meetErrorName:code] ?: @"unknown",
+        @"status": statusName ?: @"",
+    }];
+    reject(@"ERR_ZOOM_MEETING",
+           [NSString stringWithFormat:@"Meeting state: %@, errorCode=%ld", statusName ?: @"", (long)code],
+           failure);
 }
 
 - (void)onMeetingError:(MobileRTCMeetError)errorCode message:(NSString *)message {

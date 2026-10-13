@@ -16,6 +16,16 @@ iOS fixes found by running the custom UI in a live class.
   percents, up to 4pt off on a phone screen, so video spilled past the tile it
   belonged to. iOS now takes fractional percents; Android still rounds, since
   `MobileRTCVideoUnitRenderInfo` only takes whole numbers there.
+- iOS: new chat messages reach `addZoomListener("onChatMessageNotification")`
+  while a video view is mounted. The view takes over the meeting delegate and
+  passed chat only to its own prop, so a custom UI saw the history it loaded
+  on join and nothing after.
+- iOS slots no longer show Zoom's own badges (raised-hand emoji, reactions,
+  mute icon, name) on top of the video. One raised hand stayed on the active
+  speaker with no hand up, and the SDK has no switch for them in custom UI.
+- iOS: a join that fails now carries Zoom's reason. iOS reports Failed before
+  `onMeetingError`, so the rejection always said `errorCode=0` (a full
+  meeting, 9, looked like any other error); it now waits briefly for the code.
 - `getAllChatMessageID` resolved its promise twice when there was chat, which
   React Native reports as an error (a red box in debug builds).
 - The self preview of the legacy renderer had a red background, visible
