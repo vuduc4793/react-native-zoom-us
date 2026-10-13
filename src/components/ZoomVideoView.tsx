@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   LayoutChangeEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -165,6 +166,9 @@ function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children, ...events
           ref={nativeRef}
           style={StyleSheet.absoluteFill}
           layout={layout as any}
+          // iOS keeps a legacy full-screen renderer for video-view.tsx and only
+          // draws `layout` when asked to. Android always draws `layout`.
+          {...(Platform.OS === "ios" ? { unitLayout: true } : null)}
           zOrder={zOrder}
           {...eventProps}
         />

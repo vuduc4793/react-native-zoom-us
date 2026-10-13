@@ -42,6 +42,8 @@ export interface NativeVideoProps {
   layout: NativeLayoutUnit[];
   /** Android only. How the video surface is composited. */
   zOrder?: "mediaOverlay" | "onTop" | "behind";
+  /** iOS only. Draw `layout` unit by unit instead of the legacy full-screen view. */
+  unitLayout?: boolean;
   muteMyCamera?: boolean
   muteMyAudio?: boolean
   onSinkMeetingUserJoin?: (event: any) => void;

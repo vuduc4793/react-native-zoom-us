@@ -1,5 +1,22 @@
 ## Changelog
 
+### 14.0.1
+
+iOS fixes found by running the custom UI in a live class.
+
+- `<ZoomVideoView>` now draws its slots on iOS. iOS ignored `layout` and showed
+  one full-screen speaker plus a self preview, so `Attendee` (gallery),
+  `Preview`, `Share` and `ActiveShare` did nothing. Each slot is now its own
+  MobileRTC view, placed where the slot was laid out, with the name badge and
+  muted icon. Units go blank between rooms (breakout switch, reconnect)
+  instead of freezing on a stale user id. The legacy `video-view.tsx` keeps the
+  old renderer: the new mode is turned on by `<ZoomVideoView>` only
+  (`unitLayout`, iOS only).
+- `getAllChatMessageID` resolved its promise twice when there was chat, which
+  React Native reports as an error (a red box in debug builds).
+- The self preview of the legacy renderer had a red background, visible
+  whenever the camera had no frame (camera off, simulator).
+
 ### 14.0.0
 
 First stable release with the Zoom SDK as an on-demand Play feature module.

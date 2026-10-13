@@ -1110,9 +1110,12 @@ RCT_EXPORT_METHOD(getAllChatMessageID: (RCTPromiseResolveBlock)resolve rejecter:
     @try {
         MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
         if (ms) {
-            NSMutableArray *dataSource = [[ms getAllChatMessageID] mutableCopy];
+            NSArray *dataSource = [ms getAllChatMessageID];
             if (dataSource != nil) {
-                resolve(dataSource);
+                resolve([dataSource copy]);
+                // A promise settles once; the fall-through resolve(nil) below
+                // used to fire as well, which React Native reports as an error.
+                return;
             }
         }
         resolve(nil);

@@ -102,12 +102,65 @@ CXCallController *callController;
 {
     [super didMoveToWindow];
 
-    if (self.window == nil || _rnZoomUsVideoViewController == nil) return;
+    if (self.window == nil) return;
 
     MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
     if (ms) ms.delegate = self;
 
+    if (_unitLayout) {
+        [self.unitsView refresh];
+        return;
+    }
+    if (_rnZoomUsVideoViewController == nil) return;
     [self addViewControllerAsSubView];
+}
+
+#pragma mark - Unit layout (<ZoomVideoView>)
+
+- (void)setLayout:(NSArray *)layout
+{
+    _layout = [layout isKindOfClass:[NSArray class]] ? [layout copy] : nil;
+    if (_unitLayout) [self.unitsView setUnits:_layout];
+}
+
+- (void)setUnitLayout:(BOOL)unitLayout
+{
+    if (_unitLayout == unitLayout) return;
+    _unitLayout = unitLayout;
+    if (unitLayout) {
+        // The legacy controller renders its own full-screen video plus a self
+        // preview in the corner; neither belongs in a layout the app drew.
+        [self detachLegacyController];
+        _rnZoomUsVideoViewController = nil;
+        if (!_unitsView) {
+            _unitsView = [[RNZoomUsVideoUnits alloc] initWithFrame:self.bounds];
+            _unitsView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        }
+        if (_unitsView.superview != self) [self insertSubview:_unitsView atIndex:0];
+        [_unitsView setUnits:_layout];
+    } else {
+        [_unitsView stopAll];
+        [_unitsView removeFromSuperview];
+        _unitsView = nil;
+        if (!_rnZoomUsVideoViewController) {
+            _rnZoomUsVideoViewController = [[CustomMeetingViewController alloc] init];
+        }
+        if (self.window) [self addViewControllerAsSubView];
+    }
+}
+
+- (void)detachLegacyController
+{
+    if (_rnZoomUsVideoViewController == nil) return;
+    [_rnZoomUsVideoViewController willMoveToParentViewController:nil];
+    [_rnZoomUsVideoViewController.view removeFromSuperview];
+    [_rnZoomUsVideoViewController removeFromParentViewController];
+}
+
+/** Units re-resolve who they show whenever the meeting changes under them. */
+- (void)refreshUnits
+{
+    if (_unitLayout) [_unitsView refresh];
 }
 
 - (void)layoutSubviews
@@ -121,9 +174,15 @@ CXCallController *callController;
     if (_rnZoomUsVideoViewController != nil) {
         _rnZoomUsVideoViewController.view.frame = self.bounds;
     }
+    if (_unitsView != nil) {
+        _unitsView.frame = self.bounds;
+    }
 }
 
 - (void)removeFromSuperview {
+    // Stop every render now: Zoom keeps feeding a view it was told to show,
+    // even after React Native has unmounted it.
+    [_unitsView stopAll];
     if (_rnZoomUsVideoViewController != nil) {
         [_rnZoomUsVideoViewController willMoveToParentViewController:nil];
         [_rnZoomUsVideoViewController.view removeFromSuperview];
@@ -239,6 +298,12 @@ CXCallController *callController;
         case MobileRTCMeetingState_InMeeting:
             result = @"MEETING_STATUS_INMEETING";
             [self connectAudio];
+            if (_unitLayout) {
+                // The legacy controller did this on joining; without a parent
+                // Zoom has nowhere to present the prompts it still owns.
+                UIViewController *parent = [self reactViewController];
+                if (parent) [[[MobileRTC sharedRTC] getMeetingService] setParentViewCtroller:parent];
+            }
             break;
         case MobileRTCMeetingState_Disconnecting:
             result = @"MEETING_STATUS_DISCONNECTING";
@@ -296,7 +361,7 @@ CXCallController *callController;
     }
     
     NSLog(@"RNZoomUsVideoView onMeetingStateChange =>%@", result);
-    
+    [self refreshUnits];
     
     if (self.onMeetingStateChange) {
         self.onMeetingStateChange(@{
@@ -308,6 +373,7 @@ CXCallController *callController;
 
 - (void)onSinkMeetingActiveVideo:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingActiveVideo", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingActiveVideo =>>%@", @(userID));
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkMeetingActiveVideo:)])
     {
@@ -317,6 +383,7 @@ CXCallController *callController;
 
 - (void)onMyVideoStateChange {
     RNZoomUsEmit(@"onMyVideoStateChange", nil);
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onMyVideoStateChange");
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onMyVideoStateChange)])
     {
@@ -325,7 +392,9 @@ CXCallController *callController;
 }
 
 - (void)onSpotlightVideoChange:(BOOL)on {
-    RNZoomUsEmit(@"onSpotlightVideoChange", @{@"on": @(on)});}
+    RNZoomUsEmit(@"onSpotlightVideoChange", @{@"on": @(on)});
+    [self refreshUnits];
+}
 
 - (void)onSinkMeetingPreviewStopped {
     RNZoomUsEmit(@"onSinkMeetingPreviewStopped", nil);
@@ -344,6 +413,9 @@ CXCallController *callController;
 
 - (void)onSinkMeetingVideoStatusChange:(NSUInteger)userID videoStatus:(MobileRTC_VideoStatus)videoStatus{
     RNZoomUsEmit(@"onSinkMeetingVideoStatusChange", @{@"userID": @(userID), @"videoStatus": @(videoStatus)});
+    // Before the de-duplication below: a unit may need the change even when
+    // this view already saw the same status for that user.
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingVideoStatusChange=%@, videoStatus=%@",@(userID), @(videoStatus));
     
     NSNumber *lastStatus = self.lastVideoStatusByUserID[@(userID)];
@@ -387,6 +459,7 @@ CXCallController *callController;
 
 - (void)onSinkMeetingUserLeft:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingUserLeft", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingUserLeft==%@", @(userID));
     if (self.onSinkMeetingUserLeft) {
         self.onSinkMeetingUserLeft(@{
@@ -398,6 +471,7 @@ CXCallController *callController;
 }
 - (void)onSinkMeetingUserJoin:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingUserJoin", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingUserJoin==%@", @(userID));
     if (self.onSinkMeetingUserJoin) {
         self.onSinkMeetingUserJoin(@{
@@ -434,10 +508,12 @@ CXCallController *callController;
 }
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkMeetingAudioStatusChange", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingAudioStatusChange=%@",@(userID));
 }
 - (void)onSinkMeetingAudioStatusChange:(NSUInteger)userID audioStatus:(MobileRTC_AudioStatus)audioStatus {
     RNZoomUsEmit(@"onSinkMeetingAudioStatusChange", @{@"userID": @(userID), @"audioStatus": @(audioStatus)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkMeetingAudioStatusChange=%@, audioStatus=%@",@(userID), @(audioStatus));
     
     if (self.onSinkMeetingAudioStatusChange) {
@@ -539,6 +615,7 @@ CXCallController *callController;
 - (void)onSinkUserNameChanged:(NSArray <NSNumber *>* _Nullable)userNameChangedArr
 {
     RNZoomUsEmit(@"onSinkUserNameChanged", @{@"userNameChangedArr": userNameChangedArr ?: @[]});
+    [self refreshUnits];
     NSLog(@"onSinkUserNameChanged:%@", userNameChangedArr);
 }
 
@@ -785,6 +862,18 @@ CXCallController *callController;
         default:
             break;
     }
+    if (_unitLayout && shareInfo != nil) {
+        BOOL ended = status == MobileRTCSharingStatus_Other_Share_End
+                  || status == MobileRTCSharingStatus_Self_Send_End;
+        BOOL remote = status == MobileRTCSharingStatus_Other_Share_Begin
+                   || status == MobileRTCSharingStatus_View_Other_Sharing
+                   || status == MobileRTCSharingStatus_Resume;
+        if (ended || remote) {
+            [_unitsView shareStatusChangedForUser:(NSUInteger)userID
+                                    shareSourceID:(NSUInteger)shareSourceID
+                                           active:remote];
+        }
+    }
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkSharingStatus:userID:)])
     {
         [_rnZoomUsVideoViewController onSinkSharingStatus:shareInfo];
@@ -793,6 +882,7 @@ CXCallController *callController;
 
 - (void)onSinkShareSizeChange:(NSUInteger)userID {
     RNZoomUsEmit(@"onSinkShareSizeChange", @{@"userID": @(userID)});
+    [self refreshUnits];
     NSLog(@"RNZoomUsVideoView onSinkShareSizeChange==%@",@(userID));
     if (_rnZoomUsVideoViewController && [_rnZoomUsVideoViewController respondsToSelector:@selector(onSinkShareSizeChange:)])
     {

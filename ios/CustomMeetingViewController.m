@@ -227,7 +227,9 @@
 - (ThumbPreviewView *)thumbPreviewView {
     if (!_thumbPreviewView) {
         _thumbPreviewView = [[ThumbPreviewView alloc] init];
-        _thumbPreviewView.backgroundColor = [UIColor redColor];
+        // Black like Zoom's own tiles; red was a leftover debug colour that
+        // showed whenever the camera had no frame yet (off, or a simulator).
+        _thumbPreviewView.backgroundColor = [UIColor blackColor];
     }
     return _thumbPreviewView;
 }

@@ -15,6 +15,7 @@
 #import <UIKit/UIKit.h>
 #import <MobileRTC/MobileRTCMeetingDelegate.h>
 #import "CustomMeetingViewController.h"
+#import "RNZoomUsVideoUnits.h"
 #import "RCTEventEmitter.h"
 #import <React/UIView+React.h>
 @interface RNZoomUsVideoView : UIView<MobileRTCAuthDelegate, MobileRTCMeetingServiceDelegate, MobileRTCAnnotationServiceDelegate, MobileRTCWaitingRoomServiceDelegate, MobileRTCShareActionDelegate>
@@ -37,6 +38,15 @@
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSNumber *> *lastVideoStatusByUserID;
 @property (nonatomic, assign) BOOL audioIsConnected;
 @property (nonatomic, assign) BOOL isInMeeting;
+/** Units measured by <ZoomVideoView>; only rendered when unitLayout is on. */
+@property (nonatomic, copy) NSArray *layout;
+/**
+ * On: render `layout` with one MobileRTC view per unit (what <ZoomVideoView>
+ * asks for). Off: the original full-screen CustomMeetingViewController, which
+ * the legacy video-view.tsx still relies on and which ignores `layout`.
+ */
+@property (nonatomic, assign) BOOL unitLayout;
+@property (nonatomic, strong) RNZoomUsVideoUnits *unitsView;
 
 
 

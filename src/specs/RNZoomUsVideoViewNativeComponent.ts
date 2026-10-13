@@ -35,6 +35,11 @@ export interface NativeProps extends ViewProps {
    * "mediaOverlay" (default) | "onTop" | "behind".
    */
   zOrder?: WithDefault<string, "mediaOverlay">;
+  /**
+   * iOS only. Render `layout` unit by unit. Off keeps the legacy full-screen
+   * renderer that ignores `layout`; <ZoomVideoView> turns it on.
+   */
+  unitLayout?: WithDefault<boolean, false>;
 }
 
 export default codegenNativeComponent<NativeProps>("RNZoomUsVideoView", {
