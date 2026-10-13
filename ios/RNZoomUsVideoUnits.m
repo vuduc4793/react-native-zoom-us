@@ -17,6 +17,14 @@ static NSInteger RNZoomUsInteger(NSDictionary *unit, NSString *key, NSInteger fa
     return [value isKindOfClass:[NSNumber class]] ? [value integerValue] : fallback;
 }
 
+static CGFloat RNZoomUsPercent(NSDictionary *unit, NSString *key, CGFloat fallback) {
+    id value = unit[key];
+    if (![value isKindOfClass:[NSNumber class]]) return fallback;
+    double percent = [value doubleValue];
+    if (!isfinite(percent)) return fallback;
+    return MAX(0, MIN(100, percent));
+}
+
 static BOOL RNZoomUsBool(NSDictionary *unit, NSString *key, BOOL fallback) {
     id value = unit[key];
     return [value isKindOfClass:[NSNumber class]] ? [value boolValue] : fallback;
@@ -267,10 +275,10 @@ static MobileRTCVideoAspect RNZoomUsAspect(NSInteger mode) {
     CGFloat height = CGRectGetHeight(self.bounds);
     for (RNZoomUsVideoUnitCell *cell in _cells) {
         NSDictionary *unit = cell.unit;
-        CGFloat x = RNZoomUsInteger(unit, @"x", 0) / 100.0 * width;
-        CGFloat y = RNZoomUsInteger(unit, @"y", 0) / 100.0 * height;
-        CGFloat w = RNZoomUsInteger(unit, @"width", 100) / 100.0 * width;
-        CGFloat h = RNZoomUsInteger(unit, @"height", 100) / 100.0 * height;
+        CGFloat x = RNZoomUsPercent(unit, @"x", 0) / 100.0 * width;
+        CGFloat y = RNZoomUsPercent(unit, @"y", 0) / 100.0 * height;
+        CGFloat w = RNZoomUsPercent(unit, @"width", 100) / 100.0 * width;
+        CGFloat h = RNZoomUsPercent(unit, @"height", 100) / 100.0 * height;
         cell.frame = CGRectMake(x, y, w, h);
     }
 }

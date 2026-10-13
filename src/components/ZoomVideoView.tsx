@@ -111,8 +111,13 @@ function ZoomVideoViewRoot({ style, zOrder = "mediaOverlay", children, ...events
   const layout = React.useMemo(() => {
     if (!size || size.width <= 0 || size.height <= 0) return [];
 
-    const toPercent = (value: number, total: number) =>
-      Math.max(0, Math.min(100, Math.round((value / total) * 100)));
+    // Android's MobileRTCVideoUnitRenderInfo takes whole percents. iOS takes
+    // fractions: a whole percent of a 874pt screen is up to 4pt off the slot.
+    const roundPercent = Platform.OS === "android";
+    const toPercent = (value: number, total: number) => {
+      const percent = Math.max(0, Math.min(100, (value / total) * 100));
+      return roundPercent ? Math.round(percent) : Math.round(percent * 100) / 100;
+    };
 
     const units: Record<string, unknown>[] = [];
     registrations.current.forEach((registration) => {

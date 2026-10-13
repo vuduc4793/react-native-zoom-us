@@ -12,6 +12,10 @@ iOS fixes found by running the custom UI in a live class.
   instead of freezing on a stale user id. The legacy `video-view.tsx` keeps the
   old renderer: the new mode is turned on by `<ZoomVideoView>` only
   (`unitLayout`, iOS only).
+- iOS slots land exactly on their layout. Positions were rounded to whole
+  percents, up to 4pt off on a phone screen, so video spilled past the tile it
+  belonged to. iOS now takes fractional percents; Android still rounds, since
+  `MobileRTCVideoUnitRenderInfo` only takes whole numbers there.
 - `getAllChatMessageID` resolved its promise twice when there was chat, which
   React Native reports as an error (a red box in debug builds).
 - The self preview of the legacy renderer had a red background, visible
