@@ -2764,13 +2764,23 @@ public class RNZoomUsModule extends ReactContextBaseJavaModule implements ZoomSD
 
     @Override
     public void onHasAttendeeRightsNotification(IBOAttendee iboAttendee) {
+        extraListeners.attachAll();
         Log.i(TAG, "onHasAttendeeRightsNotification");
-        String boName = iboAttendee.getBoName();
-        if (boName != null && !boName.isEmpty()) {
-            sendEvent("MeetingEvent", "onHasAttendeeRightsNotification", boName);
-        } else {
-            sendEvent("MeetingEvent", "onHasAttendeeRightsNotification", "");
+        // status keeps carrying the room name ("" when none) for existing
+        // listeners; boName/attendeePresent match the other rights events.
+        String boName = null;
+        try {
+            boName = iboAttendee == null ? null : iboAttendee.getBoName();
+        } catch (Exception e) {
+            Log.w(TAG, "onHasAttendeeRightsNotification getBoName", e);
         }
+        WritableMap params = Arguments.createMap();
+        params.putString("event", "onHasAttendeeRightsNotification");
+        params.putString("status", boName == null ? "" : boName);
+        params.putString("boName", boName == null ? "" : boName);
+        params.putBoolean("attendeePresent", iboAttendee != null);
+        sendBoth("MeetingEvent", "onHasAttendeeRightsNotification", params);
+        if (iboAttendee == null) return;
         iboAttendee.setEvent(new IBOAttendeeEvent() {
 
             public void onShareAction(SharingStatus status, IShareAction shareAction) {

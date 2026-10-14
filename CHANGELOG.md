@@ -4,6 +4,11 @@
 
 iOS fixes found by running the custom UI in a live class.
 
+- Android: `onHasAttendeeRightsNotification` no longer crashes when the SDK
+  passes no attendee, and now carries `boName` and `attendeePresent` like the
+  other breakout rights events (`status` still holds the room name, `""` when
+  none is assigned).
+
 - `<ZoomVideoView>` now draws its slots on iOS. iOS ignored `layout` and showed
   one full-screen speaker plus a self preview, so `Attendee` (gallery),
   `Preview`, `Share` and `ActiveShare` did nothing. Each slot is now its own
