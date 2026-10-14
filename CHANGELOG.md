@@ -4,6 +4,10 @@
 
 iOS fixes found by running the custom UI in a live class.
 
+- iOS: an `Attendee` slot that changes user (gallery pages) renders again. A
+  MobileRTC attendee view stopped for one user drew nothing for the next, so
+  every page after the first went black; such a slot now gets a fresh view.
+
 - Android: `onHasAttendeeRightsNotification` no longer crashes when the SDK
   passes no attendee, and now carries `boName` and `attendeePresent` like the
   other breakout rights events (`status` still holds the room name, `""` when

@@ -51,6 +51,8 @@ static MobileRTCVideoAspect RNZoomUsAspect(NSInteger mode) {
 @property (nonatomic, strong) UIImageView *micOffView;
 @property (nonatomic, assign) NSInteger shownTarget;
 @property (nonatomic, assign) NSInteger lastAspect;
+/** The view has rendered someone since it was made. */
+@property (nonatomic, assign) BOOL everShown;
 - (void)muteZoomBadges;
 @end
 
@@ -94,18 +96,7 @@ static BOOL RNZoomUsIsZoomBadge(UIView *view) {
     self.clipsToBounds = YES;
     self.userInteractionEnabled = NO;
 
-    if ([kind isEqualToString:@"active"]) {
-        _videoView = [[MobileRTCActiveVideoView alloc] initWithFrame:CGRectZero];
-    } else if ([self isShareKind]) {
-        _videoView = [[MobileRTCActiveShareView alloc] initWithFrame:CGRectZero];
-    } else {
-        // "preview" and "attendee": a plain attendee view. After joining, the
-        // local camera is rendered as an attendee (myselfUserID), which is what
-        // Zoom's own custom-UI sample does.
-        _videoView = [[MobileRTCVideoView alloc] initWithFrame:CGRectZero];
-    }
-    _videoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _videoView.backgroundColor = [UIColor clearColor];
+    _videoView = [self makeVideoView];
     [self addSubview:_videoView];
 
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -123,6 +114,41 @@ static BOOL RNZoomUsIsZoomBadge(UIView *view) {
     _micOffView.hidden = YES;
     [self addSubview:_micOffView];
     return self;
+}
+
+- (MobileRTCVideoView *)makeVideoView
+{
+    MobileRTCVideoView *view;
+    if ([_kind isEqualToString:@"active"]) {
+        view = [[MobileRTCActiveVideoView alloc] initWithFrame:CGRectZero];
+    } else if ([self isShareKind]) {
+        view = [[MobileRTCActiveShareView alloc] initWithFrame:CGRectZero];
+    } else {
+        // "preview" and "attendee": a plain attendee view. After joining, the
+        // local camera is rendered as an attendee (myselfUserID), which is what
+        // Zoom's own custom-UI sample does.
+        view = [[MobileRTCVideoView alloc] initWithFrame:CGRectZero];
+    }
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+}
+
+/**
+ * A plain attendee view that has shown one user and is stopped draws nothing
+ * for the next one (gallery pages went black after the first page turn), so a
+ * unit moving to another user gets a fresh view. The active-speaker and share
+ * views follow their target themselves and are kept.
+ */
+- (void)renewVideoViewIfUsed
+{
+    if (_everShown == NO || [_kind isEqualToString:@"active"] || [self isShareKind]) return;
+    MobileRTCVideoView *fresh = [self makeVideoView];
+    fresh.frame = self.bounds;
+    [self insertSubview:fresh aboveSubview:_videoView];
+    [_videoView removeFromSuperview];
+    _videoView = fresh;
+    _everShown = NO;
 }
 
 - (BOOL)isShareKind
@@ -193,12 +219,14 @@ static BOOL RNZoomUsIsZoomBadge(UIView *view) {
     }
     if (target == _shownTarget) return;
     [self stop];
+    [self renewVideoViewIfUsed];
     BOOL shown = [self isShareKind]
         ? [(MobileRTCActiveShareView *)_videoView showActiveShareWithShareSourceID:(NSUInteger)target]
         : [_videoView showAttendeeVideoWithUserID:(NSUInteger)target];
     // Remember the target only if Zoom took it, so the next refresh retries.
     _shownTarget = shown ? target : RNZoomUsNoTarget;
     if (shown) {
+        _everShown = YES;
         [_videoView setVideoAspect:RNZoomUsAspect(_lastAspect < 0 ? 0 : _lastAspect)];
         if ([self isShareKind]) {
             [(MobileRTCActiveShareView *)_videoView changeShareScaleWithShareSourceID:(NSUInteger)target];
